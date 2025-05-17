@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, use } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ClusteringPanel from "./ClusteringPanel";
-import { Spline, Settings2, Tag } from "lucide-react";
+import DisplayPanel from "./DisplayPanel";
+import GenrePanel from "./GenrePanel";
+import { Spline, Settings2, Tag, RotateCcw } from "lucide-react";
 
 type PanelType = "clustering" | "display" | "genres";
 
@@ -19,39 +21,50 @@ export function GraphControls() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-              setActivePanel(undefined);
-            }
-          };
-      
-          document.addEventListener("mousedown", handleClickOutside);
-          return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-          };
-        }, []);
+        setActivePanel(undefined);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    // Container for the graph controls
-    <div 
-    ref={containerRef} className={`fixed top-1 right-1 z-50  p-2 rounded-xl overflow-hidden ${
-      activePanel ? "w-xs flex flex-col gap-2 bg-white border-1 border-gray-200 shadow-md" : ""}`}>
-    {/* tabs container */}
-      <div className="flex justify-end gap-1">
+    <motion.div
+      key="graph-controls"
+      ref={containerRef}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.2 }}
+      className={`fixed top-4 right-4 z-50 w-xs flex flex-col gap-2 p-2 rounded-xl overflow-hidden   ${activePanel ? "bg-white border border-gray-200 shadow-md" : ""}`}
+    >
+      <div className="relative flex items-center
+ justify-end gap-1">
+    {activePanel ? 
+        <button className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100">
+            <RotateCcw size={16}/>
+            {/* onClick should reset graph controls to defaults */}
+        </button> : ""}
+            
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActivePanel(tab.id)}
-            className={`flex items-center gap-1 px-2 py-1 rounded-md transition-all ${
-                activePanel === tab.id
-                  ? "bg-gray-100 text-gray-700 font-medium"
-                  : "text-gray-500"
-              }`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100 ${
+              activePanel === tab.id
+                ? "bg-gray-100 text-gray-700 font-medium"
+                : ""
+            }`}
           >
             {tab.icon}
             {activePanel === tab.id && <span className="text-sm">{tab.label}</span>}
           </button>
         ))}
       </div>
-      <div className="">
+      <div>
         <AnimatePresence mode="wait">
           {activePanel === "clustering" && (
             <motion.div
@@ -70,7 +83,7 @@ export function GraphControls() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              {/* <DisplayPanel /> */}
+              <DisplayPanel />
             </motion.div>
           )}
           {activePanel === "genres" && (
@@ -80,11 +93,11 @@ export function GraphControls() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              {/* <GenresPanel /> */}
+              <GenrePanel />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }

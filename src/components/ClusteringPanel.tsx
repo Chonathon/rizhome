@@ -10,6 +10,7 @@ export default function ClusteringPanel() {
     ];
     
     return (
+        // TODO: add animation to accordion effect
         <div>
             <div className="flex flex-col items-start w-full align-start gap-0.5 p-1 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
             {options.map((option) => (
@@ -18,8 +19,8 @@ export default function ClusteringPanel() {
             onClick={() => setSelected(option.id)}
             className={`flex w-full flex-col gap-0.5 items-start text-left appearance-none border-none  p-3 rounded-xl transition-all font-medium ${
                 selected === option.id
-                  ? "bg-gray-300"
-                  : "bg-gray-50 text-gray-600 hover:bg-gray-200"
+                  ? "bg-gray-200"
+                  : "bg-gray-50 text-gray-600 hover:bg-gray-100"
               }`}
           >
             {option.label}

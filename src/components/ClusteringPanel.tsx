@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function ClusteringPanel() {
     const [selected, setSelected] = useState("genre")
@@ -12,22 +13,40 @@ export default function ClusteringPanel() {
     return (
         // TODO: add animation to accordion effect
         <div>
-            <div className="flex flex-col items-start w-full align-start gap-0.5 p-1 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
-            {options.map((option) => (
-          <button
-            key={option.id}
-            onClick={() => setSelected(option.id)}
-            className={`flex w-full flex-col gap-0.5 items-start text-left appearance-none border-none  p-3 rounded-xl transition-all font-medium ${
-                selected === option.id
-                  ? "bg-gray-200"
-                  : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-              }`}
-          >
-            {option.label}
-            {selected === option.id && <span className="text-md font-normal">{option.description}</span>}
-          </button>
-        ))}
-            </div>
+            <RadioGroup
+              value={selected}
+              onValueChange={setSelected}
+              className="flex flex-col items-start w-full gap-0.5 p-1 bg-gray-50 border border-gray-200 rounded-xl shadow-sm"
+            >
+                {options.map((option) => (
+                  <div key={option.id} className="w-full">
+                    <label
+                      htmlFor={option.id}
+                      className={`flex items-start w-full gap-2 rounded-xl p-3 transition-colors cursor-pointer ${
+                        selected === option.id ? "bg-gray-200" : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <RadioGroupItem
+                        value={option.id}
+                        id={option.id}
+                        className="mt-1 sr-only"
+                      />
+                      <div className="flex flex-col items-start">
+                        <span className="text-md font-medium leading-none">
+                          {option.label}
+                        </span>
+                          {selected === option.id && (
+                            <p
+                              className="text-md text-muted-foreground mt-1 text-left"
+                            >
+                              {option.description}
+                            </p>
+                          )}
+                      </div>
+                    </label>
+                  </div>
+                ))}
+            </RadioGroup>
         </div>
     )
 }

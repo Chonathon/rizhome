@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/Slider"
+import { Slider } from "@/components/ui/slider"
 
 
 export default function DisplayPanel() {

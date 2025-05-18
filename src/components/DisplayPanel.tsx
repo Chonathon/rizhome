@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
+import { Badge } from "./ui/badge"
 
 
 export default function DisplayPanel() {
@@ -12,19 +13,13 @@ export default function DisplayPanel() {
     const [showUnfollowedArtists, setShowUnfollowedArtists] = useState(false)
 
     return (
-      <div className="flex flex-col gap-4 p-4 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+      <div className="flex flex-col gap-4 p-2 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
         {/* Node Size */}
         <div className="flex items-center justify-start gap-6">
           <label htmlFor="node-size" className="w-full text-left
   text-md font-medium ">Node Size</label>
           <div className="w-full flex items-center gap-2">
-            <input
-              id="node-size"
-              type="number"
-              value={nodeSize}
-              onChange={e => setNodeSize(Number(e.target.value))}
-              className="w-12 p-1 border rounded"
-            />
+            <Badge variant="outline" className="w-12 p-1 text-center">{nodeSize}</Badge>      
             <Slider
               id="node-size-slider"
               aria-labelledby="node-size"
@@ -41,13 +36,8 @@ export default function DisplayPanel() {
         <div className="flex items-center justify-start gap-6">
           <label htmlFor="edge-thickness" className="w-full text-left text-md font-medium">Edge thickness</label>
           <div className="w-full flex items-center gap-2">
-            <input
-              id="edge-thickness"
-              type="number"
-              value={edgeThickness}
-              onChange={e => setEdgeThickness(Number(e.target.value))}
-              className="w-12 p-1 border rounded"
-            />
+          <Badge variant="outline" className="w-12 p-1 text-center">{edgeThickness}</Badge>      
+
             <Slider
               id="edge-thickness-slider"
               aria-labelledby="edge-thickness"
@@ -64,13 +54,8 @@ export default function DisplayPanel() {
         <div className="flex items-center justify-start gap-6">
           <label htmlFor="text-fade-threshold" className="w-full text-left text-md font-medium">Text Fade Threshold</label>
           <div className="w-full flex items-center gap-2">
-            <input
-              id="text-fade-threshold"
-              type="number"
-              value={textFadeThreshold}
-              onChange={e => setTextFadeThreshold(Number(e.target.value))}
-              className="w-12 p-1 border rounded"
-            />
+          <Badge variant="outline" className="w-12 p-1 text-center">{textFadeThreshold}</Badge>      
+
             <Slider
               id="text-fade-threshold-slider"
               aria-labelledby="text-fade-threshold"
@@ -83,7 +68,7 @@ export default function DisplayPanel() {
             />
           </div>
         </div>
-        <fieldset className="flex flex-col gap-2">
+        <fieldset className="flex flex-col gap-4">
           <legend className="sr-only">Display options</legend>
           <div className="flex items-center justify-between">
             <label htmlFor="show-labels" className="w-full text-left text-md font-medium">Show labels</label>

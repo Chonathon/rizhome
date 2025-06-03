@@ -20,10 +20,10 @@ function App() {
             <BreadcrumbLink href="#">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Graph</BreadcrumbLink>
+            <BreadcrumbLink href="#">Doom Metal</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbPage>Controls</BreadcrumbPage>
+            <BreadcrumbPage>Boris</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

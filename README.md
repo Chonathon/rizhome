@@ -17,7 +17,7 @@ If you are developing a production application, we recommend using TypeScript wi
 - Motion
 - Lucid
 - ShadCN UI
-- react-router-dom
+- react-router
 
 ## Getting Started
 

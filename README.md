@@ -16,3 +16,17 @@ If you are developing a production application, we recommend using TypeScript wi
 - Tailwind
 - Motion
 - Lucid
+
+## Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the dev server:
+
+```bash
+npm run dev
+```

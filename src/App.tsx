@@ -8,6 +8,8 @@ import {  Breadcrumb,
           BreadcrumbPage,
           BreadcrumbSeparator,
           BreadcrumbEllipsis } from './components/ui/breadcrumb'
+import { Link } from 'react-router'
+import Home from './pages/Home'
 
 function App() {
 
@@ -17,7 +19,9 @@ function App() {
       <Breadcrumb className="fixed top-4 left-4 z-50 rounded-xl overflow-hidden">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/Home">Home</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <BreadcrumbLink href="#">Doom Metal</BreadcrumbLink>

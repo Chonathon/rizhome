@@ -57,13 +57,13 @@ function App() {
         </BreadcrumbList>
       </Breadcrumb>
       {/* Placeholder Genre / Artist Navigation Helpers */}
-      <button
+      {!selectedArtist && !selectedGenre && <button
         className="fixed top-80 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
         onClick={() => {
           setSelectedGenre("Doom Metal")
           setSelectedArtist(null)
         }}
-      >Doom Metal</button>
+      >Doom Metal</button>}
       {selectedGenre && <button
         className="fixed top-64 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
         onClick={() => {

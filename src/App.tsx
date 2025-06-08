@@ -12,8 +12,8 @@ import { Waypoints } from 'lucide-react'
 
 function App() {
   // App state for selected genre and artist
-  const [selectedGenre, setSelectedGenre] = useState<string | null>("Doom Metal")
-  const [selectedArtist, setSelectedArtist] = useState<string | null>("Boris")
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
+  const [selectedArtist, setSelectedArtist] = useState<string | null>(null)
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -24,7 +24,10 @@ function App() {
         <BreadcrumbList>
           {/* Home icon - always visible */}
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">{<Waypoints size={20} />}</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => {
+              setSelectedGenre(null)
+              setSelectedArtist(null)
+            }}>{<Waypoints size={20} />}</BreadcrumbLink>
           </BreadcrumbItem>
           {/* Show selected genre if available */}
           {selectedGenre && (
@@ -32,7 +35,10 @@ function App() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {selectedArtist ? (
-                  <BreadcrumbLink href="#">{selectedGenre}</BreadcrumbLink>
+                  <BreadcrumbLink onClick={() => {
+                    // setSelectedGenre(null)
+                    setSelectedArtist(null) 
+                  }}>{selectedGenre}</BreadcrumbLink>
                 ) : (
                   <BreadcrumbPage>{selectedGenre}</BreadcrumbPage>
                 )}
@@ -50,6 +56,21 @@ function App() {
           )}
         </BreadcrumbList>
       </Breadcrumb>
+      {/* Placeholder Genre / Artist Navigation Helpers */}
+      <button
+        className="fixed top-80 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+        onClick={() => {
+          setSelectedGenre("Doom Metal")
+          setSelectedArtist(null)
+        }}
+      >Doom Metal</button>
+      {selectedGenre && <button
+        className="fixed top-64 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+        onClick={() => {
+          setSelectedGenre("Doom Metal")
+          setSelectedArtist("Boris")
+        }}
+      >Boris</button>}
     </div>
   )
 }

@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-gray-100">
-      {/* UI component for interacting with the graph (e.g., selecting genre/artist) */}
+      {/* UI component for interacting with the graph*/}
       <GraphControls />
       {/* Breadcrumb navigation updates dynamically based on selected genre and artist */}
       <Breadcrumb className="fixed top-4 left-4 z-50 p-2 rounded-xl overflow-hidden">
@@ -35,9 +35,10 @@ function App() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {selectedArtist ? (
+                  // Clickable link that sets selectedArtist to null
                   <BreadcrumbLink onClick={() => {
-                    // setSelectedGenre(null)
                     setSelectedArtist(null) 
+                    // TODO: Add logic to reset graph view to genre level
                   }}>{selectedGenre}</BreadcrumbLink>
                 ) : (
                   <BreadcrumbPage>{selectedGenre}</BreadcrumbPage>

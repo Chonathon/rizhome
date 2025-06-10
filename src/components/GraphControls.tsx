@@ -11,9 +11,9 @@ export function GraphControls() {
   const [activePanel, setActivePanel] = useState<PanelType>();
 
   const tabs: { id: PanelType; icon: React.ReactNode; label: string }[] = [
-    { id: "clustering", icon: <Spline size={16} />, label: "Clustering" },
-    { id: "display", icon: <Settings2 size={16} />, label: "Display" },
-    { id: "genres", icon: <Tag size={16} />, label: "Genres" },
+    { id: "clustering", icon: <Spline size={20} />, label: "Clustering" },
+    { id: "display", icon: <Settings2 size={20} />, label: "Display" },
+    { id: "genres", icon: <Tag size={20} />, label: "Genres" },
   ];
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export function GraphControls() {
  justify-end gap-1">
     {activePanel ? 
         <button className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100">
-            <RotateCcw size={16}/>
+            <RotateCcw size={20}/>
             {/* onClick should reset graph controls to defaults */}
         </button> : ""}
             

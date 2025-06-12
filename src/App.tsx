@@ -61,7 +61,6 @@ function App() {
       {/* Placeholder Genre / Artist Navigation Helpers */}
       {!selectedArtist && !selectedGenre && 
       <Button
-        variant="secondary"
         className="fixed top-80 px-4 py-2"
         onClick={() => {
           setSelectedGenre("Doom Metal")
@@ -70,7 +69,6 @@ function App() {
       >Doom Metal</Button>}
       {selectedGenre && 
       <Button
-        variant="secondary"
         className="fixed top-64 px-4 py-2"
         onClick={() => {
           setSelectedGenre("Doom Metal")

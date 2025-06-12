@@ -47,7 +47,7 @@ export function GraphControls() {
    {/* TODO: onClick should reset graph controls to defaults */}
     {activePanel ? 
         <Button
-        variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-8">
+        variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-10">
      <motion.div
        key="rotate-icon"
        whileTap={{ rotate: -45 }}
@@ -58,10 +58,11 @@ export function GraphControls() {
         </Button> : ""}
             
         {tabs.map((tab) => (
-          <button
+          <Button
             key={tab.id}
             onClick={() => setActivePanel(tab.id)}
-            className={`flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100 ${
+            variant="ghost"
+            className={`flex items-center gap-1 px-2 py-1 ${
               activePanel === tab.id
                 ? "bg-gray-100 text-gray-700 font-medium"
                 : ""
@@ -69,7 +70,7 @@ export function GraphControls() {
           >
             {tab.icon}
             {activePanel === tab.id && <span className="text-sm">{tab.label}</span>}
-          </button>
+          </Button>
         ))}
       </div>
       <div>

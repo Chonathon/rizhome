@@ -9,6 +9,7 @@ import {  Breadcrumb,
           BreadcrumbSeparator,
           BreadcrumbEllipsis } from './components/ui/breadcrumb'
 import { Waypoints } from 'lucide-react'
+import { Button, buttonVariants } from "@/components/ui/button";
 
 function App() {
   // App state for selected genre and artist
@@ -58,20 +59,24 @@ function App() {
         </BreadcrumbList>
       </Breadcrumb>
       {/* Placeholder Genre / Artist Navigation Helpers */}
-      {!selectedArtist && !selectedGenre && <button
-        className="fixed top-80 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+      {!selectedArtist && !selectedGenre && 
+      <Button
+        variant="secondary"
+        className="fixed top-80 px-4 py-2"
         onClick={() => {
           setSelectedGenre("Doom Metal")
           setSelectedArtist(null)
         }}
-      >Doom Metal</button>}
-      {selectedGenre && <button
-        className="fixed top-64 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+      >Doom Metal</Button>}
+      {selectedGenre && 
+      <Button
+        variant="secondary"
+        className="fixed top-64 px-4 py-2"
         onClick={() => {
           setSelectedGenre("Doom Metal")
           setSelectedArtist("Boris")
         }}
-      >Boris</button>}
+      >Boris</Button>}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import ClusteringPanel from "./ClusteringPanel";
 import DisplayPanel from "./DisplayPanel";
 import GenrePanel from "./GenrePanel";
 import { Spline, Settings2, Tag, RotateCcw } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 type PanelType = "clustering" | "display" | "genres";
 
@@ -45,7 +46,8 @@ export function GraphControls() {
  justify-end gap-1">
    {/* TODO: onClick should reset graph controls to defaults */}
     {activePanel ? 
-        <button className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100">
+        <Button
+        variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-8">
      <motion.div
        key="rotate-icon"
        whileTap={{ rotate: -45 }}
@@ -53,7 +55,7 @@ export function GraphControls() {
      >
        <RotateCcw size={20} />
      </motion.div>
-        </button> : ""}
+        </Button> : ""}
             
         {tabs.map((tab) => (
           <button

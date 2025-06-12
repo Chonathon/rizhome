@@ -38,7 +38,7 @@ export function GraphControls() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       className={`fixed top-4 right-4 z-50 w-sm flex flex-col gap-2 p-2 rounded-xl overflow-hidden   ${activePanel ? "bg-white border border-gray-200 shadow-md" : ""}`}
     >
       <div className="relative flex items-center
@@ -46,7 +46,7 @@ export function GraphControls() {
     {activePanel ? 
         <button className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100">
             <RotateCcw size={20}/>
-            {/* onClick should reset graph controls to defaults */}
+            {/* TODO: onClick should reset graph controls to defaults */}
         </button> : ""}
             
         {tabs.map((tab) => (

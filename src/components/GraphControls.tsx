@@ -43,10 +43,16 @@ export function GraphControls() {
     >
       <div className="relative flex items-center
  justify-end gap-1">
+   {/* TODO: onClick should reset graph controls to defaults */}
     {activePanel ? 
         <button className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center gap-1 px-2 py-1 rounded-md text-gray-500 transition-all hover:bg-gray-100">
-            <RotateCcw size={20}/>
-            {/* TODO: onClick should reset graph controls to defaults */}
+     <motion.div
+       key="rotate-icon"
+       whileTap={{ rotate: -45 }}
+       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+     >
+       <RotateCcw size={20} />
+     </motion.div>
         </button> : ""}
             
         {tabs.map((tab) => (

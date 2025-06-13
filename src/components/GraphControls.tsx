@@ -31,7 +31,17 @@ export function GraphControls() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  // State to control rotation animation
+  const [isRotating, setIsRotating] = useState(false);
 
+  const handleResetClick = () => {
+    // TODO: Reset logic for graph controls can be implemented here
+    setIsRotating(true);
+    setTimeout(() => {
+      setIsRotating(false);
+    }
+    , 200); // Match the duration of the rotation animation
+  }
   return (
     <motion.div
       key="graph-controls"
@@ -44,14 +54,13 @@ export function GraphControls() {
     >
       <div className="relative flex items-center
  justify-end gap-1">
-   {/* TODO: onClick should reset graph controls to defaults */}
     {activePanel ? 
         <Button
+        onClick={handleResetClick}
         variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-10">
      <motion.div
-       key="rotate-icon"
-       whileTap={{ rotate: -45 }}
-       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+       animate={ isRotating ?{rotate: -45 } : "rotate"}
+       transition={{ type: "spring", stiffness: 300, damping: 12 }}
      >
        <RotateCcw size={20} />
      </motion.div>
@@ -69,7 +78,12 @@ export function GraphControls() {
             }`}
           >
             {tab.icon}
-            {activePanel === tab.id && <span className="text-sm">{tab.label}</span>}
+            {activePanel === tab.id && 
+            <motion.span 
+            className="text-sm">
+            
+              {tab.label}
+            </motion.span>}
           </Button>
         ))}
       </div>

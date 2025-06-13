@@ -31,12 +31,22 @@ export function GraphControls() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  // State to control rotation animation
+  const [isRotating, setIsRotating] = useState(false);
+
+  const handleResetClick = () => {
+    // TODO: Reset logic for graph controls can be implemented here
+    setIsRotating(true);
+    setTimeout(() => {
+      setIsRotating(false);
+    }, 200);
+  };
 
   return (
     <motion.div
       key="graph-controls"
       ref={containerRef}
-      initial={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y:0 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
@@ -44,14 +54,13 @@ export function GraphControls() {
     >
       <div className="relative flex items-center
  justify-end gap-1">
-   {/* TODO: onClick should reset graph controls to defaults */}
     {activePanel ? 
         <Button
+        onClick={handleResetClick}
         variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-10">
      <motion.div
-       key="rotate-icon"
-       whileTap={{ rotate: -45 }}
-       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+       animate={ isRotating ?{rotate: -45 } : "rotate"}
+       transition={{ type: "spring", stiffness: 300, damping: 12 }}
      >
        <RotateCcw size={20} />
      </motion.div>
@@ -62,14 +71,24 @@ export function GraphControls() {
             key={tab.id}
             onClick={() => setActivePanel(tab.id)}
             variant="ghost"
-            className={`flex items-center gap-1 px-2 py-1 ${
+            className={` ${
               activePanel === tab.id
                 ? "bg-gray-100 text-gray-700 font-medium"
                 : ""
             }`}
           >
             {tab.icon}
-            {activePanel === tab.id && <span className="text-sm">{tab.label}</span>}
+            {activePanel === tab.id && 
+            <motion.span 
+            className="text-sm w-full overflow-hidden rounded-sm"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+            
+              {tab.label}
+            </motion.span>}
           </Button>
         ))}
       </div>

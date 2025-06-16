@@ -30,4 +30,9 @@ export interface ArtistJSON {
     genre: string;
 }
 
+export interface BasicNode {
+    id: string;
+    name: string;
+}
+
 export type ArtistLink = [string, string];

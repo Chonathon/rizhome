@@ -9,27 +9,38 @@ import {  Breadcrumb,
           BreadcrumbSeparator,
           BreadcrumbEllipsis } from './components/ui/breadcrumb'
 import { Waypoints } from 'lucide-react'
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button"
+import useArtists from "@/hooks/useArtists";
+import useGenres from "@/hooks/useGenres";
+import ArtistsForceGraph from "@/components/ArtistsForceGraph";
+import GenresForceGraph from "@/components/GenresForceGraph";
+import {BasicNode} from "@/types";
 
 function App() {
   // App state for selected genre and artist
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
-  const [selectedArtist, setSelectedArtist] = useState<string | null>(null)
+  const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
+  const [selectedArtist, setSelectedArtist] = useState<BasicNode | undefined>(undefined);
+  const { genres, genresLoading, genresError } = useGenres();
+  const { artists, artistLinks, artistsLoading, artistsError } = useArtists(selectedGenre);
+
 
   return (
     <div className="relative min-h-screen bg-gray-100">
       {/* UI component for interacting with the graph*/}
       <GraphControls />
+
       {/* Breadcrumb navigation updates dynamically based on selected genre and artist */}
       <Breadcrumb className="fixed top-4 left-4 z-50 p-2 rounded-xl overflow-hidden">
         <BreadcrumbList>
+
           {/* Home icon - always visible */}
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => {
-              setSelectedGenre(null)
-              setSelectedArtist(null)
+              setSelectedGenre(undefined)
+              setSelectedArtist(undefined)
             }}>{<Waypoints size={20} />}</BreadcrumbLink>
           </BreadcrumbItem>
+
           {/* Show selected genre if available */}
           {selectedGenre && (
             <>
@@ -38,7 +49,7 @@ function App() {
                 {selectedArtist ? (
                   // Clickable link that sets selectedArtist to null
                   <BreadcrumbLink onClick={() => {
-                    setSelectedArtist(null) 
+                    setSelectedArtist(undefined)
                     // TODO: Add logic to reset graph view to genre level
                   }}>{selectedGenre}</BreadcrumbLink>
                 ) : (
@@ -47,34 +58,28 @@ function App() {
               </BreadcrumbItem>
             </>
           )}
+
           {/* Show selected artist if available */}
           {selectedGenre && selectedArtist && (
             <>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{selectedArtist}</BreadcrumbPage>
+                <BreadcrumbPage>{selectedArtist.name}</BreadcrumbPage>
               </BreadcrumbItem>
             </>
           )}
         </BreadcrumbList>
       </Breadcrumb>
-      {/* Placeholder Genre / Artist Navigation Helpers */}
-      {!selectedArtist && !selectedGenre && 
-      <Button
-        className="fixed top-80 px-4 py-2"
-        onClick={() => {
-          setSelectedGenre("Doom Metal")
-          setSelectedArtist(null)
-        }}
-      >Doom Metal</Button>}
-      {selectedGenre && 
-      <Button
-        className="fixed top-64 px-4 py-2"
-        onClick={() => {
-          setSelectedGenre("Doom Metal")
-          setSelectedArtist("Boris")
-        }}
-      >Boris</Button>}
+
+      {/* Genres Graph */}
+        {!selectedArtist && !selectedGenre && (
+            <GenresForceGraph genres={genres} onNodeClick={setSelectedGenre} />
+        )}
+
+      {/* Artists Graph */}
+        {selectedGenre && (
+            <ArtistsForceGraph artists={artists} artistLinks={artistLinks} onNodeClick={setSelectedArtist} />
+        )}
     </div>
   )
 }

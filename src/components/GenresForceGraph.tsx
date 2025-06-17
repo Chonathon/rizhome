@@ -43,13 +43,13 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
                 const radius = 8;
                 const labelOffset = 10;
 
-                // 1. Draw node circle
+                // Draw node circle
                 ctx.beginPath();    
                 ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
                 ctx.fillStyle = node.color || 'blue';
                 ctx.fill();
 
-                // 2. Draw label below node
+                // Draw label below node
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillStyle = 'blue';

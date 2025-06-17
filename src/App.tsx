@@ -16,7 +16,7 @@ function App() {
   const [selectedArtist, setSelectedArtist] = useState<BasicNode | undefined>(undefined);
   const { genres, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useArtists(selectedGenre);
-
+ 
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -39,7 +39,8 @@ function App() {
 
       {/* Artists Graph */}
         {selectedGenre && (
-            <ArtistsForceGraph artists={artists} artistLinks={artistLinks} onNodeClick={setSelectedArtist} />
+            <ArtistsForceGraph artists={artists} artistLinks={artistLinks} loading={artistsLoading}
+ onNodeClick={setSelectedArtist} />
         )}
     </div>
   )

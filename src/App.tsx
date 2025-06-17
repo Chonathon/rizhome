@@ -34,7 +34,7 @@ function App() {
 
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
-            <GenresForceGraph genres={genres} onNodeClick={setSelectedGenre} />
+            <GenresForceGraph genres={genres} onNodeClick={setSelectedGenre} loading={genresLoading}/>
         )}
 
       {/* Artists Graph */}

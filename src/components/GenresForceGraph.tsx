@@ -1,14 +1,16 @@
 import {Genre} from "@/types";
 import React, {useEffect, useState} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
+import {Loading} from "./Loading";
 
 // Needs more props like the view/filtering controls
 interface GenresForceGraphProps {
     genres: Genre[];
     onNodeClick: (genreName: string) => void;
+    loading: boolean;
 }
 
-const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick }) => {
+const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick, loading }) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
 
     useEffect(() => {
@@ -22,7 +24,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
         }
     }, [genres]);
 
-    return !genres ? <p>Genres not loaded!</p> : (
+    return loading ? <Loading /> : (
         <ForceGraph
             graphData={graphData}
             linkVisibility={true}

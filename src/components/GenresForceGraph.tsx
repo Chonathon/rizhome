@@ -1,14 +1,16 @@
 import {Genre} from "@/types";
 import React, {useEffect, useState} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
+import {Loading} from "./Loading";
 
 // Needs more props like the view/filtering controls
 interface GenresForceGraphProps {
     genres: Genre[];
     onNodeClick: (genreName: string) => void;
+    loading: boolean;
 }
 
-const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick }) => {
+const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick, loading }) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
 
     useEffect(() => {
@@ -22,7 +24,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
         }
     }, [genres]);
 
-    return !genres ? <p>Genres not loaded!</p> : (
+    return loading ? <Loading /> : (
         <ForceGraph
             graphData={graphData}
             linkVisibility={true}
@@ -43,13 +45,13 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
                 const radius = 8;
                 const labelOffset = 10;
 
-                // 1. Draw node circle
+                // Draw node circle
                 ctx.beginPath();    
                 ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
                 ctx.fillStyle = node.color || 'blue';
                 ctx.fill();
 
-                // 2. Draw label below node
+                // Draw label below node
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillStyle = 'blue';

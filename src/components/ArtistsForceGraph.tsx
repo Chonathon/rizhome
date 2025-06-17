@@ -1,15 +1,17 @@
 import {Artist, ArtistLink, BasicNode} from "@/types";
 import React, {useEffect, useState} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
+import { Loading} from "./Loading";
 
 // Needs more props like the view/filtering controls
 interface ArtistsForceGraphProps {
     artists: Artist[];
     artistLinks: ArtistLink[];
     onNodeClick: (artist: BasicNode) => void;
+    loading: boolean;
 }
 
-const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLinks, onNodeClick}) => {
+const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLinks, onNodeClick, loading}) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
     useEffect(() => {
         if (artists && artistLinks) {
@@ -27,8 +29,10 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
 
     }, [artists, artistLinks]);
 
-    return !artists ? <p>Artists not loaded!</p> :(
-        <ForceGraph
+    return loading ? (<div className="flex-1 h-[calc(100vh-104px)] w-full bg-gray-100">
+        <Loading />
+    </div>) : (
+        (<ForceGraph
             graphData={graphData}
             linkVisibility={true}
             linkColor='#666666'
@@ -56,7 +60,7 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
             //     const bckgDimensions = node.__bckgDimensions;
             //     bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
             // }}
-        />
+        />)
     )
 }
 

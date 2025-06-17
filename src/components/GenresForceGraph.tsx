@@ -28,6 +28,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
             linkVisibility={true}
             linkColor='#666666'
             linkCurvature={0.2}
+            nodeRelSize={24}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={(node, ctx, globalScale) => {
                 const label = node.name;

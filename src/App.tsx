@@ -1,7 +1,7 @@
 import './App.css'
 import { useState } from 'react'
 import { GraphControls } from './components/GraphControls'
-import { Waypoints } from 'lucide-react'
+import { Waypoints, Undo2 } from 'lucide-react'
 import { BreadcrumbHeader } from './components/BreadcrumbHeader'
 import { Button, buttonVariants } from "@/components/ui/button"
 import useArtists from "@/hooks/useArtists";
@@ -9,6 +9,8 @@ import useGenres from "@/hooks/useGenres";
 import ArtistsForceGraph from "@/components/ArtistsForceGraph";
 import GenresForceGraph from "@/components/GenresForceGraph";
 import {BasicNode} from "@/types";
+import { motion, AnimatePresence } from "framer-motion";
+import { ResetButton } from "@/components/ResetButton";
 
 function App() {
   // App state for selected genre and artist
@@ -38,10 +40,23 @@ function App() {
         )}
 
       {/* Artists Graph */}
-        {selectedGenre && (
-            <ArtistsForceGraph artists={artists} artistLinks={artistLinks} loading={artistsLoading}
- onNodeClick={setSelectedArtist} />
-        )}
+{selectedGenre && (
+  <AnimatePresence>
+    <ArtistsForceGraph
+      artists={artists}
+      artistLinks={artistLinks}
+      loading={artistsLoading}
+      onNodeClick={setSelectedArtist}
+    />
+    <ResetButton 
+      onClick={() => {
+            setSelectedGenre(undefined);
+            setSelectedArtist(undefined);
+          }}
+    />
+  </AnimatePresence>
+)}
+
     </div>
   )
 }

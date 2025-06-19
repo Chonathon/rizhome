@@ -11,12 +11,12 @@ interface BreadcrumbHeaderProps {
 }
 
 export function BreadcrumbHeader({
-                                     selectedGenre,
-                                     setSelectedGenre,
-                                     selectedArtist,
-                                     setSelectedArtist,
-                                     HomeIcon
-                                 }: BreadcrumbHeaderProps) {
+            selectedGenre,
+            setSelectedGenre,
+            selectedArtist,
+            setSelectedArtist,
+            HomeIcon
+        }: BreadcrumbHeaderProps) {
     return (
         <Breadcrumb className="fixed top-4 left-4 z-50 p-2 rounded-xl overflow-hidden">
             <BreadcrumbList>

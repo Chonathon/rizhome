@@ -1,5 +1,5 @@
 import {Genre} from "@/types";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 
@@ -8,10 +8,12 @@ interface GenresForceGraphProps {
     genres: Genre[];
     onNodeClick: (genreName: string) => void;
     loading: boolean;
+    setVisibleGenres: (genres: Genre[]) => void;
 }
 
-const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick, loading }) => {
+const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick, loading, setVisibleGenres }) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
+    const fgRef = useRef<any>(null);
 
     useEffect(() => {
         if (genres){
@@ -24,8 +26,38 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
         }
     }, [genres]);
 
+    useEffect(() => {
+        const updateVisibleGenres = () => {
+            if (!fgRef.current) return;
+
+            const fg = fgRef.current;
+            const allNodes = fg.graphData().nodes;
+            const { x: cx, y: cy, k: zoom } = fg.cameraPosition();
+            const halfWidth = window.innerWidth / 2 / zoom;
+            const halfHeight = window.innerHeight / 2 / zoom;
+
+            const visible = allNodes.filter((node: any) => {
+                const nx = node.x || 0;
+                const ny = node.y || 0;
+                return (
+                    nx > cx - halfWidth &&
+                    nx < cx + halfWidth &&
+                    ny > cy - halfHeight &&
+                    ny < cy + halfHeight
+                );
+            });
+
+            setVisibleGenres(visible.map(node => ({ id: node.id, name: node.name })));
+        };
+
+        updateVisibleGenres();
+        const fg = fgRef.current;
+        fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
+    }, [graphData, setVisibleGenres]);
+
     return loading ? <Loading /> : (
         <ForceGraph
+            ref={fgRef}
             graphData={graphData}
             linkVisibility={true}
             linkColor='#666666'

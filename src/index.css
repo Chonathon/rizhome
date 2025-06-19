@@ -47,6 +47,13 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -220,4 +227,5 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
 }

@@ -19,9 +19,14 @@ export function BreadcrumbHeader({
             HomeIcon
         }: BreadcrumbHeaderProps) {
     return (
-        <div className="fixed top-4 left-4 gap-1 z-50 p-2">
-            <div className="flex flex-col gap-2">
-                <Breadcrumb >
+        <div 
+        className="
+        fixed top-4 left-4 z-50
+        bg-white border border-gray-200 shadow-md rounded-xl
+        overflow-hidden
+        ">
+            <div className="flex flex-col">
+                <Breadcrumb className="p-2">
                     <BreadcrumbList>
                         {/* Home icon - always visible */}
                         <BreadcrumbItem>

@@ -1,6 +1,5 @@
 import {Genre} from "@/types";
 import React, {useEffect, useState, useRef} from "react";
-import React, {useEffect, useState, useRef} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 
@@ -27,34 +26,34 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
         }
     }, [genres]);
 
-    useEffect(() => {
-        const updateVisibleGenres = () => {
-            if (!fgRef.current) return;
+    // useEffect(() => {
+    //     const updateVisibleGenres = () => {
+    //         if (!fgRef.current) return;
 
-            const fg = fgRef.current;
-            const allNodes = fg.graphData().nodes;
-            const { x: cx, y: cy, k: zoom } = fg.cameraPosition();
-            const halfWidth = window.innerWidth / 2 / zoom;
-            const halfHeight = window.innerHeight / 2 / zoom;
+    //         const fg = fgRef.current;
+    //         const allNodes = fg.graphData().nodes;
+    //         const { x: cx, y: cy, k: zoom } = fg.cameraPosition();
+    //         const halfWidth = window.innerWidth / 2 / zoom;
+    //         const halfHeight = window.innerHeight / 2 / zoom;
 
-            const visible = allNodes.filter((node: any) => {
-                const nx = node.x || 0;
-                const ny = node.y || 0;
-                return (
-                    nx > cx - halfWidth &&
-                    nx < cx + halfWidth &&
-                    ny > cy - halfHeight &&
-                    ny < cy + halfHeight
-                );
-            });
+    //         const visible = allNodes.filter((node: any) => {
+    //             const nx = node.x || 0;
+    //             const ny = node.y || 0;
+    //             return (
+    //                 nx > cx - halfWidth &&
+    //                 nx < cx + halfWidth &&
+    //                 ny > cy - halfHeight &&
+    //                 ny < cy + halfHeight
+    //             );
+    //         });
 
-            setVisibleGenres(visible.map(node => ({ id: node.id, name: node.name })));
-        };
+    //         // setVisibleGenres(visible.map(node => ({ id: node.id, name: node.name })));
+    //     };
 
-        updateVisibleGenres();
-        const fg = fgRef.current;
-        fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
-    }, [graphData, setVisibleGenres]);
+    //     updateVisibleGenres();
+    //     const fg = fgRef.current;
+    //     fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
+    // }, [graphData, setVisibleGenres]);
 
     return loading ? <Loading /> : (
         
@@ -94,11 +93,16 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
 
                 node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
             }}
-            // nodePointerAreaPaint={(node, color, ctx) => {
-            //     ctx.fillStyle = color;
-            //     const bckgDimensions = node.__bckgDimensions;
-            //     bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-            // }}
+                  nodePointerAreaPaint={(node, color, ctx, globalScale) => {
+                ctx.fillStyle = color;
+                const [width = 0, height = 0] = node.__bckgDimensions || [0, 0];
+                const minSize = 24/globalScale; // minimum touch size in pixels
+                const w = Math.max(width, minSize);
+                const h = Math.max(height, minSize);
+                const x = (node.x || 0) - w / 2;
+                const y = (node.y || 0) - h / 2;
+                ctx.fillRect(x, y, w, h);
+                }}
         />
     )
 }

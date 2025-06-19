@@ -11,6 +11,7 @@ import GenresForceGraph from "@/components/GenresForceGraph";
 import {BasicNode} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
+import useGenreArtistsCount from "@/hooks/useGenreArtistsCount";
 
 function App() {
   // App state for selected genre and artist
@@ -18,7 +19,7 @@ function App() {
   const [selectedArtist, setSelectedArtist] = useState<BasicNode | undefined>(undefined);
   const { genres, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useArtists(selectedGenre);
- 
+  const { genreArtistsCounts, genreArtistCountLoading, genreArtistCountError } = useGenreArtistsCount();
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -36,7 +37,12 @@ function App() {
 
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
-            <GenresForceGraph genres={genres} onNodeClick={setSelectedGenre} loading={genresLoading}/>
+            <GenresForceGraph
+                genres={genres}
+                genreArtistCounts={genreArtistsCounts}
+                onNodeClick={setSelectedGenre}
+                loading={genresLoading}
+            />
         )}
 
       {/* Artists Graph */}

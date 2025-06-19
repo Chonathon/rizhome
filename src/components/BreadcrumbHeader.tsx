@@ -22,11 +22,19 @@ export function BreadcrumbHeader({
         <div 
         className="
         fixed top-4 left-4 z-50
-        bg-white border border-gray-200 shadow-md rounded-xl
-        overflow-hidden
+        
         ">
-            <div className="flex flex-col">
-                <Breadcrumb className="p-2">
+            <div 
+            className="
+            inline-flex flex-col gap-2 items-start
+            ">
+                <Breadcrumb 
+                className="
+                inline-flex items-center
+                px-2 py-3
+                bg-white border border-gray-200 shadow-md rounded-xl
+                transition-all
+                ">
                     <BreadcrumbList>
                         {/* Home icon - always visible */}
                         <BreadcrumbItem>

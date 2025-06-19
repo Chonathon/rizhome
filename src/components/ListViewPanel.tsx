@@ -71,8 +71,9 @@ export function ListViewPanel(){
     w-full 
     min-w-[420px]
     flex flex-col
-    h-[calc(100vh-80px)]
-    
+    h-[calc(100vh-96px)]
+    bg-white border border-gray-200 shadow-md rounded-xl
+    overflow-hidden
     ">
       {/* list controls */}
       <div 

@@ -18,6 +18,7 @@ function App() {
   const [selectedArtist, setSelectedArtist] = useState<BasicNode | undefined>(undefined);
   const { genres, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useArtists(selectedGenre);
+  const [visibleNodes, setVisibleNodes] = useState<BasicNode[]>([]);
  
 
   return (
@@ -36,7 +37,12 @@ function App() {
 
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
-            <GenresForceGraph genres={genres} onNodeClick={setSelectedGenre} loading={genresLoading}/>
+            <GenresForceGraph 
+              genres={genres} 
+              onNodeClick={setSelectedGenre} 
+              loading={genresLoading}
+              onVisibleNodesChange={setVisibleNodes}
+            />
         )}
 
       {/* Artists Graph */}

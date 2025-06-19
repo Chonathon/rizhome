@@ -1,5 +1,6 @@
 import {Genre} from "@/types";
 import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 
@@ -56,6 +57,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, onNodeClick
     }, [graphData, setVisibleGenres]);
 
     return loading ? <Loading /> : (
+        
         <ForceGraph
             ref={fgRef}
             graphData={graphData}

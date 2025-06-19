@@ -43,10 +43,7 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
                 const fontSize = 12/globalScale;
                 ctx.font = `${fontSize}px Sans-Serif`;
                 const textWidth = ctx.measureText(label).width;
-                const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-
-                // ctx.fillStyle = 'black';
-                // ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+                const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); 
 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -55,11 +52,16 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
 
                 node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
             }}
-            // nodePointerAreaPaint={(node, color, ctx) => {
-            //     ctx.fillStyle = color;
-            //     const bckgDimensions = node.__bckgDimensions;
-            //     bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-            // }}
+            nodePointerAreaPaint={(node, color, ctx, globalScale) => {
+                ctx.fillStyle = color;
+                const [width = 0, height = 0] = node.__bckgDimensions || [0, 0];
+                const minSize = 24/globalScale; // minimum touch size in pixels
+                const w = Math.max(width, minSize);
+                const h = Math.max(height, minSize);
+                const x = (node.x || 0) - w / 2;
+                const y = (node.y || 0) - h / 2;
+                ctx.fillRect(x, y, w, h);
+                }}
         />)
     )
 }

@@ -13,7 +13,6 @@ const useGenres = () => {
         setGenresLoading(true);
         try {
             const response = await axios.get(url);
-            console.log(response.data.genres);
             setGenres(response.data.genres);
         } catch (err) {
             if (err instanceof AxiosError) {

@@ -1,5 +1,5 @@
 import {Genre, GenreArtistCountMap} from "@/types";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 

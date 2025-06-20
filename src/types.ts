@@ -36,3 +36,7 @@ export interface BasicNode {
 }
 
 export type ArtistLink = [string, string];
+
+export interface GenreArtistCountMap {
+    [k: string]: number;
+}

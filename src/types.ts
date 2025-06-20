@@ -1,11 +1,13 @@
 export interface Genre {
     id: string;
     name: string;
+    artistCount: number;
 }
 
 export interface GenresJSON {
     count: number;
     genres: Genre[];
+    links: NodeLink[];
     date: string;
 }
 
@@ -25,7 +27,7 @@ export interface Artist {
 export interface ArtistJSON {
     count: number;
     artists: Artist[];
-    links: ArtistLink[];
+    links: NodeLink[];
     date: string;
     genre: string;
 }
@@ -35,8 +37,7 @@ export interface BasicNode {
     name: string;
 }
 
-export type ArtistLink = [string, string];
-
-export interface GenreArtistCountMap {
-    [k: string]: number;
+export interface NodeLink {
+    source: string;
+    target: string;
 }

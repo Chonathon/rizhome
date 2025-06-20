@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
-import {Genre} from "@/types";
+import {Genre, NodeLink} from "@/types";
 import axios, {AxiosError} from "axios";
 
 const url = 'http://localhost:3000/genres';
 
 const useGenres = () => {
     const [genres, setGenres] = useState<Genre[]>([]);
+    const [genreLinks, setGenreLinks] = useState<NodeLink[]>([]);
     const [genresLoading, setGenresLoading] = useState(true);
     const [genresError, setGenresError] = useState<AxiosError>();
 
@@ -14,6 +15,7 @@ const useGenres = () => {
         try {
             const response = await axios.get(url);
             setGenres(response.data.genres);
+            setGenreLinks(response.data.links);
         } catch (err) {
             if (err instanceof AxiosError) {
                 setGenresError(err);
@@ -26,7 +28,7 @@ const useGenres = () => {
         fetchGenres();
     }, []);
 
-    return { genres, genresLoading, genresError };
+    return { genres, genreLinks, genresLoading, genresError };
 }
 
 export default useGenres;

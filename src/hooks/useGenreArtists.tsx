@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
-import {Artist, ArtistLink} from "@/types";
+import {Artist, NodeLink} from "@/types";
 import axios, {AxiosError} from "axios";
 
 const url = 'http://localhost:3000/artists/';
 
-const useArtists = (genre?: string) => {
+const useGenreArtists = (genre?: string) => {
     const [artists, setArtists] = useState<Artist[]>([]);
-    const [artistLinks, setArtistLinks] = useState<ArtistLink[]>([]);
+    const [artistLinks, setArtistLinks] = useState<NodeLink[]>([]);
     const [artistsLoading, setArtistsLoading] = useState(true);
     const [artistsError, setArtistsError] = useState<AxiosError>();
 
@@ -33,4 +33,4 @@ const useArtists = (genre?: string) => {
     return { artists, artistsLoading, artistsError, artistLinks };
 }
 
-export default useArtists;
+export default useGenreArtists;

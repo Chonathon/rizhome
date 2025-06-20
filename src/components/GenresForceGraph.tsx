@@ -1,73 +1,27 @@
-import {Genre, GenreArtistCountMap} from "@/types";
-import React, {useEffect, useState, useRef} from "react";
+import {Genre, NodeLink} from "@/types";
+import React, {useEffect, useState} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 
 // Needs more props like the view/filtering controls
 interface GenresForceGraphProps {
     genres: Genre[];
-    genreArtistCounts: GenreArtistCountMap;
+    links: NodeLink[];
     onNodeClick: (genreName: string) => void;
     loading: boolean;
     setVisibleGenres: (genres: Genre[]) => void;
 }
 
-const FILTER_THRESHOLD = 0; // Filters out genres with this amount of artists
 const GENRE_MAX_SIZE = 34000; // Approx. size of the largest genre (rock)
 const TRANSPARENCY = 0.666;
 
-const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, genreArtistCounts, onNodeClick, loading }) => {
+const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading }) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
     const fgRef = useRef<any>(null);
 
     useEffect(() => {
-        if (genres && genreArtistCounts){
-
-            // TODO: should prob do this on the server
-            // This filters out empty genres and links ones that contain the whole name of another genre
-            const nodes: {id: string, name: string, artistCount: number}[] = [];
-            const links: {source: string, target: string}[] = [];
-            const linkKeys = new Set(); // for deduplication
-
-            const genreNames = new Map(); // lowercased genre name → genre ID
-
-            genres
-                .filter(g => genreArtistCounts[g.id] > FILTER_THRESHOLD)
-                .forEach(genre => {
-                    const lowerName = genre.name.toLowerCase();
-                    genreNames.set(lowerName, genre.id);
-                });
-
-            genres
-                .filter(g => genreArtistCounts[g.id] > FILTER_THRESHOLD)
-                .forEach(genre => {
-                    const { id, name } = genre;
-                    const lowerName = name.toLowerCase();
-
-                    nodes.push({ id, name, artistCount: genreArtistCounts[id] });
-
-                    for (const [otherName, otherId] of genreNames.entries()) {
-                        if (otherName === lowerName) continue;
-
-                        // Check if `otherName` exists as a standalone phrase in `lowerName`
-                        const regex = new RegExp(`(^|[\\s&-])${escapeRegex(otherName)}($|[\\s&-])`, 'i');
-                        if (regex.test(lowerName)) {
-                            const [a, b] = [id, otherId].sort(); // undirected
-                            const key = `${a}:${b}`;
-                            if (!linkKeys.has(key)) {
-                                linkKeys.add(key);
-                                links.push({ source: a, target: b });
-                            }
-                        }
-                    }
-                });
-
-            // Helper to escape special regex chars
-            function escapeRegex(s: string) {
-                return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            }
-
-            setGraphData({ nodes, links });
+        if (genres && links){
+            setGraphData({ nodes: genres, links })
         }
     }, [genres]);
 

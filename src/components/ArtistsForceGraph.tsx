@@ -1,12 +1,12 @@
-import {Artist, ArtistLink, BasicNode} from "@/types";
+import {Artist, BasicNode, NodeLink} from "@/types";
 import React, {useEffect, useState} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
-import { Loading} from "./Loading";
+import { Loading } from "./Loading";
 
 // Needs more props like the view/filtering controls
 interface ArtistsForceGraphProps {
     artists: Artist[];
-    artistLinks: ArtistLink[];
+    artistLinks: NodeLink[];
     onNodeClick: (artist: BasicNode) => void;
     loading: boolean;
 }
@@ -20,14 +20,12 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
                     nodes: artists.map(artist => {
                         return {id: artist.id, name: artist.name}
                     }),
-                    links: artistLinks.map(link => {
-                        return {source: link[0], target: link[1]}
-                    }),
+                    links: artistLinks
                 }
             );
         }
 
-    }, [artists, artistLinks]);
+    }, [artists]);
 
     return loading ? (<div className="flex-1 h-[calc(100vh-104px)] w-full bg-gray-100">
         <Loading />

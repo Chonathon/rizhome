@@ -41,3 +41,30 @@ export interface NodeLink {
     source: string;
     target: string;
 }
+
+export interface LastFMArtistJSON {
+    name: string;
+    mbid: string;
+    image: LastFMImage[];
+    ontour: boolean;
+    stats: LastFMStats;
+    bio: LastFMBio;
+    similar: string[];
+    date: string;
+}
+
+export interface LastFMImage {
+    link: string;
+    size: string;
+}
+
+export interface LastFMStats {
+    listeners: number;
+    playcount: number;
+}
+
+export interface LastFMBio {
+    link: string;
+    summary: string;
+    content: string;
+}

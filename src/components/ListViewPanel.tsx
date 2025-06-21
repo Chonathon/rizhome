@@ -1,10 +1,11 @@
 import React from 'react';
 import { BasicNode } from '@/types';
+import {Genre, NodeLink} from "@/types";
 import { Button } from '@/components/ui/button';
 import { ArrowUpNarrowWide } from "lucide-react"
 
 interface ListViewPanelProps {
-  // nodes: BasicNode[];
+  genres: Genre[];
 }
 
 
@@ -60,11 +61,17 @@ const dummyVisibleNodes = [
   { id: '49', name: 'New Jack Swing', origin: 'USA', year: 1987, emoji: '🕺', artistCount: 71 },
   { id: '50', name: 'Neo-Classical', origin: 'Europe', year: 2000, emoji: '🎻', artistCount: 58 },
 ];
-
+// placeholder for genre count
 const genreCount = "20,341"; // Example count
 
+// placeholder for emoji
+const emojiPool = ["🎸", "🎧", "🎷", "🥁", "🎤", "🎹", "🎻", "🪕", "📻", "🎶", "💿", "🕺", "👟", "💥", "☁️", "🌀"];
+function getRandomEmoji() {
+  return emojiPool[Math.floor(Math.random() * emojiPool.length)];
+}
 
-export function ListViewPanel(){
+export function ListViewPanel({ genres,
+}: ListViewPanelProps) {
   return (
 
     <div className="
@@ -94,6 +101,7 @@ export function ListViewPanel(){
           </Button>
       </div>
         {/* List */}
+
         <ul
           className="
           flex
@@ -103,32 +111,33 @@ export function ListViewPanel(){
           overflow-y-auto
           no-scrollbar
           ">
-          {dummyVisibleNodes.map((node) => (
-            // List item
-            <button>
-              <li key={node.id}
+          {genres.map((genre) => (
+            <li
+              key={genre.id}
               className="
               hover:bg-gray-100
               rounded-md
-              
-              ">
-                {/* List item contents */}
-                  <div
+              "
+            >
+              {/* List item contents */}
+              <button 
+              className="w-full text-left">
+                <div
                   className='
                   flex
                   items-start
                   py-1 px-3
                   gap-2
-                  '>
-              
-                    <span className="text-xl">{node.emoji}</span>
-                    <div className='flex flex-col items-start'>
-                      <span className="text-md font-medium">{node.name}</span>
-                      <div className="text-sm text-gray-600">{node.origin} - {node.year} - {node.artistCount}</div>
-                    </div>
+                  '
+                >
+                  <span className="text-xl">{getRandomEmoji()}</span>
+                  <div className='flex flex-col items-start'>
+                    <span className="text-md font-medium">{genre.name}</span>
+                    <div className="text-sm text-gray-600">{genre.artistCount} · {genre.artistCount} · {genre.artistCount}</div>
                   </div>
-              </li>
-            </button>
+                </div>
+              </button>
+            </li>
           ))}
         </ul>
         

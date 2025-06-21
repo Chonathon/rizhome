@@ -9,7 +9,6 @@ interface GenresForceGraphProps {
     links: NodeLink[];
     onNodeClick: (genreName: string) => void;
     loading: boolean;
-    setVisibleGenres: (genres: Genre[]) => void;
 }
 
 const GENRE_MAX_SIZE = 34000; // Approx. size of the largest genre (rock)

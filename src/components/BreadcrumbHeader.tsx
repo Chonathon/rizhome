@@ -3,6 +3,7 @@ import { LucideIcon, ChevronDown } from 'lucide-react'
 import { BasicNode } from '@/types'
 import { ListViewPanel } from "@/components/ListViewPanel"
 import { Button } from "@/components/ui/button"
+import useGenres from "@/hooks/useGenres";
 
 interface BreadcrumbHeaderProps {
     selectedGenre: string | undefined
@@ -13,12 +14,13 @@ interface BreadcrumbHeaderProps {
 }
 
 export function BreadcrumbHeader({
-            selectedGenre,
-            setSelectedGenre,
-            selectedArtist,
-            setSelectedArtist,
-            HomeIcon
-        }: BreadcrumbHeaderProps) {
+    selectedGenre,
+    setSelectedGenre,
+    selectedArtist,
+    setSelectedArtist,
+    HomeIcon
+}: BreadcrumbHeaderProps) {
+    const { genres, genreLinks, genresLoading, genresError } = useGenres();
     return (
         <div 
         className="
@@ -87,7 +89,10 @@ export function BreadcrumbHeader({
                         <ChevronDown />
                     </Button>
                 </div>
-                <ListViewPanel />
+                {!genresLoading && !genresError && 
+                (<ListViewPanel 
+                genres={genres}
+                />)}
             </div>
         </div>
     )

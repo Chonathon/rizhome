@@ -3,6 +3,7 @@ import { BasicNode } from '@/types';
 import {Genre, NodeLink} from "@/types";
 import { Button } from '@/components/ui/button';
 import { ArrowUpNarrowWide } from "lucide-react"
+import { useState } from 'react';
 
 interface ListViewPanelProps {
   genres: Genre[];
@@ -202,6 +203,7 @@ export function ListViewPanel({
   selectedArtist
 }: ListViewPanelProps) {
   console.log("Example artist data:", dummyLastFMArtistData[0]);
+  
 
   return (
 

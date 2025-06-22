@@ -1,9 +1,9 @@
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb'
-import { LucideIcon, ChevronDown } from 'lucide-react'
+import { LucideIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { BasicNode } from '@/types'
-import { ListViewPanel } from "@/components/ListViewPanel"
 import { Button } from "@/components/ui/button"
 import useGenres from "@/hooks/useGenres";
+import { useState } from 'react'
 
 interface BreadcrumbHeaderProps {
     selectedGenre: string | undefined
@@ -11,6 +11,8 @@ interface BreadcrumbHeaderProps {
     selectedArtist: BasicNode | undefined
     setSelectedArtist: (artist: BasicNode | undefined) => void
     HomeIcon: LucideIcon
+    toggleListView: () => void
+    showListView: boolean
 }
 
 export function BreadcrumbHeader({
@@ -18,17 +20,14 @@ export function BreadcrumbHeader({
     setSelectedGenre,
     selectedArtist,
     setSelectedArtist,
-    HomeIcon
+    HomeIcon,
+    toggleListView,
+    showListView
 }: BreadcrumbHeaderProps) {
     const { genres, genreLinks, genresLoading, genresError } = useGenres();
     return (
-        <div 
-        className="
-        fixed top-4 left-4 z-50">
-            <div 
-            className="
-            inline-flex flex-col gap-2 items-start
-            ">
+        <div>
+
                 <div
                 className='
                     inline-flex items-center gap-2
@@ -84,19 +83,11 @@ export function BreadcrumbHeader({
                     <Button
                     variant="secondary"
                     size="sm"
-                    >
+                    onClick={toggleListView}>
                         
-                        <ChevronDown />
+                        {showListView ? <ChevronDown /> : <ChevronUp />}
                     </Button>
                 </div>
-                {!genresLoading && !genresError && 
-                (<ListViewPanel 
-                genres={genres}
-                selectedGenre={selectedGenre}
-                selectedArtist={selectedArtist}
-
-                />)}
-            </div>
         </div>
     )
 }

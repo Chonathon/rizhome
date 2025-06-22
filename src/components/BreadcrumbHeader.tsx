@@ -83,6 +83,7 @@ export function BreadcrumbHeader({
                     <Button
                     variant="secondary"
                     size="sm"
+                    className='rounded-full'
                     onClick={toggleListView}>
                         
                         {showListView ? <ChevronDown /> : <ChevronUp />}

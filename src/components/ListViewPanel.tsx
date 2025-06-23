@@ -310,9 +310,7 @@ export function ListViewPanel({
                   ">
                     <div
                       className='
-                      flex
-                      flex-col
-                      items-start
+                      flex flex-col items-start gap-1
                       py-1 px-3
                       '
                     >
@@ -323,18 +321,18 @@ export function ListViewPanel({
                             className="w-full h-full object-cover"
                           />
                         </div>
-                      <div className='flex flex-col items-start gap-1'>
+                      <div className='flex flex-col items-start'>
                         <div>
-                          <h2 className="text-md font-semibold">{artist.name}</h2>
-                          <h3 className="text-sm"> {formatNumber(artist.stats.listeners)} listeners
-                          </h3>
+                          <h2 className="text-md font-semibold m-0">{artist.name}</h2>
+                          {/* <h3 className="text-sm"> {formatNumber(artist.stats.listeners)} listeners
+                          </h3> */}
                         </div>
-                          {/* <div>
-                            <div className="text-sm text-foreground">
+                          <div>
+                            {/* <div className="text-sm text-foreground">
                               <span className='font-medium text-foreground'>Founded:</span> {formatDate(artist.date)}
-                            </div>
-                            <div className="text-sm text-foreground"><span className='font-medium text-foreground'>Similar artists:</span> {artist.similar[0]}, {artist.similar[1]}, {artist.similar[1]}</div>
-                          </div> */}
+                            </div> */}
+                            <div className="text-sm text-muted-foreground">Similar to <button>{artist.similar[0]}</button>, <button>{artist.similar[1]}</button>, <button>{artist.similar[2]}</button></div>
+                          </div>
                         </div>
                     </div>
                   </button>

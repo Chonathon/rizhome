@@ -191,7 +191,7 @@ const dummyLastFMArtistData = [
 // placeholder for genre count
 const genreCount = "20,341"; // Example count
 
-// placeholder for emoji
+// placeholder for ai-generated emojis
 const emojiPool = ["🎸", "🎧", "🎷", "🥁", "🎤", "🎹", "🎻", "🪕", "📻", "🎶", "💿", "🕺", "👟", "💥", "☁️", "🌀"];
 function getRandomEmoji() {
   return emojiPool[Math.floor(Math.random() * emojiPool.length)];
@@ -225,7 +225,7 @@ export function ListViewPanel({
       pr-2
       pt-3
       '>
-        <span className="text-muted-foreground text-sm font-normal">{genreCount} Genres</span>
+        <span className="text-muted-foreground text-sm font-normal">{formatNumber(genreLinksCount)} Genres</span>
         <Button
           variant="ghost"
           size="sm"
@@ -272,11 +272,11 @@ export function ListViewPanel({
                         <div className="
                         flex items-center gap-1
                         text-sm text-gray-600">
-                          <div className='flex items-center'>
+                          <div className='flex items-center gap-1'>
                             <UsersRound size={16}/>{genre.artistCount} 
                           </div>
                           · 
-                          <div className='flex items-center'>
+                          <div className='flex items-center gap-1'>
                             <Link size={16}/>{genreLinksCount} 
                           </div>
                           </div>

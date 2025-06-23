@@ -3,7 +3,6 @@ import { LucideIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { BasicNode } from '@/types'
 import { Button } from "@/components/ui/button"
 import useGenres from "@/hooks/useGenres";
-import { useState } from 'react'
 
 interface BreadcrumbHeaderProps {
     selectedGenre: string | undefined

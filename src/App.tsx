@@ -47,6 +47,7 @@ function App() {
                   genres={genres}
                   selectedGenre={selectedGenre}
                   selectedArtist={selectedArtist}
+                  genreLinksCount={genreLinks.length}
                   />)}
         </div>
 

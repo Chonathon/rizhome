@@ -2,13 +2,13 @@ import React from 'react';
 import { BasicNode } from '@/types';
 import {Genre, NodeLink} from "@/types";
 import { Button } from '@/components/ui/button';
-import { ArrowUpNarrowWide } from "lucide-react"
-import { useState } from 'react';
+import { ArrowUpNarrowWide, UsersRound, Link } from "lucide-react"
 
 interface ListViewPanelProps {
   genres: Genre[];
   selectedGenre: string | undefined
   selectedArtist: BasicNode | undefined 
+  genreLinksCount: number;
 }
 
 // Format number with commas
@@ -200,7 +200,8 @@ function getRandomEmoji() {
 export function ListViewPanel({ 
   genres,
   selectedGenre,
-  selectedArtist
+  selectedArtist,
+  genreLinksCount
 }: ListViewPanelProps) {
   console.log("Example artist data:", dummyLastFMArtistData[0]);
   
@@ -234,101 +235,114 @@ export function ListViewPanel({
       </div>
         {/* List */}
 
-        {(!selectedGenre && !selectedArtist) && (
-          <ul
-            className="
-            flex
-            flex-col
-            gap-1px
-            p-1
-            overflow-y-auto
-            no-scrollbar
-            ">
-            {genres.map((genre) => (
-              <li
-                key={genre.id}
-                className="
-                hover:bg-gray-100
-                rounded-md
-                "
-              >
-                {/* List item contents */}
-                <button 
-                  className="w-full text-left">
-                  <div
-                    className='
-                    flex
-                    items-start
-                    py-1 px-3
-                    gap-2
-                    '
-                  >
-                    <span className="text-xl">{getRandomEmoji()}</span>
-                    <div className='flex flex-col items-start'>
-                      <span className="text-md font-medium">{genre.name}</span>
-                      <div className="text-sm text-gray-600">{genre.artistCount} · {genre.artistCount} · {genre.artistCount}</div>
-                    </div>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        
-        {(selectedGenre && (
-          <ul
-            className="
-            flex
-            flex-col
-            gap-3
-            p-1
-            overflow-y-auto
-            no-scrollbar
-            ">
-            {dummyLastFMArtistData.map((artist) => (
-              <li
-                key={artist.mbid}
-              >
-                {/* List item contents */}
-                <button 
+        <div className='
+          overflow-y-auto no-scrollbar pb-40
+          '>
+          {(!selectedGenre && !selectedArtist) && (
+            <ul
+              className="
+              flex
+              flex-col
+              gap-1px
+              p-1
+              
+              ">
+              {genres.map((genre) => (
+                <li
+                  key={genre.id}
                   className="
-                  w-full text-left
+                  hover:bg-gray-100
                   rounded-md
-                ">
-                  <div
-                    className='
-                    flex
-                    flex-col
-                    items-start
-                    py-1 px-3
-                    '
-                  >
-                      <div className="w-full aspect-[2/1] overflow-hidden rounded-md border border-gray-300">
-                        <img
-                          src={artist.image[0].link}
-                          alt={artist.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    <div className='flex flex-col items-start gap-1'>
-                      <div>
-                        <h2 className="text-lg font-semibold">{artist.name}</h2>
-                        <h3 className="text-md"> {formatNumber(artist.stats.listeners)} listeners
-                        </h3>
-                      </div>
-                        {/* <div>
-                          <div className="text-sm text-foreground">
-                            <span className='font-medium text-foreground'>Founded:</span> {formatDate(artist.date)}
+                  "
+                >
+                  {/* List item contents */}
+                  <button
+                    className="w-full text-left">
+                    <div
+                      className='
+                      flex
+                      items-start
+                      py-1 px-3
+                      gap-2
+                      '
+                    >
+                      <span className="text-xl">{getRandomEmoji()}</span>
+                      <div className='flex flex-col items-start'>
+                        <span className="text-md font-medium">{genre.name}</span>
+                        <div className="
+                        flex items-center gap-1
+                        text-sm text-gray-600">
+                          <div className='flex items-center'>
+                            <UsersRound size={16}/>{genre.artistCount} 
                           </div>
-                          <div className="text-sm text-foreground"><span className='font-medium text-foreground'>Similar artists:</span> {artist.similar[0]}, {artist.similar[1]}, {artist.similar[1]}</div>
-                        </div> */}
+                          · 
+                          <div className='flex items-center'>
+                            <Link size={16}/>{genreLinksCount} 
+                          </div>
+                          </div>
                       </div>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ))}
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          
+          {(selectedGenre && (
+            <ul
+              className="
+              flex
+              flex-col
+              gap-3
+              p-1
+              overflow-y-auto
+              no-scrollbar
+              ">
+              {dummyLastFMArtistData.map((artist) => (
+                <li
+                  key={artist.mbid}
+                >
+                  {/* List item contents */}
+                  <button
+                    className="
+                    w-full text-left
+                    rounded-md
+                  ">
+                    <div
+                      className='
+                      flex
+                      flex-col
+                      items-start
+                      py-1 px-3
+                      '
+                    >
+                        <div className="w-full aspect-[2/1] overflow-hidden rounded-md border border-gray-300">
+                          <img
+                            src={artist.image[0].link}
+                            alt={artist.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      <div className='flex flex-col items-start gap-1'>
+                        <div>
+                          <h2 className="text-md font-semibold">{artist.name}</h2>
+                          <h3 className="text-sm"> {formatNumber(artist.stats.listeners)} listeners
+                          </h3>
+                        </div>
+                          {/* <div>
+                            <div className="text-sm text-foreground">
+                              <span className='font-medium text-foreground'>Founded:</span> {formatDate(artist.date)}
+                            </div>
+                            <div className="text-sm text-foreground"><span className='font-medium text-foreground'>Similar artists:</span> {artist.similar[0]}, {artist.similar[1]}, {artist.similar[1]}</div>
+                          </div> */}
+                        </div>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
         {/* overflow gradient */}
         {/* <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent" /> */}
       </div>

@@ -12,6 +12,7 @@ import GenresForceGraph from "@/components/GenresForceGraph";
 import {BasicNode} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
+import { ListViewPanel } from "@/components/ListViewPanel";
 
 function App() {
   // App state for selected genre and artist
@@ -20,6 +21,7 @@ function App() {
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
+  const [showListView, setShowListView] = useState(true);
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -27,13 +29,27 @@ function App() {
       <GraphControls />
 
         {/* Breadcrumb navigation */}
-        <BreadcrumbHeader
-            selectedGenre={selectedGenre}
-            setSelectedGenre={setSelectedGenre}
-            selectedArtist={selectedArtist}
-            setSelectedArtist={setSelectedArtist}
-            HomeIcon={Waypoints}
-        />
+        <div className='
+        fixed top-4 left-4 z-50
+        inline-flex flex-col gap-2 items-start
+        '>
+          <BreadcrumbHeader
+              selectedGenre={selectedGenre}
+              setSelectedGenre={setSelectedGenre}
+              selectedArtist={selectedArtist}
+              setSelectedArtist={setSelectedArtist}
+              HomeIcon={Waypoints}
+              toggleListView={() => setShowListView(!showListView)}
+              showListView={showListView}
+          />
+          {showListView && !genresLoading && !genresError &&
+                  (<ListViewPanel
+                  genres={genres}
+                  selectedGenre={selectedGenre}
+                  selectedArtist={selectedArtist}
+                  genreLinksCount={genreLinks.length}
+                  />)}
+        </div>
 
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (

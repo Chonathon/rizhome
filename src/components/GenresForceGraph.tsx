@@ -1,5 +1,5 @@
 import {Genre, NodeLink} from "@/types";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ForceGraph, {GraphData} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 
@@ -16,6 +16,7 @@ const TRANSPARENCY = 0.666;
 
 const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading }) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
+    const fgRef = useRef<any>(null);
 
     useEffect(() => {
         if (genres && links){
@@ -23,13 +24,43 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         }
     }, [genres]);
 
+    // useEffect(() => {
+    //     const updateVisibleGenres = () => {
+    //         if (!fgRef.current) return;
+
+    //         const fg = fgRef.current;
+    //         const allNodes = fg.graphData().nodes;
+    //         const { x: cx, y: cy, k: zoom } = fg.cameraPosition();
+    //         const halfWidth = window.innerWidth / 2 / zoom;
+    //         const halfHeight = window.innerHeight / 2 / zoom;
+
+    //         const visible = allNodes.filter((node: any) => {
+    //             const nx = node.x || 0;
+    //             const ny = node.y || 0;
+    //             return (
+    //                 nx > cx - halfWidth &&
+    //                 nx < cx + halfWidth &&
+    //                 ny > cy - halfHeight &&
+    //                 ny < cy + halfHeight
+    //             );
+    //         });
+
+    //         // setVisibleGenres(visible.map(node => ({ id: node.id, name: node.name })));
+    //     };
+
+    //     updateVisibleGenres();
+    //     const fg = fgRef.current;
+    //     fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
+    // }, [graphData, setVisibleGenres]);
+
     return loading ? <Loading /> : (
+        
         <ForceGraph
+            ref={fgRef}
             graphData={graphData}
             linkVisibility={true}
             linkColor='#666666'
             linkCurvature={0.2}
-            nodeRelSize={2} // dunno what this does
             nodeVisibility={true}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={(node, ctx, globalScale) => {
@@ -62,13 +93,16 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
 
                 node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
             }}
-            // I think this draws the interactable area of the node
-            nodePointerAreaPaint={(node, color, ctx) => {
+                  nodePointerAreaPaint={(node, color, ctx, globalScale) => {
                 ctx.fillStyle = color;
-                const bckgDimensions = node.__bckgDimensions;
-                // @ts-ignore
-                bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-            }}
+                const [width = 0, height = 0] = node.__bckgDimensions || [0, 0];
+                const minSize = 24/globalScale; // minimum touch size in pixels
+                const w = Math.max(width, minSize);
+                const h = Math.max(height, minSize);
+                const x = (node.x || 0) - w / 2;
+                const y = (node.y || 0) - h / 2;
+                ctx.fillRect(x, y, w, h);
+                }}
         />
     )
 }

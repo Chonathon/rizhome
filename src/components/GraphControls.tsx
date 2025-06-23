@@ -52,7 +52,13 @@ export function GraphControls() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className={`fixed top-4 right-4 z-50 w-sm flex flex-col gap-2 p-2 rounded-xl overflow-hidden   ${activePanel ? "bg-white border border-gray-200 shadow-md" : ""}`}
+      className={`
+        fixed top-4 right-4 z-50 
+        flex flex-col 
+        overflow-hidden bg-white border border-gray-200 shadow-md
+        ${activePanel ? "w-sm p-2 gap-2 rounded-3xl" : "w-auto max-w-fit p-1 gap-1 rounded-full"}
+         
+      `}
     >
       <div className="relative flex items-center
  justify-end gap-1">

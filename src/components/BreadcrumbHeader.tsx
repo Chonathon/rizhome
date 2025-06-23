@@ -35,10 +35,7 @@ export function BreadcrumbHeader({
                     transition-all
                     '
                 >
-                    <Breadcrumb
-                    className="
-                    
-                    ">
+                    <Breadcrumb>
                         <BreadcrumbList>
                             {/* Home icon - always visible */}
                             <BreadcrumbItem>

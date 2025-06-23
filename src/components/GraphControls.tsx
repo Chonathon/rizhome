@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ClusteringPanel from "./ClusteringPanel";
 import DisplayPanel from "./DisplayPanel";
 import GenrePanel from "./GenrePanel";
-import { Spline, Settings2, Tag, RotateCcw } from "lucide-react";
+import { Spline, Settings2, Tag, RotateCcw, CircleX } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 
 type PanelType = "clustering" | "display" | "genres";
@@ -12,13 +12,15 @@ export function GraphControls() {
   const [activePanel, setActivePanel] = useState<PanelType>();
 
   const tabs: { id: PanelType; icon: React.ReactNode; label: string }[] = [
-    { id: "clustering", icon: <Spline size={20} />, label: "Clustering" },
-    { id: "display", icon: <Settings2 size={20} />, label: "Display" },
-    { id: "genres", icon: <Tag size={20} />, label: "Genres" },
+    { id: "clustering", icon: <Spline size={24} />, label: "Clustering" },
+    { id: "display", icon: <Settings2 size={24} />, label: "Display" },
+    { id: "genres", icon: <Tag size={24} />, label: "Genres" },
   ];
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // BUG: Clicking outside the panel should close it, but it doesn't work as expected
+  // It was working before the addition of the graphs. I think it has to do with the canvas not being part of the DOM tree
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -55,16 +57,27 @@ export function GraphControls() {
       <div className="relative flex items-center
  justify-end gap-1">
     {activePanel ? 
-        <Button
-        onClick={handleResetClick}
-        variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 left-0 size-10">
-     <motion.div
-       animate={ isRotating ?{rotate: -45 } : "rotate"}
-       transition={{ type: "spring", stiffness: 300, damping: 12 }}
-     >
-       <RotateCcw size={20} />
-     </motion.div>
-        </Button> : ""}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center">
+          <Button
+          variant="ghost" size="icon" className=" size-10"          
+           onClick={() => setActivePanel(undefined)}
+          >
+            <CircleX size={24} />
+          </Button>
+          <Button
+          onClick={handleResetClick}
+          variant="ghost" size="icon" className=" size-10">
+               <motion.div
+                 animate={ isRotating ?{rotate: -45 } : "rotate"}
+                 transition={{ type: "spring", stiffness: 300, damping: 12 }}
+               >
+                 <RotateCcw size={24} />
+               </motion.div>
+          </Button>
+        </div>
+        
+        
+        : ""}
             
         {tabs.map((tab) => (
           <Button

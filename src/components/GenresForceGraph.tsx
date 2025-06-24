@@ -1,7 +1,8 @@
 import {Genre, NodeLink} from "@/types";
 import React, {useEffect, useState, useRef} from "react";
-import ForceGraph, {GraphData} from "react-force-graph-2d";
+import ForceGraph, {ForceGraphMethods, GraphData, NodeObject} from "react-force-graph-2d";
 import {Loading} from "./Loading";
+import {forceCollide} from 'd3-force';
 
 // Needs more props like the view/filtering controls
 interface GenresForceGraphProps {
@@ -12,17 +13,71 @@ interface GenresForceGraphProps {
 }
 
 const GENRE_MAX_SIZE = 34000; // Approx. size of the largest genre (rock)
-const TRANSPARENCY = 0.666;
+const TRANSPARENCY = 0.8;
 
 const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading }) => {
-    const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
-    const fgRef = useRef<any>(null);
+    const [graphData, setGraphData] = useState<GraphData<Genre, NodeLink>>({ nodes: [], links: [] });
+    const fgRef = useRef<ForceGraphMethods<Genre, NodeLink> | undefined>(undefined);
 
     useEffect(() => {
         if (genres && links){
-            setGraphData({ nodes: genres, links })
+            setGraphData({ nodes: genres, links });
+            // Creates d3 forces to separate nodes and centers/zooms to a set level on load
+            if (fgRef.current) {
+                fgRef.current.d3Force('charge')?.strength(-500);
+                fgRef.current.d3Force('link')?.distance(100);
+                // @ts-expect-error this works
+                fgRef.current.d3Force('collide', forceCollide((node: Genre) => calculateRadius(node.artistCount) + 1));
+                fgRef.current.zoom(0.15);
+                fgRef.current.centerAt(-400, -800, 0);
+            }
         }
     }, [genres]);
+
+    const calculateRadius = (artistCount: number) => {
+        return 5 + Math.sqrt(artistCount) * 2;
+    };
+
+    const getColor = (artistCount: number) => {
+        const ratio = Math.min(artistCount / GENRE_MAX_SIZE, 1);
+        const r = Math.floor(ratio * 255);
+        const g = Math.abs(127 - (ratio * 255));
+        const b = Math.floor(255 - (ratio * 255));
+        return `rgba(${r}, ${g}, ${b}, ${TRANSPARENCY})`;
+    };
+
+    const nodeCanvasObject = (node: NodeObject, ctx: CanvasRenderingContext2D) => {
+        const genreNode = node as Genre;
+        const radius = calculateRadius(genreNode.artistCount);
+        const fontSize = (radius * Math.min(4 / genreNode.name.length, 1) * 0.75); // Font size based on radius and name length
+        const nodeX = node.x || 0;
+        const nodeY = node.y || 0;
+
+        // Draw the circle with dynamic size and color
+        ctx.beginPath();
+        ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = getColor(genreNode.artistCount);
+        ctx.fill();
+
+        // Draw the genre name text, centered and contained within the circle
+        ctx.font = `${fontSize}px Sans-Serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'white';
+        ctx.fillText(genreNode.name, nodeX, nodeY);
+    };
+
+    const nodePointerAreaPaint = (node: NodeObject, color: string, ctx: CanvasRenderingContext2D) => {
+        ctx.fillStyle = color;
+        const genreNode = node as Genre;
+        const radius = calculateRadius(genreNode.artistCount);
+        const nodeX = node.x || 0;
+        const nodeY = node.y || 0;
+
+        ctx.beginPath();
+        ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
+        ctx.fill();
+    }
 
     // useEffect(() => {
     //     const updateVisibleGenres = () => {
@@ -54,55 +109,18 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     // }, [graphData, setVisibleGenres]);
 
     return loading ? <Loading /> : (
-        
         <ForceGraph
             ref={fgRef}
             graphData={graphData}
-            linkVisibility={true}
+            linkVisibility={false}
             linkColor='#666666'
             linkCurvature={0.2}
             nodeVisibility={true}
             onNodeClick={node => onNodeClick(node.name)}
-            nodeCanvasObject={(node, ctx, globalScale) => {
-                const sizeRatio = node.artistCount / GENRE_MAX_SIZE;
-                const label = node.name;
-                const fontSize = node.artistCount / 120 + 10; // quick & dirty relative text size
-                ctx.font = `${fontSize}px Sans-Serif`;
-                const textWidth = ctx.measureText(label).width;
-                const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-
-                const x = node.x || 0;
-                const y = node.y || 0;
-                const radius =  node.artistCount / 70 + 10; // size of the node
-                const labelOffset = 10;
-
-                // Draw node circle
-                ctx.beginPath();    
-                ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-
-                // The coloring, these are just so they stand out, could be better colors
-                ctx.fillStyle = `rgba(${sizeRatio * 255}, ${Math.abs(127 - (sizeRatio * 255))}, ${255 - (sizeRatio * 255)}, ${TRANSPARENCY})` || 'blue';
-                ctx.fill();
-
-                // Draw label
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'top';
-                ctx.fillStyle = 'white';
-                ctx.font = `${fontSize}px Sans-Serif`;
-                ctx.fillText(label, x, y - 6, radius * 2);
-
-                node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-            }}
-                  nodePointerAreaPaint={(node, color, ctx, globalScale) => {
-                ctx.fillStyle = color;
-                const [width = 0, height = 0] = node.__bckgDimensions || [0, 0];
-                const minSize = 24/globalScale; // minimum touch size in pixels
-                const w = Math.max(width, minSize);
-                const h = Math.max(height, minSize);
-                const x = (node.x || 0) - w / 2;
-                const y = (node.y || 0) - h / 2;
-                ctx.fillRect(x, y, w, h);
-                }}
+            nodeCanvasObject={nodeCanvasObject}
+            nodeCanvasObjectMode={() => 'replace'}
+            nodeVal={(node: Genre) => calculateRadius(node.artistCount)}
+            nodePointerAreaPaint={nodePointerAreaPaint}
         />
     )
 }

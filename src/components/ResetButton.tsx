@@ -2,11 +2,29 @@ import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
+import { useEffect, useCallback } from "react";
 
 
 export function ResetButton(props: { onClick: () => void }) {
   const { onClick } = props;
   const isMobile = useMediaQuery({ maxWidth: 640 });
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.metaKey && event.key === "ArrowLeft") {
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   return(
         <motion.div 
       key="artist-graph"

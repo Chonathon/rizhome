@@ -66,20 +66,24 @@ function App() {
 
       {/* Artists Graph */}
 {selectedGenre && (
-  <AnimatePresence>
-    <ArtistsForceGraph
-      artists={artists}
-      artistLinks={artistLinks}
-      loading={artistsLoading}
-      onNodeClick={setSelectedArtist}
-    />
+  <>
+    <AnimatePresence>
+      {!artistsLoading && (
+        <ArtistsForceGraph
+          artists={artists}
+          artistLinks={artistLinks}
+          loading={artistsLoading}
+          onNodeClick={setSelectedArtist}
+        />
+      )}
+    </AnimatePresence>
     <ResetButton 
       onClick={() => {
-            setSelectedGenre(undefined);
-            setSelectedArtist(undefined);
-          }}
+        setSelectedGenre(undefined);
+        setSelectedArtist(undefined);
+      }}
     />
-  </AnimatePresence>
+  </>
 )}
     </div>
   )

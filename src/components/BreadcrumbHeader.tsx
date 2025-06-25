@@ -85,7 +85,7 @@ export function BreadcrumbHeader({
                     className='rounded-full'
                     onClick={toggleListView}>
                         
-                        {showListView ? <ChevronDown /> : <ChevronUp />}
+                        {showListView ? <ChevronUp /> : <ChevronDown />}
                     </Button>
                 </div>
         </div>

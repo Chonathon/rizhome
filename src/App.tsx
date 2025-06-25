@@ -13,6 +13,8 @@ import {BasicNode} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
+import { useMediaQuery } from 'react-responsive';
+
 
 function App() {
   // App state for selected genre and artist
@@ -21,18 +23,19 @@ function App() {
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
-  const [showListView, setShowListView] = useState(true);
-
+  const [showListView, setShowListView] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 640 });
   return (
     <div className="relative min-h-screen bg-gray-100">
       {/* UI component for interacting with the graph*/}
-      <GraphControls />
+      {/* <GraphControls /> */}
 
         {/* Breadcrumb navigation */}
-        <div className='
-        fixed top-4 left-4 z-50
-        inline-flex flex-col gap-2 items-start
-        '>
+        <div className={
+          isMobile 
+            ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
+            : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
+        }>
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
               setSelectedGenre={setSelectedGenre}

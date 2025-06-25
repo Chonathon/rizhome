@@ -1,13 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
+
 
 export function ResetButton(props: { onClick: () => void }) {
-    const { onClick } = props;
-    return(
+  const { onClick } = props;
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+  return(
         <motion.div 
       key="artist-graph"
-      className="absolute bottom-16 left-1/2"
+      className={`absolute left-1/2 
+        ${isMobile 
+        ? "bottom-4" 
+        : "bottom-8"}`}
       initial={{ opacity: 0, y: 16, x: "-50%" }}
       animate={{ opacity: 1, y: 0, x: "-50%" }}
       exit={{ opacity: 0, y: 16, x: "-50%" }}

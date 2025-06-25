@@ -26,7 +26,7 @@ function App() {
   const [showListView, setShowListView] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 640 });
   return (
-    <div className="relative min-h-screen bg-gray-100">
+    <div className="relative min-h-screen min-w-screen bg-gray-100">
       {/* UI component for interacting with the graph*/}
       {/* <GraphControls /> */}
 

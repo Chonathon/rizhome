@@ -28,17 +28,17 @@ export function ResetButton(props: { onClick: () => void }) {
   return(
         <motion.div 
       key="artist-graph"
-      className={`absolute left-1/2 
-        ${isMobile 
-        ? "bottom-4" 
-        : "bottom-8"}`}
-      initial={{ opacity: 0, y: 16, x: "-50%" }}
-      animate={{ opacity: 1, y: 0, x: "-50%" }}
-      exit={{ opacity: 0, y: 16, x: "-50%" }}
+      // className={`absolute left-1/2 
+      //   ${isMobile 
+      //   ? "bottom-4" 
+      //   : "bottom-8"}`}
+      initial={{ opacity: 0, y: 16}}
+      animate={{ opacity: 1, y: 0}}
+      exit={{ opacity: 0, y: 16}}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
         <Button
-          className="rounded-full p-8 bg-gray-200/90 shadow-lg hover:bg-gray-200"
+          className="rounded-full p-8 bg-gray-200/97 shadow-lg hover:bg-gray-200"
           size="icon"
           variant="secondary"
           onClick={onClick}

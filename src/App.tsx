@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
+import { ArtistCard } from './components/ArtistCard'
 
 
 function App() {
@@ -24,18 +25,28 @@ function App() {
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
   const [showListView, setShowListView] = useState(false);
+  const [showArtistCard, setShowArtistCard] = useState(false)
   const isMobile = useMediaQuery({ maxWidth: 640 });
+  console.log("App render", {
+  selectedGenre,
+  selectedArtist,
+  genres,
+  genresLoading,
+  genresError,
+  artists,
+  artistsLoading,
+  artistsError,
+  artistData,
+  artistLoading,
+  artistError
+});
   return (
     <div className="relative min-h-screen min-w-screen bg-gray-100">
-      {/* UI component for interacting with the graph*/}
-      {/* <GraphControls /> */}
-
-        {/* Breadcrumb navigation */}
-        <div className={
-          isMobile 
-            ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
-            : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
-        }>
+      <div className={
+        isMobile 
+          ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
+          : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
+      }>
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
               setSelectedGenre={setSelectedGenre}
@@ -53,7 +64,6 @@ function App() {
                   genreLinksCount={genreLinks.length}
                   />)}
         </div>
-
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
             <GenresForceGraph
@@ -67,24 +77,38 @@ function App() {
       {/* Artists Graph */}
 {selectedGenre && (
   <>
-    <AnimatePresence>
       {!artistsLoading && (
-        <ArtistsForceGraph
-          artists={artists}
-          artistLinks={artistLinks}
-          loading={artistsLoading}
-          onNodeClick={setSelectedArtist}
-        />
+          <ArtistsForceGraph
+            artists={artists}
+            artistLinks={artistLinks}
+            loading={artistsLoading}
+            onNodeClick={setSelectedArtist}
+          />
       )}
-    </AnimatePresence>
-    <ResetButton 
-      onClick={() => {
-        setSelectedGenre(undefined);
-        setSelectedArtist(undefined);
-      }}
-    />
+  
+      <div className={`
+        fixed left-1/2 transform -translate-x-1/2
+        flex items-center gap-4
+        ${isMobile 
+        ? " flex-col-reverse bottom-4" 
+        : "bottom-8"}`}>
+          <div>
+            <ResetButton
+              onClick={() => {
+                  setSelectedGenre(undefined);
+                  setSelectedArtist(undefined);
+              }}
+              />
+          </div>
+          <ArtistCard
+              selectedArtist={selectedArtist}
+              setSelectedArtist={setSelectedArtist}
+              artistData={artistData}
+             />
+        </div>
+
   </>
-)}
+)} 
     </div>
   )
 }

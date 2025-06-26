@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
+import { ArtistCard } from './components/ArtistCard'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
   const [showListView, setShowListView] = useState(false);
+  const [showArtistCard, setShowArtistCard] = useState(false)
   const isMobile = useMediaQuery({ maxWidth: 640 });
   return (
     <div className="relative min-h-screen min-w-screen bg-gray-100">
@@ -45,6 +47,8 @@ function App() {
               toggleListView={() => setShowListView(!showListView)}
               showListView={showListView}
           />
+             <div className='flex w-full h-full'>
+          </div>
           {showListView && !genresLoading && !genresError &&
                   (<ListViewPanel
                   genres={genres}
@@ -53,7 +57,7 @@ function App() {
                   genreLinksCount={genreLinks.length}
                   />)}
         </div>
-
+{/* {console.log(`artist data ${artists}`)} */}
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
             <GenresForceGraph
@@ -67,22 +71,33 @@ function App() {
       {/* Artists Graph */}
 {selectedGenre && (
   <>
-    <AnimatePresence>
       {!artistsLoading && (
-        <ArtistsForceGraph
-          artists={artists}
-          artistLinks={artistLinks}
-          loading={artistsLoading}
-          onNodeClick={setSelectedArtist}
-        />
+          <ArtistsForceGraph
+            artists={artists}
+            artistLinks={artistLinks}
+            loading={artistsLoading}
+            onNodeClick={setSelectedArtist}
+          />
       )}
-    </AnimatePresence>
-    <ResetButton 
-      onClick={() => {
-        setSelectedGenre(undefined);
-        setSelectedArtist(undefined);
-      }}
-    />
+  
+      <div className={`
+        fixed left-1/2 transform -translate-x-1/2
+        flex items-center 
+        ${isMobile 
+        ? "bottom-4" 
+        : "bottom-8"}`}>
+          <ResetButton
+            onClick={() => {
+      setSelectedGenre(undefined);
+      setSelectedArtist(undefined);
+            }}
+            />
+          <ArtistCard
+               selectedArtist={selectedArtist}
+              artistData={artistData}
+             />
+        </div>
+
   </>
 )}
     </div>

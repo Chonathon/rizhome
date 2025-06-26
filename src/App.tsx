@@ -94,6 +94,7 @@ function App() {
             />
           <ArtistCard
               selectedArtist={selectedArtist}
+              setSelectedArtist={setSelectedArtist}
               artistData={artistData}
              />
         </div>

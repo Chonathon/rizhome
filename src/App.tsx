@@ -9,7 +9,7 @@ import useGenres from "@/hooks/useGenres";
 import useArtist from "@/hooks/useArtist";
 import ArtistsForceGraph from "@/components/ArtistsForceGraph";
 import GenresForceGraph from "@/components/GenresForceGraph";
-import {BasicNode} from "@/types";
+import {Artist, BasicNode} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
@@ -20,13 +20,20 @@ import { ArtistCard } from './components/ArtistCard'
 function App() {
   // App state for selected genre and artist
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
-  const [selectedArtist, setSelectedArtist] = useState<BasicNode | undefined>(undefined);
+  const [selectedArtist, setSelectedArtist] = useState<Artist | undefined>(undefined);
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
   const [showListView, setShowListView] = useState(false);
   const [showArtistCard, setShowArtistCard] = useState(false)
   const isMobile = useMediaQuery({ maxWidth: 640 });
+
+  const setArtistFromName = (name: string) => {
+    const artist = artists.find((artist) => artist.name === name);
+    if (artist) {
+      setSelectedArtist(artist);
+    }
+  }
   console.log("App render", {
   selectedGenre,
   selectedArtist,
@@ -102,9 +109,11 @@ function App() {
           </div>
           <ArtistCard
               selectedArtist={selectedArtist}
-              setSelectedArtist={setSelectedArtist}
+              setSelectedArtist={setArtistFromName}
               artistData={artistData}
-             />
+              artistLoading={artistLoading}
+              artistError={artistError}
+          />
         </div>
 
   </>

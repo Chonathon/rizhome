@@ -50,7 +50,7 @@ export interface LastFMArtistJSON {
     stats: LastFMStats;
     bio: LastFMBio;
     similar: string[];
-    date: string;
+    date: string; // this is for caching
 }
 
 export interface LastFMImage {

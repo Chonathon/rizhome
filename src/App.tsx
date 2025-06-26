@@ -29,15 +29,12 @@ function App() {
   const isMobile = useMediaQuery({ maxWidth: 640 });
   return (
     <div className="relative min-h-screen min-w-screen bg-gray-100">
-      {/* UI component for interacting with the graph*/}
-      {/* <GraphControls /> */}
-
-        {/* Breadcrumb navigation */}
-        <div className={
-          isMobile 
-            ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
-            : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
-        }>
+      {/* Breadcrumb navigation */}
+      <div className={
+        isMobile 
+          ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
+          : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
+      }>
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
               setSelectedGenre={setSelectedGenre}
@@ -47,8 +44,6 @@ function App() {
               toggleListView={() => setShowListView(!showListView)}
               showListView={showListView}
           />
-             <div className='flex w-full h-full'>
-          </div>
           {showListView && !genresLoading && !genresError &&
                   (<ListViewPanel
                   genres={genres}
@@ -57,7 +52,6 @@ function App() {
                   genreLinksCount={genreLinks.length}
                   />)}
         </div>
-{/* {console.log(`artist data ${artists}`)} */}
       {/* Genres Graph */}
         {!selectedArtist && !selectedGenre && (
             <GenresForceGraph
@@ -100,7 +94,7 @@ function App() {
         </div>
 
   </>
-)}
+)} 
     </div>
   )
 }

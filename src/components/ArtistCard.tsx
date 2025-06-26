@@ -3,29 +3,13 @@ import { LastFMArtistJSON } from '@/types';
 import { motion, AnimatePresence } from "framer-motion";
 import { dummyLastFMArtistData } from '@/DummyDataForDummies'
 import { X } from "lucide-react"
+import { formatDate } from '@/lib/utils'
 
 interface ArtistCardProps {
     selectedArtist?: BasicNode;
     setSelectedArtist: (artist: BasicNode | undefined) => void;
     artistData?: LastFMArtistJSON;
     }
-
-// Format number with commas
-// TODO: global number formatting utility
-const formatNumber = (value: number) =>
-  new Intl.NumberFormat('en-US').format(value);
-
-// Format date to "MMM dd, yyyy"
-// TODO: global date formatting utility
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-}; 
-
 
 const artist = dummyLastFMArtistData[0]
 
@@ -71,7 +55,7 @@ export function ArtistCard({
                  flex flex-col
                  text-sm text-muted-foreground
                  ">
-                     <p className=''>Founded {artist?.date ? formatDate(artist.date) : 'Unknown'} </p>
+                     <p>Founded {artist?.date ? formatDate(artist.date) : 'Unknown'} </p>
                      {/* <p>{artist?.bio?.content}</p> */}
                  <p>
                      Similar to {artist?.similar?.slice(0, 3).map((name, index, array) => (

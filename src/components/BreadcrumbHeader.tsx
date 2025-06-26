@@ -69,14 +69,14 @@ export function BreadcrumbHeader({
                                 </>
                             )}
                             {/* Show selected artist if available */}
-                            {/* {selectedGenre && selectedArtist && (
+                            {selectedGenre && selectedArtist && (
                                 <>
                                     <BreadcrumbSeparator />
                                     <BreadcrumbItem>
                                         <BreadcrumbPage>{selectedArtist.name}</BreadcrumbPage>
                                     </BreadcrumbItem>
                                 </>
-                            )} */}
+                            )}
                         </BreadcrumbList>
                     </Breadcrumb>
                     <Button

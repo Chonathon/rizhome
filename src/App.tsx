@@ -27,9 +27,21 @@ function App() {
   const [showListView, setShowListView] = useState(false);
   const [showArtistCard, setShowArtistCard] = useState(false)
   const isMobile = useMediaQuery({ maxWidth: 640 });
+  console.log("App render", {
+  selectedGenre,
+  selectedArtist,
+  genres,
+  genresLoading,
+  genresError,
+  artists,
+  artistsLoading,
+  artistsError,
+  artistData,
+  artistLoading,
+  artistError
+});
   return (
     <div className="relative min-h-screen min-w-screen bg-gray-100">
-      {/* Breadcrumb navigation */}
       <div className={
         isMobile 
           ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"

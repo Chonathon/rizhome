@@ -1,5 +1,6 @@
 import { BasicNode } from '@/types'
 import { LastFMArtistJSON } from '@/types';
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ArtistCardProps {
           selectedArtist?: BasicNode;
@@ -140,43 +141,49 @@ export function ArtistCard({
 }: ArtistCardProps) {
     if (!selectedArtist) return null
     return (
-        
-     <div
-        className='
-        w-[420px] h-auto p-3 z-50 pb-4 mr-13
-        flex items-start gap-3 
-        bg-background rounded-3xl border border-gray-200
-        '
-    >
-        <div className="
-        w-24 h-auto overflow-hidden 
-        rounded-lg border border-gray-100
-        ">
-            <img
-            className="w-full h-full object-cover"
-            src={artist?.image[0].link}
-            alt={artist?.name}
-            />
-        </div>
-        <div className='flex flex-col items-start gap-1'>
-        <div>
-            <h2 className="text-md font-semibold m-0">{selectedArtist.name}</h2>
-            {/* <h3 className="text-sm"> {formatNumber(artist.stats.listeners)} listeners
-            </h3> */}
-        </div>
-                <div className="
-                flex flex-col 
-                text-sm text-muted-foreground
-                ">
-                    <p className=''>Founded {artist?.date ? formatDate(artist.date) : 'Unknown'} </p>
-                    {/* <p>{artist?.bio?.content}</p> */}
-                <p>
-                    Similar to {artist?.similar?.slice(0, 3).map((name) => (
-                        <button key={name}>{name}</button>
-                    ))}
-                </p>
-                </div>
-        </div>
-    </div>
+     <AnimatePresence mode="wait">
+            
+              <motion.div
+         initial={{ opacity: 0, y:3}}
+         animate={{ opacity: 1, y:0}}
+         exit={{ opacity: 0, y:3}}
+         transition={{ duration: 0.4, ease: "easeOut" }}
+         className='
+         w-[420px] h-auto p-3 z-50 pb-4
+         flex items-start gap-3
+         bg-background rounded-3xl border border-gray-200
+         '
+             >
+         <div className="
+         w-24 h-full overflow-hidden
+         rounded-lg border border-gray-100
+         ">
+             <img
+             className="w-full h-full object-cover"
+             src={artist?.image[0].link}
+             alt={artist?.name}
+             />
+         </div>
+         <div className='flex flex-col items-start gap-1'>
+         <div>
+             <h2 className="text-md font-semibold">{selectedArtist.name}</h2>
+             {/* <h3 className="text-sm"> {formatNumber(artist.stats.listeners)} listeners
+             </h3> */}
+         </div>
+                 <div className="
+                 flex flex-col
+                 text-sm text-muted-foreground
+                 ">
+                     <p className=''>Founded {artist?.date ? formatDate(artist.date) : 'Unknown'} </p>
+                     {/* <p>{artist?.bio?.content}</p> */}
+                 <p>
+                     Similar to {artist?.similar?.slice(0, 3).map((name) => (
+                         <button key={name}>{name}</button>
+                     ))}
+                 </p>
+                 </div>
+         </div>
+             </motion.div>
+     </AnimatePresence>
     )
 }

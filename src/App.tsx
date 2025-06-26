@@ -87,17 +87,19 @@ function App() {
       )}
   
       <div className={`
-        fixed w-full left-1/2 transform -translate-x-1/2
-        flex items-center 
+        fixed left-1/2 transform -translate-x-1/2
+        flex items-center gap-4
         ${isMobile 
-        ? "bottom-4" 
+        ? " flex-col-reverse bottom-4" 
         : "bottom-8"}`}>
-          <ResetButton
-            onClick={() => {
-      setSelectedGenre(undefined);
-      setSelectedArtist(undefined);
-            }}
-            />
+          <div>
+            <ResetButton
+              onClick={() => {
+                  setSelectedGenre(undefined);
+                  setSelectedArtist(undefined);
+              }}
+              />
+          </div>
           <ArtistCard
               selectedArtist={selectedArtist}
               setSelectedArtist={setSelectedArtist}

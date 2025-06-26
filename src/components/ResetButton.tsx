@@ -32,9 +32,9 @@ export function ResetButton(props: { onClick: () => void }) {
       //   ${isMobile 
       //   ? "bottom-4" 
       //   : "bottom-8"}`}
-      initial={{ opacity: 0, y: 16, x: "-50%" }}
-      animate={{ opacity: 1, y: 0, x: "-50%" }}
-      exit={{ opacity: 0, y: 16, x: "-50%" }}
+      initial={{ opacity: 0, y: 16}}
+      animate={{ opacity: 1, y: 0}}
+      exit={{ opacity: 0, y: 16}}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
         <Button

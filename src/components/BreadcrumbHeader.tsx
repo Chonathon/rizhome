@@ -1,14 +1,14 @@
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb'
 import { LucideIcon, ChevronDown, ChevronUp } from 'lucide-react'
-import { BasicNode } from '@/types'
+import {Artist, BasicNode} from '@/types'
 import { Button } from "@/components/ui/button"
 import useGenres from "@/hooks/useGenres";
 
 interface BreadcrumbHeaderProps {
     selectedGenre: string | undefined
     setSelectedGenre: (genre: string | undefined) => void
-    selectedArtist: BasicNode | undefined
-    setSelectedArtist: (artist: BasicNode | undefined) => void
+    selectedArtist: Artist | undefined
+    setSelectedArtist: (artist: Artist | undefined) => void
     HomeIcon: LucideIcon
     toggleListView: () => void
     showListView: boolean

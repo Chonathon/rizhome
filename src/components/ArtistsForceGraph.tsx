@@ -7,19 +7,17 @@ import { Loading } from "./Loading";
 interface ArtistsForceGraphProps {
     artists: Artist[];
     artistLinks: NodeLink[];
-    onNodeClick: (artist: BasicNode) => void;
+    onNodeClick: (artist: Artist) => void;
     loading: boolean;
 }
 
 const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLinks, onNodeClick, loading}) => {
-    const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
+    const [graphData, setGraphData] = useState<GraphData<Artist, NodeLink>>({ nodes: [], links: [] });
     useEffect(() => {
         if (artists && artistLinks) {
             setGraphData(
                 {
-                    nodes: artists.map(artist => {
-                        return {id: artist.id, name: artist.name}
-                    }),
+                    nodes: artists,
                     links: artistLinks
                 }
             );
@@ -35,7 +33,7 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
             linkVisibility={true}
             linkColor='#666666'
             linkCurvature={0.2}
-            onNodeClick={node => onNodeClick({ id: node.id ? node.id.toString() : 'no id', name: node.name })}
+            onNodeClick={onNodeClick}
             nodeCanvasObject={(node, ctx, globalScale) => {
                 const label = node.name;
                 const fontSize = 12/globalScale;

@@ -15,6 +15,7 @@ const useArtist = (mbid?: string) => {
             try {
                 const response = await axios.get(`${url}${mbid}`);
                 setArtistData(response.data);
+                setArtistError(undefined);
             } catch (err) {
                 if (err instanceof AxiosError) {
                     setArtistError(err);

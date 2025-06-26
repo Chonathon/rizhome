@@ -38,7 +38,7 @@ export function ResetButton(props: { onClick: () => void }) {
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
         <Button
-          className="rounded-full p-8 bg-gray-200/90 shadow-lg hover:bg-gray-200"
+          className="rounded-full p-8 bg-gray-200/97 shadow-lg hover:bg-gray-200"
           size="icon"
           variant="secondary"
           onClick={onClick}

@@ -3,6 +3,8 @@ import { BasicNode } from '@/types';
 import {Genre, NodeLink} from "@/types";
 import { Button } from '@/components/ui/button';
 import { ArrowUpNarrowWide, UsersRound, Link } from "lucide-react"
+import { useMediaQuery } from 'react-responsive';
+import { formatNumber, formatDate } from '@/lib/utils';
 
 interface ListViewPanelProps {
   genres: Genre[];
@@ -13,20 +15,13 @@ interface ListViewPanelProps {
 
 // Format number with commas
 // TODO: global number formatting utility
-const formatNumber = (value: number) =>
-  new Intl.NumberFormat('en-US').format(value);
+
 
 // Format date to "MMM dd, yyyy"
 // TODO: global date formatting utility
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-};
 
+
+  const isMobile = useMediaQuery({ maxWidth: 640 });
 
 const dummyGenres = [
   { id: '1', name: 'Indie Rock', origin: 'USA', year: 1980, emoji: '🎸', artistCount: 321 },
@@ -208,13 +203,14 @@ export function ListViewPanel({
 
   return (
 
-    <div className="
+    <div className={`
     w-[320px] 
     flex flex-col
-    h-[calc(100vh-104px)]
-    bg-white border border-gray-200 shadow-md rounded-3xl
-    overflow-hidden
-    ">
+   ${isMobile 
+   ? ""
+   : `h-[calc(100vh-104px)] 
+   bg-white border border-gray-200 shadow-md rounded-3xl overflow-hidden`}
+    `}>
       {/* list controls */}
       <div 
       className='

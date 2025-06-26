@@ -81,7 +81,7 @@ function App() {
       )}
   
       <div className={`
-        fixed left-1/2 transform -translate-x-1/2
+        fixed w-full left-1/2 transform -translate-x-1/2
         flex items-center 
         ${isMobile 
         ? "bottom-4" 
@@ -93,7 +93,7 @@ function App() {
             }}
             />
           <ArtistCard
-               selectedArtist={selectedArtist}
+              selectedArtist={selectedArtist}
               artistData={artistData}
              />
         </div>

@@ -8,6 +8,7 @@ import {formatDate, formatNumber} from '@/lib/utils'
 import {Loading} from "@/components/Loading";
 import {AxiosError} from "axios";
 import { useState } from "react"
+import { useMediaQuery } from 'react-responsive';
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
@@ -26,6 +27,7 @@ export function ArtistCard({
 }: ArtistCardProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
+    const isMobile = useMediaQuery({ maxWidth: 640 });
     return (!selectedArtist || !artistData) ? null : (
      <AnimatePresence mode="wait">
          <motion.div
@@ -38,6 +40,7 @@ export function ArtistCard({
             flex items-start gap-3
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
              max-w-full overflow-hidden
+             ${isMobile ? 'w-full' : ''}
              ${isExpanded ? 'flex-col' : ''}
              `}
              onMouseEnter={() => setIsHovered(true)}
@@ -47,8 +50,8 @@ export function ArtistCard({
                  <Loading />
                 ) : (
                  <>
-                   {isHovered &&
-                        <div className="w-full flex justify-end absolute  top-0 pr-3">
+                   {isHovered || isMobile &&
+                        <div className="w-full flex justify-end absolute top-0 pr-3">
                         <Button
                             className='hover:bg-white/0'
                             variant="ghost" 

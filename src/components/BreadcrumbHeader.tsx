@@ -79,14 +79,14 @@ export function BreadcrumbHeader({
                             )} */}
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <Button
+                    {/* <Button
                     variant="secondary"
                     size="sm"
                     className='rounded-full'
                     onClick={toggleListView}>
                         
                         {showListView ? <ChevronUp /> : <ChevronDown />}
-                    </Button>
+                    </Button> */}
                 </div>
         </div>
     )

@@ -97,11 +97,11 @@ function App() {
         <motion.div
 
         className={`
-          fixed left-1/2 transform -translate-x-1/2
-          flex gap-4 items-end
+          fixed left-1/2 transform -translate-x-1/2 z-999
+          flex gap-4
           ${isMobile
-          ? " flex-col-reverse bottom-4"
-          : "bottom-8"}`}>
+          ? "w-full px-4 items-center flex-col-reverse bottom-4"
+          : "bottom-8  items-end"}`}>
             <div>
               <ResetButton
                 onClick={() => {

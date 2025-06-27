@@ -47,6 +47,13 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+.noise {
+  background-image: url('src/assets/Noise.png');
+  background-repeat: repeat;
+  background-size :contain;
+  opacity: .16;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }

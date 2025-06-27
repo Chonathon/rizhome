@@ -54,7 +54,7 @@ export function ArtistCard({
                      </div>
                      {artistError ? <p>No last.fm data found for {selectedArtist.name}</p> : (
                          <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
-                                 <h2 className="text-md font-semibold max-h-[20px] truncate">{artistData.name}</h2>
+                                 <h2 className="w-full text-md font-semibold">{artistData.name}</h2>
                                  <div className='text-sm'>
                                      {artistData.stats.listeners && (
                                          <h3><span className='font-medium'>Listeners:</span> {formatNumber(artistData.stats.listeners)}

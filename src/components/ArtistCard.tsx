@@ -29,10 +29,10 @@ export function ArtistCard({
     return (!selectedArtist || !artistData) ? null : (
      <AnimatePresence mode="wait">
          <motion.div
-             initial={{ opacity: 0, y:3}}
-             animate={{ opacity: 1, y:0}}
-             exit={{ opacity: 0, y:3}}
-             transition={{ duration: 0.4, ease: "easeOut" }}
+             initial={{ opacity: 0, width:0, y:3}}
+             animate={{ opacity: 1, width:"auto", y:0}}
+             exit={{ opacity: 0, width:0, y:3}}
+             transition={{ duration: 0.2, ease: "easeOut" }}
              className={`
              w-[420px] h-auto p-3 z-50 pb-4
             flex items-start gap-3

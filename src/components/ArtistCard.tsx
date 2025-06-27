@@ -6,6 +6,7 @@ import { X } from "lucide-react"
 import {formatDate, formatNumber} from '@/lib/utils'
 import {Loading} from "@/components/Loading";
 import {AxiosError} from "axios";
+import { useState } from "react"
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
@@ -22,6 +23,7 @@ export function ArtistCard({
     artistLoading,
     artistError,
 }: ArtistCardProps) {
+    const [isExpanded, setIsExpanded] = useState(false)
     return (!selectedArtist || !artistData) ? null : (
      <AnimatePresence mode="wait">
          <motion.div
@@ -77,7 +79,10 @@ export function ArtistCard({
                              flex flex-col
                              text-sm text-muted-foreground
                              ">
-                                 <p className='line-clamp-5 overflow-hidden'>{artistData.bio ? artistData.bio.summary : 'No bio'}</p>
+                                 <p 
+                                 onClick={() => setIsExpanded(prev => !prev)}
+                                 className=
+                                 {`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "" : "line-clamp-3 overflow-hidden"}`}>{artistData.bio ? artistData.bio.summary : 'No bio'}</p>
 
                              </div>
                          </div>

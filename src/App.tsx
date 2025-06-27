@@ -15,7 +15,7 @@ import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
-
+import { Gradient } from './components/Gradient'
 
 function App() {
   // App state for selected genre and artist
@@ -48,7 +48,8 @@ function App() {
   artistError
 });
   return (
-    <div className="relative min-h-screen min-w-screen bg-gray-100">
+    <div className="relative min-h-screen min-w-screen bg-white">
+       <Gradient />
       <div className={
         isMobile 
           ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
@@ -118,6 +119,8 @@ function App() {
 
   </>
 )} 
+
+      
     </div>
   )
 }

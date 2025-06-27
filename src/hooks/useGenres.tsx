@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Genre, NodeLink} from "@/types";
 import axios, {AxiosError} from "axios";
 
-const url = 'http://localhost:3000/genres';
+const url = `https://rhizome-server-production.up.railway.app/genres`;
 
 const useGenres = () => {
     const [genres, setGenres] = useState<Genre[]>([]);

@@ -60,7 +60,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.fill();
 
         // Draw the genre name text, centered and contained within the circle
-        ctx.font = `${fontSize}px Sans-Serif`;
+        ctx.font = `${fontSize}px Geist`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = 'white';

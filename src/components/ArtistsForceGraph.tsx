@@ -37,7 +37,7 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
             nodeCanvasObject={(node, ctx, globalScale) => {
                 const label = node.name;
                 const fontSize = 12/globalScale;
-                ctx.font = `${fontSize}px Sans-Serif`;
+                ctx.font = `${fontSize}px Geist`;
                 const textWidth = ctx.measureText(label).width;
                 const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); 
 

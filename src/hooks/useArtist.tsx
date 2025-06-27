@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {LastFMArtistJSON} from "@/types";
 import axios, {AxiosError} from "axios";
 
-const url = 'http://localhost:3000/artists/data/';
+const url = `https://rhizome-server-production.up.railway.app/artists/data/`;
 
 const useArtist = (mbid?: string) => {
     const [artistData, setArtistData] = useState<LastFMArtistJSON>();

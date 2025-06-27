@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Artist, NodeLink} from "@/types";
 import axios, {AxiosError} from "axios";
 
-const url = 'http://localhost:3000/artists/';
+const url = `https://rhizome-server-production.up.railway.app/artists/`;
 
 const useGenreArtists = (genre?: string) => {
     const [artists, setArtists] = useState<Artist[]>([]);

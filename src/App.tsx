@@ -17,7 +17,6 @@ import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient'
 
-
 function App() {
   // App state for selected genre and artist
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);

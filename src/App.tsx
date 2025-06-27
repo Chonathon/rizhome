@@ -95,7 +95,7 @@ function App() {
   
       <div className={`
         fixed left-1/2 transform -translate-x-1/2
-        flex items-center gap-4
+        flex gap-4 items-end
         ${isMobile 
         ? " flex-col-reverse bottom-4" 
         : "bottom-8"}`}>
@@ -109,7 +109,7 @@ function App() {
           </div>
           <ArtistCard
               selectedArtist={selectedArtist}
-              setSelectedArtist={setArtistFromName}
+              setSelectedArtist={setSelectedArtist}
               artistData={artistData}
               artistLoading={artistLoading}
               artistError={artistError}

@@ -2,7 +2,8 @@ import {Artist, BasicNode} from '@/types'
 import { LastFMArtistJSON } from '@/types';
 import { motion, AnimatePresence } from "framer-motion";
 import { dummyLastFMArtistData } from '@/DummyDataForDummies'
-import { X } from "lucide-react"
+import { CircleX } from "lucide-react"
+import { Button, buttonVariants } from "@/components/ui/button";
 import {formatDate, formatNumber} from '@/lib/utils'
 import {Loading} from "@/components/Loading";
 import {AxiosError} from "axios";
@@ -10,7 +11,7 @@ import { useState } from "react"
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
-    setSelectedArtist: (artist: string) => void;
+    setSelectedArtist: (artist: string | undefined) => void;
     artistData?: LastFMArtistJSON;
     artistLoading: boolean;
     artistError?: AxiosError;
@@ -24,6 +25,7 @@ export function ArtistCard({
     artistError,
 }: ArtistCardProps) {
     const [isExpanded, setIsExpanded] = useState(false)
+    const [isHovered, setIsHovered] = useState(false)
     return (!selectedArtist || !artistData) ? null : (
      <AnimatePresence mode="wait">
          <motion.div
@@ -33,15 +35,32 @@ export function ArtistCard({
              transition={{ duration: 0.4, ease: "easeOut" }}
              className={`
              w-[420px] h-auto p-3 z-50 pb-4
-             flex items-start gap-3
-             bg-background rounded-3xl border border-gray-200
-             max-w-full
-             ${isExpanded ? 'flex-col' : ''}`}
-         >
+            flex items-start gap-3
+            bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
+             max-w-full overflow-hidden
+             ${isExpanded ? 'flex-col' : ''}
+             `}
+             onMouseEnter={() => setIsHovered(true)}
+             onMouseLeave={() => setIsHovered(false)}
+             >
              {artistLoading ? (
                  <Loading />
-             ) : (
+                ) : (
                  <>
+                   {isHovered &&
+                        <div className="w-full flex justify-end absolute  top-0 pr-3">
+                        <Button
+                            className='hover:bg-white/0'
+                            variant="ghost" 
+                            size="icon"         
+                            onClick={() => (
+                                setSelectedArtist(undefined),
+                                setIsHovered(false)
+                            )}
+                            >
+                            <CircleX className=' fill-gray-500 text-white overflow-hidden size-5' size={20} />
+                            </Button>
+                        </div>}
                      <div className={`
                          w-24 h-24 shrink-0 overflow-hidden
                          rounded-lg border border-gray-100
@@ -84,7 +103,7 @@ export function ArtistCard({
                                  <p 
                                  onClick={() => setIsExpanded(prev => !prev)}
                                  className=
-                                 {`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "" : "line-clamp-3 overflow-hidden"}`}>{artistData.bio ? artistData.bio.summary : 'No bio'}</p>
+                                 {`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "text-muted-foreground" : "line-clamp-3 overflow-hidden"}`}>{artistData.bio ? artistData.bio.summary : 'No bio'}</p>
 
                              </div>
                          </div>

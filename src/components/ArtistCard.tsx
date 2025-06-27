@@ -31,23 +31,25 @@ export function ArtistCard({
              animate={{ opacity: 1, y:0}}
              exit={{ opacity: 0, y:3}}
              transition={{ duration: 0.4, ease: "easeOut" }}
-             className='
+             className={`
              w-[420px] h-auto p-3 z-50 pb-4
              flex items-start gap-3
              bg-background rounded-3xl border border-gray-200
              max-w-full
-             '
+             ${isExpanded ? 'flex-col' : ''}`}
          >
              {artistLoading ? (
                  <Loading />
              ) : (
                  <>
-                     <div className="
+                     <div className={`
                          w-24 h-24 shrink-0 overflow-hidden
                          rounded-lg border border-gray-100
-                     ">
+                         ${isExpanded ? 'w-full h-[160px]' : ''}
+                     `}>
                          <img
-                             className="w-24 h-24 object-cover"
+                             className={`w-24 h-24 object-cover
+                                ${isExpanded ? 'w-full h-full object-cover aspect-[4/3]' : ''}`}
                              src={artistData.image[0].link}
                              alt={artistData.name}
                          />

@@ -47,7 +47,8 @@ export function ArtistCard({
              onMouseLeave={() => setIsHovered(false)}
              >
                  <AnimatePresence mode="wait">
-                     <div 
+                    {/* TODO: this animation isn't working as intented */}
+                     <motion.div 
                         // initial={{ opacity: 0}}
                         // animate={{ opacity: 1 }}
                         // exit={{ opacity: 0 }}
@@ -59,7 +60,7 @@ export function ArtistCard({
                     ${isMobile ? 'w-full' : ''}
                     ${isExpanded ? 'flex-col' : ''}
                     `}>
-
+                        {/* Dismiss button shouldn't animate with content */}
                        {(isHovered || isMobile) && (
                             <div className="w-full flex justify-end absolute top-0 pr-3">
                             <Button
@@ -136,7 +137,7 @@ export function ArtistCard({
                                      </div>
                                  </div>
                          </>}
-                     </div>
+                     </motion.div>
                  </AnimatePresence>
          </motion.div>
      </AnimatePresence>

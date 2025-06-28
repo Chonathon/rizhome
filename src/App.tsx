@@ -27,6 +27,7 @@ function App() {
   const [showListView, setShowListView] = useState(false);
   const [showArtistCard, setShowArtistCard] = useState(false)
   const isMobile = useMediaQuery({ maxWidth: 640 });
+  // const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
 
   const setArtistFromName = (name: string) => {
     const artist = artists.find((artist) => artist.name === name);
@@ -94,30 +95,40 @@ function App() {
           />
       )}
   
-        <motion.div
-
-        className={`
-          fixed left-1/2 transform -translate-x-1/2 z-999
-          flex gap-4
-          ${isMobile
-          ? "w-full px-4 items-center flex-col-reverse bottom-4"
-          : "bottom-8  items-end"}`}>
-            <div>
-              <ResetButton
-                onClick={() => {
-                    setSelectedGenre(undefined);
-                    setSelectedArtist(undefined);
-                }}
+        <AnimatePresence mode="popLayout">
+          <motion.div
+          // layout
+          className={`
+            fixed left-1/2 transform -translate-x-1/2 z-999
+            flex gap-4
+            ${isMobile
+            ? "w-full px-4 items-center flex-col-reverse bottom-4"
+            : "bottom-8  items-end"}`}>
+              <motion.div
+                // layout
+                // initial={{ opacity: 1 }}
+                // animate={{ opacity: isLayoutAnimating ? 0 : 1 }}
+                // exit={{ opacity: 0 }}
+                // onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
+                // onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
+                // transition={{ layout: { duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
+              >
+                <ResetButton
+                  onClick={() => {
+                      setSelectedGenre(undefined);
+                      setSelectedArtist(undefined);
+                  }}
                 />
-            </div>
-            <ArtistCard
-                selectedArtist={selectedArtist}
-                setSelectedArtist={setSelectedArtist}
-                artistData={artistData}
-                artistLoading={artistLoading}
-                artistError={artistError}
-            />
-          </motion.div>
+              </motion.div>
+              <ArtistCard
+                  selectedArtist={selectedArtist}
+                  setSelectedArtist={setSelectedArtist}
+                  artistData={artistData}
+                  artistLoading={artistLoading}
+                  artistError={artistError}
+              />
+            </motion.div>
+        </AnimatePresence>
   </>
 )} 
 

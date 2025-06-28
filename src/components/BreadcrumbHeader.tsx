@@ -29,9 +29,10 @@ export function BreadcrumbHeader({
 
                 <div
                 className='
+                    h-[54px]
                     inline-flex items-center gap-2
                     px-2 py-3
-                    bg-white border border-gray-200 shadow-md rounded-full
+                    bg-gray-50/90 border backdrop-blur-xs border-gray-200 shadow-md rounded-full
                     transition-all
                     '
                 >

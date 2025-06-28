@@ -33,9 +33,9 @@ export function ArtistCard({
      <AnimatePresence mode="popLayout">
          <motion.div
             // key={ArtistCard}
-            layout
+            // layout="position"
              initial={{ opacity: 0, scale:.9 }}
-             animate={{ opacity: 1, scale:1 }}
+             animate={{ opacity: 1, scale: 1 }}
              exit={{ opacity: 0, scale:0 }}
              transition={{ duration: .2, ease: "easeInOut" }}
              className={`
@@ -52,7 +52,7 @@ export function ArtistCard({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        layout
+                        layout="position"
                      className={`
                      
                     flex items-start gap-3
@@ -77,7 +77,7 @@ export function ArtistCard({
                        )}
                         {/* Artist Image */}
                          {artistError 
-                         ? <div className='w-full h-full flex justify-center p-4'>
+                         ? <div className='w-full h-full flex justify-center p-4 min-w-0'>
                              <p>Can't find that artist 🤔</p>
                          </div> 
                          : <>

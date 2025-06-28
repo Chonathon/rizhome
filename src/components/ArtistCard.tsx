@@ -36,7 +36,7 @@ export function ArtistCard({
              exit={{ opacity: 0, y:3}}
              transition={{ duration: 0.2, ease: "easeOut" }}
              className={`
-            w-[420px] h-auto p-3 z-50 pb-4
+            w-[420px] h-auto min-h-[126] p-3 z-50 pb-4
             flex items-start gap-3
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
              max-w-full overflow-hidden

@@ -31,12 +31,12 @@ export function ArtistCard({
     return (!selectedArtist || !artistData) ? null : (
      <AnimatePresence mode="wait">
          <motion.div
-             initial={{ opacity: 0, width:0, y:3}}
-             animate={{ opacity: 1, width:"auto", y:0}}
-             exit={{ opacity: 0, width:0, y:3}}
+             initial={{ opacity: 0, y:3}}
+             animate={{ opacity: 1, y:0}}
+             exit={{ opacity: 0, y:3}}
              transition={{ duration: 0.2, ease: "easeOut" }}
              className={`
-             w-[420px] h-auto p-3 z-50 pb-4
+            w-[420px] h-auto p-3 z-50 pb-4
             flex items-start gap-3
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
              max-w-full overflow-hidden
@@ -50,7 +50,7 @@ export function ArtistCard({
                  <Loading />
                 ) : (
                  <>
-                   {isHovered || isMobile &&
+                   {(isHovered || isMobile) &&
                         <div className="w-full flex justify-end absolute top-0 pr-3">
                         <Button
                             className='hover:bg-white/0'

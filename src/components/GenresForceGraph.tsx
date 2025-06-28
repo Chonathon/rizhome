@@ -10,12 +10,13 @@ interface GenresForceGraphProps {
     links: NodeLink[];
     onNodeClick: (genreName: string) => void;
     loading: boolean;
+    show: boolean;
 }
 
 const GENRE_MAX_SIZE = 34000; // Approx. size of the largest genre (rock)
 const TRANSPARENCY = 0.8;
 
-const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading }) => {
+const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading, show }) => {
     const [graphData, setGraphData] = useState<GraphData<Genre, NodeLink>>({ nodes: [], links: [] });
     const fgRef = useRef<ForceGraphMethods<Genre, NodeLink> | undefined>(undefined);
 
@@ -32,7 +33,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                 fgRef.current.centerAt(-400, -800, 0);
             }
         }
-    }, [genres]);
+    }, [genres, show]);
 
     const calculateRadius = (artistCount: number) => {
         return 5 + Math.sqrt(artistCount) * 2;
@@ -108,14 +109,11 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     //     fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
     // }, [graphData, setVisibleGenres]);
 
-    return loading ? <Loading /> : (
+    return !show ? null : loading ? <Loading /> : (
         <ForceGraph
             ref={fgRef}
             graphData={graphData}
             linkVisibility={false}
-            linkColor='#666666'
-            linkCurvature={0.2}
-            nodeVisibility={true}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={nodeCanvasObject}
             nodeCanvasObjectMode={() => 'replace'}

@@ -9,9 +9,10 @@ interface ArtistsForceGraphProps {
     artistLinks: NodeLink[];
     onNodeClick: (artist: Artist) => void;
     loading: boolean;
+    show: boolean;
 }
 
-const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLinks, onNodeClick, loading}) => {
+const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLinks, onNodeClick, loading, show}) => {
     const [graphData, setGraphData] = useState<GraphData<Artist, NodeLink>>({ nodes: [], links: [] });
     useEffect(() => {
         if (artists && artistLinks) {
@@ -25,7 +26,7 @@ const ArtistsForceGraph: React.FC<ArtistsForceGraphProps> = ({artists, artistLin
 
     }, [artists]);
 
-    return loading ? (<div className="flex-1 h-[calc(100vh-104px)] w-full bg-gray-100">
+    return !show ? null : loading ? (<div className="flex-1 h-[calc(100vh-104px)] w-full bg-gray-100">
         <Loading />
     </div>) : (
         (<ForceGraph

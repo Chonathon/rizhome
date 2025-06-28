@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { useEffect, useCallback, useState } from "react";
 
+interface ResetButtonProps {
+    onClick: () => void;
+    show: boolean;
+}
 
+export function ResetButton({ onClick, show }: ResetButtonProps) {
 
-export function ResetButton(props: { onClick: () => void }) {
-  const { onClick } = props;
-  const isMobile = useMediaQuery({ maxWidth: 640 });
+  const isMobile = useMediaQuery({ maxWidth: 640 }); // pass this in as a prop if you want to use it
   const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -26,7 +29,7 @@ export function ResetButton(props: { onClick: () => void }) {
     };
   }, [handleKeyDown]);
 
-  return(
+  return show && (
       <motion.div 
       layout
       initial={{ opacity: 0, y: 16 }}

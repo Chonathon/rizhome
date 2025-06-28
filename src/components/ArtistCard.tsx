@@ -13,23 +13,35 @@ import { Skeleton } from './ui/skeleton';
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
-    setSelectedArtist: (artist: string | undefined) => void;
+    setArtistFromName: (artist: string) => void;
+    setSelectedArtist: (artist: Artist | undefined) => void;
     artistData?: LastFMArtistJSON;
     artistLoading: boolean;
     artistError?: AxiosError;
+    show: boolean;
+    setShowArtistCard: (show: boolean) => void;
+    deselectArtist: () => void;
 }
 
 export function ArtistCard({
     selectedArtist,
+    setArtistFromName,
     setSelectedArtist,
     artistData,
     artistLoading,
     artistError,
+    show,
+    setShowArtistCard,
+    deselectArtist,
 }: ArtistCardProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 640 });
-    return (!selectedArtist || !artistData) ? null : (
+    const onDeselectArtist = () => {
+        setIsHovered(false);
+        deselectArtist();
+    }
+    return !show ? null : (
      <AnimatePresence mode="wait">
          <motion.div
             // key={ArtistCard}
@@ -67,10 +79,7 @@ export function ArtistCard({
                                 className='hover:bg-white/0'
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => (
-                                    setSelectedArtist(undefined),
-                                    setIsHovered(false)
-                                )}
+                                onClick={() => onDeselectArtist()}
                             >
                                 <CircleX className=' fill-gray-500 text-white overflow-hidden size-5' size={20} />
                             </Button>
@@ -79,7 +88,7 @@ export function ArtistCard({
                         {/* Artist Image */}
                          {artistError 
                          ? <div className='w-full h-full flex justify-center p-4 min-w-0'>
-                             <p>Can't find {selectedArtist.name} 🤔</p>
+                             <p>Can't find {selectedArtist && selectedArtist.name} 🤔</p>
                          </div> 
                          : <>
                              <div className={`
@@ -90,15 +99,15 @@ export function ArtistCard({
                                  <img
                                      className={`w-24 h-24 object-cover
                                         ${isExpanded ? 'w-full h-full object-cover aspect-[4/3]' : ''}`}
-                                     src={artistData.image[0].link}
-                                     alt={artistData.name}
-                                     />
+                                     src={artistData && artistData.image[0].link}
+                                     alt={artistData && artistData.name}
+                                 />
                                 </div>
                                  <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
                                 {/* Artist Name */}
                                     {artistLoading
                                     ? <Skeleton className='h-[24px] w-full'/>
-                                    : <h2 className="w-full text-md font-semibold">{artistData.name}</h2>}
+                                    : <h2 className="w-full text-md font-semibold">{artistData && artistData.name}</h2>}
                                          {/* Artist Stats */}
                                          {artistLoading
                                          ? <>
@@ -107,16 +116,16 @@ export function ArtistCard({
                                                 <Skeleton className='h-[20px] w-full'/>
                                          </>
                                          : <div className='text-sm'>
-                                            {artistData.stats.listeners && (
+                                            {artistData && artistData.stats.listeners && (
                                                 <h3><span className='font-medium'>Listeners:</span> {formatNumber(artistData.stats.listeners)}
                                                 </h3>
                                             )}
-                                            <h3><span className='font-medium'>Founded:</span> {selectedArtist.startDate ? formatDate(selectedArtist.startDate) : 'Unknown'} </h3>
-                                                                        {artistData.similar && (
+                                            <h3><span className='font-medium'>Founded:</span> {selectedArtist && selectedArtist.startDate ? formatDate(selectedArtist.startDate) : 'Unknown'} </h3>
+                                                                        {artistData && artistData.similar && (
                                             <h3>
                                                 <span className='font-medium'>Similar:</span> {artistData.similar.slice(0, 3).map((name, index, array) => (
                                                 <>
-                                                    <button key={name} onClick={() => setSelectedArtist(name)}>
+                                                    <button key={index + name} onClick={() => setArtistFromName(name)}>
                                                         {name}
                                                     </button>
                                                     {index < array.length - 1 ? ', ' : ''}
@@ -133,7 +142,9 @@ export function ArtistCard({
                                          <p
                                          onClick={() => setIsExpanded(prev => !prev)}
                                          className=
-                                         {`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "text-muted-foreground" : "line-clamp-3 overflow-hidden"}`}>{artistData.bio ? artistData.bio.summary : 'No bio'}</p>
+                                         {`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "text-muted-foreground" : "line-clamp-3 overflow-hidden"}`}>
+                                             {artistData && artistData.bio ? artistData.bio.summary : 'No bio'}
+                                         </p>
                                      </div>
                                  </div>
                          </>}

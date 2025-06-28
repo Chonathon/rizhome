@@ -1,33 +1,32 @@
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb'
 import { LucideIcon, ChevronDown, ChevronUp } from 'lucide-react'
-import {Artist, BasicNode} from '@/types'
+import {Artist, BasicNode, GraphType} from '@/types'
 import { Button } from "@/components/ui/button"
 import useGenres from "@/hooks/useGenres";
 
 interface BreadcrumbHeaderProps {
-    selectedGenre: string | undefined
-    setSelectedGenre: (genre: string | undefined) => void
-    selectedArtist: Artist | undefined
-    setSelectedArtist: (artist: Artist | undefined) => void
-    HomeIcon: LucideIcon
-    toggleListView: () => void
-    showListView: boolean
+    selectedGenre: string | undefined;
+    selectedArtist: Artist | undefined;
+    HomeIcon: LucideIcon;
+    toggleListView: () => void;
+    showListView: boolean;
+    reset: () => void;
+    hideArtistCard: () => void;
 }
 
 export function BreadcrumbHeader({
     selectedGenre,
-    setSelectedGenre,
     selectedArtist,
-    setSelectedArtist,
     HomeIcon,
     toggleListView,
-    showListView
+    showListView,
+    reset,
+    hideArtistCard
 }: BreadcrumbHeaderProps) {
-    const { genres, genreLinks, genresLoading, genresError } = useGenres();
+
     return (
         <div>
-
-                <div
+            <div
                 className='
                     h-[54px]
                     inline-flex items-center gap-2
@@ -43,10 +42,7 @@ export function BreadcrumbHeader({
                         <BreadcrumbList>
                             {/* Home icon - always visible */}
                             <BreadcrumbItem>
-                                <BreadcrumbLink onClick={() => {
-                                    setSelectedGenre(undefined)
-                                    setSelectedArtist(undefined)
-                                } }>
+                                <BreadcrumbLink onClick={() => reset()}>
                                     <HomeIcon size={20} />
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
@@ -57,10 +53,7 @@ export function BreadcrumbHeader({
                                     <BreadcrumbItem>
                                         {selectedArtist ? (
                                             // Clickable link that sets selectedArtist to undefined
-                                            <BreadcrumbLink onClick={() => {
-                                                setSelectedArtist(undefined)
-                                                // TODO: Add logic to reset graph view to genre level
-                                            } }>
+                                            <BreadcrumbLink onClick={() => hideArtistCard()}>
                                                 {selectedGenre}
                                             </BreadcrumbLink>
                                         ) : (
@@ -81,15 +74,14 @@ export function BreadcrumbHeader({
                         </BreadcrumbList>
                     </Breadcrumb>
                     {/* show to have access to ListViewPanel */}
-                    {/* <Button
-                    variant="secondary"
-                    size="sm"
-                    className='rounded-full'
-                    onClick={toggleListView}>
-                        
-                        {showListView ? <ChevronUp /> : <ChevronDown />}
-                    </Button> */}
-                </div>
+                    {/*<Button*/}
+                    {/*variant="secondary"*/}
+                    {/*size="sm"*/}
+                    {/*className='rounded-full'*/}
+                    {/*onClick={toggleListView}>*/}
+                    {/*    {showListView ? <ChevronUp /> : <ChevronDown />}*/}
+                    {/*</Button>*/}
+            </div>
         </div>
     )
 }

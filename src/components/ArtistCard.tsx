@@ -30,7 +30,7 @@ export function ArtistCard({
     const [isHovered, setIsHovered] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 640 });
     return (!selectedArtist || !artistData) ? null : (
-     <AnimatePresence mode="popLayout">
+     <AnimatePresence mode="wait">
          <motion.div
             // key={ArtistCard}
             // layout="position"
@@ -47,12 +47,12 @@ export function ArtistCard({
              onMouseLeave={() => setIsHovered(false)}
              >
                  <AnimatePresence mode="wait">
-                     <motion.div 
-                        initial={{ opacity: 0}}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        layout="position"
+                     <div 
+                        // initial={{ opacity: 0}}
+                        // animate={{ opacity: 1 }}
+                        // exit={{ opacity: 0 }}
+                        // transition={{ duration: 0.2, ease: "easeInOut" }}
+                        // layout="position"
                      className={`
                      
                     flex items-start gap-3
@@ -136,7 +136,7 @@ export function ArtistCard({
                                      </div>
                                  </div>
                          </>}
-                     </motion.div>
+                     </div>
                  </AnimatePresence>
          </motion.div>
      </AnimatePresence>

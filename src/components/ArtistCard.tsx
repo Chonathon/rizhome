@@ -78,7 +78,7 @@ export function ArtistCard({
                         {/* Artist Image */}
                          {artistError 
                          ? <div className='w-full h-full flex justify-center p-4 min-w-0'>
-                             <p>Can't find that artist 🤔</p>
+                             <p>Can't find {selectedArtist.name} 🤔</p>
                          </div> 
                          : <>
                              <div className={`

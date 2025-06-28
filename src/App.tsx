@@ -94,29 +94,30 @@ function App() {
           />
       )}
   
-      <div className={`
-        fixed left-1/2 transform -translate-x-1/2
-        flex items-center gap-4
-        ${isMobile 
-        ? " flex-col-reverse bottom-4" 
-        : "bottom-8"}`}>
-          <div>
-            <ResetButton
-              onClick={() => {
-                  setSelectedGenre(undefined);
-                  setSelectedArtist(undefined);
-              }}
-              />
-          </div>
-          <ArtistCard
-              selectedArtist={selectedArtist}
-              setSelectedArtist={setArtistFromName}
-              artistData={artistData}
-              artistLoading={artistLoading}
-              artistError={artistError}
-          />
-        </div>
+        <motion.div
 
+        className={`
+          fixed left-1/2 transform -translate-x-1/2 z-999
+          flex gap-4
+          ${isMobile
+          ? "w-full px-4 items-center flex-col-reverse bottom-4"
+          : "bottom-8  items-end"}`}>
+            <div>
+              <ResetButton
+                onClick={() => {
+                    setSelectedGenre(undefined);
+                    setSelectedArtist(undefined);
+                }}
+                />
+            </div>
+            <ArtistCard
+                selectedArtist={selectedArtist}
+                setSelectedArtist={setSelectedArtist}
+                artistData={artistData}
+                artistLoading={artistLoading}
+                artistError={artistError}
+            />
+          </motion.div>
   </>
 )} 
 

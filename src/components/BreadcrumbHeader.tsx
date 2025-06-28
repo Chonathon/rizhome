@@ -79,14 +79,15 @@ export function BreadcrumbHeader({
                             )} */}
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <Button
+                    {/* show to have access to ListViewPanel */}
+                    {/* <Button
                     variant="secondary"
                     size="sm"
                     className='rounded-full'
                     onClick={toggleListView}>
                         
                         {showListView ? <ChevronUp /> : <ChevronDown />}
-                    </Button>
+                    </Button> */}
                 </div>
         </div>
     )

@@ -68,3 +68,5 @@ export interface LastFMBio {
     summary: string;
     content: string;
 }
+
+export type GraphType = 'genres' | 'artists';

@@ -9,23 +9,24 @@ import useGenres from "@/hooks/useGenres";
 import useArtist from "@/hooks/useArtist";
 import ArtistsForceGraph from "@/components/ArtistsForceGraph";
 import GenresForceGraph from "@/components/GenresForceGraph";
-import {Artist, BasicNode} from "@/types";
+import {Artist, BasicNode, GraphType} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
-import { Gradient } from './components/Gradient'
+import { Gradient } from './components/Gradient';
 
 function App() {
-  // App state for selected genre and artist
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
   const [selectedArtist, setSelectedArtist] = useState<Artist | undefined>(undefined);
+  const [showListView, setShowListView] = useState(false);
+  const [showArtistCard, setShowArtistCard] = useState(false);
+  const [graph, setGraph] = useState<GraphType>('genres');
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
-  const [showListView, setShowListView] = useState(false);
-  const [showArtistCard, setShowArtistCard] = useState(false)
+
   const isMobile = useMediaQuery({ maxWidth: 640 });
   // const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
 
@@ -33,8 +34,29 @@ function App() {
     const artist = artists.find((artist) => artist.name === name);
     if (artist) {
       setSelectedArtist(artist);
+      setShowArtistCard(true);
     }
   }
+  const onGenreNodeClick = (genre: string) => {
+    setSelectedGenre(genre);
+    setGraph('artists');
+  }
+  const onArtistNodeClick = (artist: Artist) => {
+    setSelectedArtist(artist);
+    setShowArtistCard(true);
+  }
+  const resetAppState = () => {
+    setGraph('genres');
+    setSelectedGenre(undefined);
+    setSelectedArtist(undefined);
+    setShowArtistCard(false);
+    setShowListView(false);
+  }
+  const deselectArtist = () => {
+    setSelectedArtist(undefined);
+    setShowArtistCard(false);
+  }
+
   console.log("App render", {
   selectedGenre,
   selectedArtist,
@@ -58,43 +80,39 @@ function App() {
       }>
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
-              setSelectedGenre={setSelectedGenre}
               selectedArtist={selectedArtist}
-              setSelectedArtist={setSelectedArtist}
               HomeIcon={Waypoints}
               toggleListView={() => setShowListView(!showListView)}
               showListView={showListView}
+              reset={resetAppState}
+              hideArtistCard={deselectArtist}
           />
-          {showListView && !genresLoading && !genresError &&
-                  (<ListViewPanel
-                  genres={genres}
-                  selectedGenre={selectedGenre}
-                  selectedArtist={selectedArtist}
-                  genreLinksCount={genreLinks.length}
-                  />)}
+          <ListViewPanel
+              genres={genres}
+              onGenreClick={onGenreNodeClick}
+              setSelectedArtist={setSelectedArtist}
+              genreLinksCount={genreLinks.length}
+              show={showListView && !genresError}
+              genresLoading={genresLoading}
+              artistsLoading={artistsLoading}
+              currentGraph={graph}
+              isMobile={isMobile}
+          />
         </div>
-      {/* Genres Graph */}
-        {!selectedArtist && !selectedGenre && (
-            <GenresForceGraph
-                genres={genres}
-                links={genreLinks}
-                onNodeClick={setSelectedGenre}
-                loading={genresLoading}
-            />
-        )}
-
-      {/* Artists Graph */}
-{selectedGenre && (
-  <>
-      {!artistsLoading && (
-          <ArtistsForceGraph
+        <GenresForceGraph
+            genres={genres}
+            links={genreLinks}
+            onNodeClick={onGenreNodeClick}
+            loading={genresLoading}
+            show={graph === 'genres' && !genresError}
+        />
+        <ArtistsForceGraph
             artists={artists}
             artistLinks={artistLinks}
             loading={artistsLoading}
-            onNodeClick={setSelectedArtist}
-          />
-      )}
-  
+            onNodeClick={onArtistNodeClick}
+            show={graph === 'artists' && !artistsError}
+        />
         <AnimatePresence mode="popLayout">
           <motion.div
           // layout
@@ -114,25 +132,23 @@ function App() {
                 // transition={{ layout: { duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
               >
                 <ResetButton
-                  onClick={() => {
-                      setSelectedGenre(undefined);
-                      setSelectedArtist(undefined);
-                  }}
+                  onClick={() => resetAppState()}
+                  show={graph === 'artists'}
                 />
               </motion.div>
               <ArtistCard
                   selectedArtist={selectedArtist}
+                  setArtistFromName={setArtistFromName}
                   setSelectedArtist={setSelectedArtist}
                   artistData={artistData}
                   artistLoading={artistLoading}
                   artistError={artistError}
+                  show={showArtistCard}
+                  setShowArtistCard={setShowArtistCard}
+                  deselectArtist={deselectArtist}
               />
             </motion.div>
         </AnimatePresence>
-  </>
-)} 
-
-      
     </div>
   )
 }

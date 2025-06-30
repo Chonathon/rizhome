@@ -58,25 +58,7 @@ export function ArtistCard({
              onMouseEnter={() => setIsHovered(true)}
              onMouseLeave={() => setIsHovered(false)}
              >
-                    {/* TODO: this animation isn't working as intented */}
-                     <motion.div 
-                        key={setSelectedArtist?.name}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          layout: { duration: 0, ease: "easeInOut" },
-                          opacity: { delay: 0.3, duration: 0.3, ease: "easeOut" }
-                        }}
-                        layout
-                     className={`
-                     
-                    flex items-start gap-3
-                    ${isMobile ? 'w-full' : ''}
-                    ${isExpanded ? 'flex-col' : ''}
-                    `}>
-                        {/* Dismiss button shouldn't animate with content */}
-                       {(isHovered || isMobile) && (
+                {(isHovered || isMobile) && (
                             <div className="w-full flex justify-end absolute top-0 pr-3">
                             <Button
                                 className='hover:bg-white/0'
@@ -88,6 +70,25 @@ export function ArtistCard({
                             </Button>
                         </div>
                        )}
+                    {/* TODO: this animation isn't working as intented */}
+                     <motion.div 
+                        key={selectedArtist?.name}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          layout: { duration: 0, ease: "easeOut" },
+                          opacity: { delay: 0.3, duration: 0.3, ease: "easeOut" }
+                        }}
+                        layout
+                     className={`
+                     
+                    flex items-start gap-3
+                    ${isMobile ? 'w-full' : ''}
+                    ${isExpanded ? 'flex-col' : ''}
+                    `}>
+                        {/* Dismiss button shouldn't animate with content */}
+                       
                         {/* Artist Image */}
                          {artistError 
                          ? <div className='w-full h-full flex justify-center p-4 min-w-0'>

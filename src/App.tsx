@@ -119,7 +119,7 @@ function App() {
           <motion.div
           // layout
           className={`
-            fixed left-1/2 transform -translate-x-1/2 z-999
+            fixed left-1/2 transform -translate-x-1/2
             flex gap-4
             ${isMobile
             ? "w-full px-4 items-center flex-col-reverse bottom-4"

@@ -45,11 +45,11 @@ export function ArtistCard({
      <AnimatePresence mode="wait">
          <motion.div
             // key={ArtistCard}
-            // layout="position"
-             initial={{ opacity: 0, scale:.9 }}
-             animate={{ opacity: 1, scale: 1 }}
-             exit={{ opacity: 0, scale:0 }}
-             transition={{ duration: .2, ease: "easeInOut" }}
+            layout
+             initial={{ scale:.9 }}
+             animate={{ scale: 1 }}
+             exit={{ scale:0 }}
+             transition={{ duration: .2, ease: "easeOut" }}
              className={`
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
@@ -58,14 +58,17 @@ export function ArtistCard({
              onMouseEnter={() => setIsHovered(true)}
              onMouseLeave={() => setIsHovered(false)}
              >
-                 <AnimatePresence mode="wait">
                     {/* TODO: this animation isn't working as intented */}
                      <motion.div 
-                        // initial={{ opacity: 0}}
-                        // animate={{ opacity: 1 }}
-                        // exit={{ opacity: 0 }}
-                        // transition={{ duration: 0.2, ease: "easeInOut" }}
-                        // layout="position"
+                        key={setSelectedArtist?.name}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          layout: { duration: 0, ease: "easeInOut" },
+                          opacity: { delay: 0.3, duration: 0.3, ease: "easeOut" }
+                        }}
+                        layout
                      className={`
                      
                     flex items-start gap-3
@@ -149,7 +152,6 @@ export function ArtistCard({
                                  </div>
                          </>}
                      </motion.div>
-                 </AnimatePresence>
          </motion.div>
      </AnimatePresence>
     )

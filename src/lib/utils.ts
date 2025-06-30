@@ -16,3 +16,7 @@ export const formatDate = (dateString: string) => {
 
 export const formatNumber = (value: number) =>
   new Intl.NumberFormat('en-US').format(value);
+
+export const envBoolean = (value: string) => {
+  return value && (value.toLowerCase() === 'true' || parseInt(value) === 1);
+}

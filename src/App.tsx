@@ -79,7 +79,6 @@ function App() {
           ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
           : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
       }>
-          <Search />
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
               selectedArtist={selectedArtist}
@@ -117,39 +116,37 @@ function App() {
         />
         <AnimatePresence mode="popLayout">
           <motion.div
-          // layout
-          className={`
-            fixed left-1/2 transform -translate-x-1/2
-            flex gap-4
-            ${isMobile
-            ? "w-full px-4 items-center flex-col-reverse bottom-4"
-            : "bottom-8  items-end"}`}>
-              <motion.div
-                // layout
-                // initial={{ opacity: 1 }}
-                // animate={{ opacity: isLayoutAnimating ? 0 : 1 }}
-                // exit={{ opacity: 0 }}
-                // onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
-                // onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
-                // transition={{ layout: { duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
-              >
-                <ResetButton
-                  onClick={() => resetAppState()}
-                  show={graph === 'artists'}
-                />
-              </motion.div>
-              <ArtistCard
-                  selectedArtist={selectedArtist}
-                  setArtistFromName={setArtistFromName}
-                  setSelectedArtist={setSelectedArtist}
-                  artistData={artistData}
-                  artistLoading={artistLoading}
-                  artistError={artistError}
-                  show={showArtistCard}
-                  setShowArtistCard={setShowArtistCard}
-                  deselectArtist={deselectArtist}
+            className={`
+              fixed left-1/2 transform -translate-x-1/2
+              flex flex-col gap-4
+              ${isMobile
+                ? "w-full px-4 items-center bottom-4"
+                : "bottom-8 items-end"}
+            `}
+          >
+            <ArtistCard
+              selectedArtist={selectedArtist}
+              setArtistFromName={setArtistFromName}
+              setSelectedArtist={setSelectedArtist}
+              artistData={artistData}
+              artistLoading={artistLoading}
+              artistError={artistError}
+              show={showArtistCard}
+              setShowArtistCard={setShowArtistCard}
+              deselectArtist={deselectArtist}
+            />
+            <div className={`flex gap-4 ${graph === 'artists' ? 'w-full' : ''}`}>
+              <ResetButton
+                onClick={() => resetAppState()}
+                show={graph === 'artists'}
               />
-            </motion.div>
+              <motion.div
+                className={`${graph === 'artists' ? 'flex-grow' : ''}`}
+              >
+                <Search className={`${graph === 'artists' ? 'w-full' : ''}`} />
+              </motion.div>
+            </div>
+          </motion.div>
         </AnimatePresence>
     </div>
   )

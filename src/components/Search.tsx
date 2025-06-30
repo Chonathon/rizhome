@@ -6,14 +6,19 @@ import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X } from "lucide-react"
 
-export function Search() {
+// Utility function to conditionally join class names
+function cn(...classes: (string | undefined | false | null)[]) {
+  return classes.filter(Boolean).join(' ');
+}
+
+export function Search({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
 
   const allSearchableItems = React.useMemo(() => {
-    const genres = dummyGenres.map(genre => ({ id: genre.id, name: genre.name, type: 'genre' }));
-    const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' }));
+    const genres = dummyGenres.map(genre => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
+    const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
     return [...genres, ...artists];
   }, []);
 
@@ -29,15 +34,16 @@ export function Search() {
   }, [])
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+    <>
       <Button
         variant="outline"
-        className="w-[300px] h-[54px] 
-        bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
+        className={cn(
+          "w-[300px] h-[54px] bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
+          className
+        )}
         onClick={() => setOpen(true)}
       >
         <span>Search...</span>
-        {/* <span>⌘ + K</span> */}
         <Badge
         className="text-xs text-muted-foreground"
         variant="outline"
@@ -47,7 +53,7 @@ export function Search() {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>
-          <CommandEmpty>{inputValue ? "No results found." : ""}</CommandEmpty>
+          <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>
           {recentSelections.length > 0 && (
             <CommandGroup heading="Recent Selections">
               {recentSelections.map((selection) => (
@@ -95,6 +101,6 @@ export function Search() {
           )}
         </CommandList>
       </CommandDialog>
-    </div>
+    </>
   )
 }

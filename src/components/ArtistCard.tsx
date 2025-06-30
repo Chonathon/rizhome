@@ -49,7 +49,7 @@ export function ArtistCard({
              initial={{ scale:.9 }}
              animate={{ scale: 1 }}
              exit={{ scale:0 }}
-             transition={{ duration: .2, ease: "easeOut" }}
+             transition={{ type: "spring", stiffness: 250, damping: 24, mass: .8 }}
              className={`
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200

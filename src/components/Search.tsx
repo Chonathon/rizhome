@@ -8,7 +8,14 @@ import { X } from "lucide-react"
 
 export function Search() {
   const [open, setOpen] = React.useState(false)
+  const [inputValue, setInputValue] = React.useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
+
+  const allSearchableItems = React.useMemo(() => {
+    const genres = dummyGenres.map(genre => ({ id: genre.id, name: genre.name, type: 'genre' }));
+    const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' }));
+    return [...genres, ...artists];
+  }, []);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -38,9 +45,9 @@ export function Search() {
         </Badge>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{inputValue ? "No results found." : ""}</CommandEmpty>
           {recentSelections.length > 0 && (
             <CommandGroup heading="Recent Selections">
               {recentSelections.map((selection) => (
@@ -69,33 +76,23 @@ export function Search() {
             </CommandGroup>
           )}
           {recentSelections.length > 0 && <CommandSeparator />}
-          <CommandGroup heading="Genres">
-            {dummyGenres.map((genre) => (
-              <CommandItem
-                key={genre.id}
-                onSelect={() => {
-                  addRecentSelection({ id: genre.id, name: genre.name, type: 'genre' });
-                  setOpen(false);
-                }}
-              >
-                {genre.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Artists">
-            {dummyLastFMArtistData.map((artist) => (
-              <CommandItem
-                key={artist.mbid}
-                onSelect={() => {
-                  addRecentSelection({ id: artist.mbid, name: artist.name, type: 'artist' });
-                  setOpen(false);
-                }}
-              >
-                {artist.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {inputValue && (
+            <CommandGroup heading="All Results">
+              {allSearchableItems.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  onSelect={() => {
+                    addRecentSelection({ id: item.id, name: item.name, type: item.type });
+                    setOpen(false);
+                  }}
+                  className="flex items-center justify-between"
+                >
+                  <span>{item.name}</span>
+                  <Badge variant="secondary">{item.type}</Badge>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
         </CommandList>
       </CommandDialog>
     </div>

@@ -16,6 +16,7 @@ import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient';
+import { Search } from './components/Search';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
@@ -78,6 +79,7 @@ function App() {
           ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
           : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
       }>
+          <Search />
           <BreadcrumbHeader
               selectedGenre={selectedGenre}
               selectedArtist={selectedArtist}

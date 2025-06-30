@@ -53,13 +53,17 @@ export function Search() {
                   className="flex items-center justify-between"
                 >
                   <span>{selection.name}</span>
-                  <X
-                    className="ml-2 h-4 w-4 text-muted-foreground cursor-pointer"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent CommandItem onSelect from firing
                       removeRecentSelection(selection.id);
                     }}
-                  />
+                    className="h-auto p-1"
+                  >
+                    <X className="h-4 w-4 text-muted-foreground" />
+                  </Button>
                 </CommandItem>
               ))}
             </CommandGroup>

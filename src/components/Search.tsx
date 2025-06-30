@@ -23,7 +23,8 @@ export function Search() {
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
       <Button
         variant="outline"
-        className="w-[300px] py-7 shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
+        className="w-[300px] h-[54px] 
+        bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
         onClick={() => setOpen(true)}
       >
         <span>Search...</span>

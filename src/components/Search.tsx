@@ -6,11 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils"
 
-// Utility function to conditionally join class names
-function cn(...classes: (string | undefined | false | null)[]) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export function Search({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false)
@@ -42,7 +39,7 @@ export function Search({ className }: { className?: string }) {
         <Button
           variant="outline"
           className={cn(
-            "w-full h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
+            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
             className
           )}
           onClick={() => setOpen(true)}

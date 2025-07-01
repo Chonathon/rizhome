@@ -148,7 +148,7 @@ function App() {
                 layout
                 // className={`${graph === 'artists' ? 'flex-grow' : ''}`}
               >
-                <Search  />
+                <Search />
               </motion.div>
             </div>
           </motion.div>

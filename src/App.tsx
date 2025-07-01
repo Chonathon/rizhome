@@ -26,7 +26,7 @@ function App() {
   const [graph, setGraph] = useState<GraphType>('genres');
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
-  const { artistData, artistLoading, artistError } = useArtist(selectedArtist?.id);
+  const { artistData, artistLoading, artistError } = useArtist(selectedArtist);
 
   const isMobile = useMediaQuery({ maxWidth: 640 });
   // const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
@@ -56,6 +56,9 @@ function App() {
   const deselectArtist = () => {
     setSelectedArtist(undefined);
     setShowArtistCard(false);
+  }
+  const similarArtistFilter = (similarArtists: string[]) => {
+    return similarArtists.filter(s => artists.some(a => a.name === s));
   }
 
   console.log("App render", {
@@ -99,7 +102,6 @@ function App() {
               currentGraph={graph}
               isMobile={isMobile}
           />
-        </div>
         <GenresForceGraph
             genres={genres}
             links={genreLinks}
@@ -134,6 +136,7 @@ function App() {
               show={showArtistCard}
               setShowArtistCard={setShowArtistCard}
               deselectArtist={deselectArtist}
+              similarFilter={similarArtistFilter}
             />
             <div className={`flex gap-4 ${graph === 'artists' ? 'w-full' : ''}`}>
               <ResetButton
@@ -149,6 +152,7 @@ function App() {
             </div>
           </motion.div>
         </AnimatePresence>
+    </div>
     </div>
   )
 }

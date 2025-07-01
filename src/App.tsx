@@ -102,6 +102,7 @@ function App() {
               currentGraph={graph}
               isMobile={isMobile}
           />
+          </div>
         <GenresForceGraph
             genres={genres}
             links={genreLinks}
@@ -152,7 +153,6 @@ function App() {
             </div>
           </motion.div>
         </AnimatePresence>
-    </div>
     </div>
   )
 }

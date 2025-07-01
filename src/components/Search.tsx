@@ -42,14 +42,14 @@ export function Search({ className }: { className?: string }) {
         <Button
           variant="outline"
           className={cn(
-            "w-[300px] h-[54px] bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
+            "w-full h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
             className
           )}
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-1 items-center">
             <SearchIcon size={20}></SearchIcon>
-            <span>Search...</span>
+            {/* <span>Search...</span> */}
           </div>
           <Badge
           className="text-xs text-muted-foreground"

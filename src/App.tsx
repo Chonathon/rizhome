@@ -138,16 +138,16 @@ function App() {
               deselectArtist={deselectArtist}
               similarFilter={similarArtistFilter}
             />
-            <div className={`flex gap-4 ${graph === 'artists' ? 'w-full' : ''}`}>
+            <div className={`flex justify-center gap-3 ${graph === 'artists' ? 'w-full' : ''}`}>
               <ResetButton
                 onClick={() => resetAppState()}
                 show={graph === 'artists'}
               />
               <motion.div
                 layout
-                className={`${graph === 'artists' ? 'flex-grow' : ''}`}
+                // className={`${graph === 'artists' ? 'flex-grow' : ''}`}
               >
-                <Search className={`${graph === 'artists' ? 'w-full' : ''}`} />
+                <Search  />
               </motion.div>
             </div>
           </motion.div>

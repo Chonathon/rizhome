@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command"
 import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
-import { X } from "lucide-react"
+import { X, Search as SearchIcon } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion";
 
 // Utility function to conditionally join class names
 function cn(...classes: (string | undefined | false | null)[]) {
@@ -35,21 +36,28 @@ export function Search({ className }: { className?: string }) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        className={cn(
-          "w-[300px] h-[54px] bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
-          className
-        )}
-        onClick={() => setOpen(true)}
+      <motion.div
+      layout
       >
-        <span>Search...</span>
-        <Badge
-        className="text-xs text-muted-foreground"
-        variant="outline"
-        >⌘K
-        </Badge>
-      </Button>
+        <Button
+          variant="outline"
+          className={cn(
+            "w-[300px] h-[54px] bg-white/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
+            className
+          )}
+          onClick={() => setOpen(true)}
+        >
+          <div className="flex gap-1 items-center">
+            <SearchIcon size={20}></SearchIcon>
+            <span>Search...</span>
+          </div>
+          <Badge
+          className="text-xs text-muted-foreground"
+          variant="outline"
+          >⌘K
+          </Badge>
+        </Button>
+      </motion.div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>

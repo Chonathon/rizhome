@@ -117,7 +117,7 @@ function App() {
         <AnimatePresence mode="popLayout">
           <motion.div
             className={`
-              fixed left-1/2 transform -translate-x-1/2
+              fixed left-1/2 transform -translate-x-1/2 z-50
               flex flex-col gap-4
               ${isMobile
                 ? "w-full px-4 items-center bottom-4"
@@ -141,6 +141,7 @@ function App() {
                 show={graph === 'artists'}
               />
               <motion.div
+                layout
                 className={`${graph === 'artists' ? 'flex-grow' : ''}`}
               >
                 <Search className={`${graph === 'artists' ? 'w-full' : ''}`} />

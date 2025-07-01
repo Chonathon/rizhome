@@ -45,7 +45,7 @@ export interface NodeLink {
 export interface LastFMArtistJSON {
     name: string;
     mbid: string;
-    image: LastFMImage[];
+    image: string;
     ontour: boolean;
     stats: LastFMStats;
     bio: LastFMBio;

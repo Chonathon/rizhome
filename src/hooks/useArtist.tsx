@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Artist, LastFMArtistJSON, NodeLink} from "@/types";
+import {Artist, LastFMArtistJSON} from "@/types";
 import axios, {AxiosError} from "axios";
 import {envBoolean} from "@/lib/utils";
 
@@ -15,25 +15,23 @@ const useArtist = (artist?: Artist) => {
     const fetchArtist = async () => {
         if (artist) {
             setArtistLoading(true);
+            let response;
             try {
-                const response = await axios.get(`${url}/artists/data/${artist.id}`);
-                const image = await axios.get(`${url}/artists/image/${artist.id}`);
-                setArtistData({...response.data, image: image.data});
-                setArtistError(undefined);
+                response = await axios.get(`${url}/artists/data/${artist.id}/${artist.name}`);
             } catch (err) {
-                try {
-                    const response = await axios.get(`${url}/artists/data/${artist.name}`);
-                    const image = await axios.get(`${url}/artists/image/${artist.id}`);
-                    setArtistData({...response.data, image: image.data});
-                    setArtistError(undefined);
-                } catch (err) {
-                    if (err instanceof AxiosError) {
-                        setArtistError(err);
-                    }
-                }
                 if (err instanceof AxiosError) {
                     setArtistError(err);
                 }
+            }
+            if (response) {
+                let image;
+                try {
+                    image = await axios.get(`${url}/artists/image/${artist.id}`);
+                } catch (err) {
+
+                }
+                setArtistData({...response.data, image: image ? image.data : undefined });
+                setArtistError(undefined);
             }
             setArtistLoading(false);
         }

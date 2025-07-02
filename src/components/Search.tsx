@@ -1,24 +1,31 @@
 import * as React from "react"
-import { dummyLastFMArtistData, dummyGenres } from "@/DummyDataForDummies"
+import { dummyLastFMArtistData } from "@/DummyDataForDummies"
 import { Button } from "@/components/ui/button"
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command"
 import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils"
+import {Genre} from "@/types";
 
+interface SearchProps {
+  genres: Genre[];
+  onGenreSelect: (genre: string) => void;
+  onArtistSelect: (artistName: string) => void;
+  className?: string;
+}
 
-export function Search({ className }: { className?: string }) {
+export function Search({ genres, onGenreSelect, onArtistSelect, className }: SearchProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
 
   const allSearchableItems = React.useMemo(() => {
-    const genres = dummyGenres.map(genre => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
+    const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
     const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
-    return [...genres, ...artists];
-  }, []);
+    return [...genreItems, ...artists];
+  }, [genres]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -94,6 +101,11 @@ export function Search({ className }: { className?: string }) {
                 <CommandItem
                   key={item.id}
                   onSelect={() => {
+                    if (item.type === 'genre') {
+                      onGenreSelect(item.name);
+                    } else {
+                      onArtistSelect(item.name);
+                    }
                     addRecentSelection({ id: item.id, name: item.name, type: item.type });
                     setOpen(false);
                   }}

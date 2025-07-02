@@ -108,22 +108,22 @@ export function ArtistCard({
               </div>
             ) : (
               <>
-                <div
-                  className={`
-                                 w-24 h-24 shrink-0 overflow-hidden
-                                 rounded-lg border border-gray-100
-                                 ${isExpanded ? "w-full h-[160px]" : ""}
-                             `}
-                >
-                  {artistData && artistData.image && (
+                {artistData?.image && artistData && (
+                  <div
+                    className={`
+                      w-24 h-24 shrink-0 overflow-hidden
+                      rounded-xl border border-gray-100
+                      ${isExpanded ? "w-full h-[200px]" : ""}
+                    `}
+                  >
                     <img
                       className={`w-24 h-24 object-cover
-                                        ${isExpanded ? "w-full h-full object-cover aspect-[4/3]" : ""}`}
+                        ${isExpanded ? "w-full h-full" : ""}`}
                       src={artistData.image}
                       alt={artistData.name}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
                   {/* Artist Name */}
                   {artistLoading ? (
@@ -176,10 +176,10 @@ export function ArtistCard({
                   )}
                   <div
                     className="
-                                     w-full
-                                     flex flex-col
-                                     text-sm text-muted-foreground
-                                     "
+                      w-full
+                      flex flex-col
+                      text-sm text-muted-foreground
+                      "
                   >
                     <p
                       onClick={() => setIsExpanded((prev) => !prev)}

@@ -122,95 +122,98 @@ export function ArtistCard({
               </div>
             ) : (
               <>
-                {artistData?.image && artistData && (
-                  <div
-                    className={`
+                {artistLoading ? (
+                  <>
+                    {/* <Skeleton className={`w-24 h-24 shrink-0 rounded-xl`} /> */}
+                    {/* <Loading /> */}
+                    {/* <div className="flex-1 flex flex-col items-start gap-2 min-w-0 w-full">
+                      <Skeleton className="h-[22px] w-3/4" />
+                      <Skeleton className="h-[18px] w-full" />
+                      <Skeleton className="h-[18px] w-full" />
+                      <div className='w-full pr-32'>
+                        <Skeleton className="h-[18px] w-full" />
+                      </div>
+                    </div> */}
+                  </>
+                ) : (
+                  <>
+                    {artistData?.image && artistData && (
+                      <div
+                        className={`
                       w-24 h-24 shrink-0 overflow-hidden
                       rounded-xl border border-gray-100
                       ${isExpanded ? "w-full h-[200px]" : ""}
                     `}
-                  >
-                    <img
-                      className={`w-24 h-24 object-cover
+                      >
+                        <img
+                          className={`w-24 h-24 object-cover
                         ${isExpanded ? "w-full h-full" : ""}`}
-                      src={artistData.image}
-                      alt={artistData.name}
-                    />
-                  </div>
-                )}
-                <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
-                  {/* Artist Name */}
-                  {artistLoading ? (
-                    <Skeleton className="h-[24px] w-full" />
-                  ) : (
-                    <h2 className="w-full text-md font-semibold">
-                      {artistData && artistData.name}
-                    </h2>
-                  )}
-                  {/* Artist Stats */}
-                  {artistLoading ? (
-                    <>
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                    </>
-                  ) : (
-                    <div className="text-sm">
-                      {artistData && artistData.stats.listeners && (
+                          src={artistData.image}
+                          alt={artistData.name}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
+                      {/* Artist Name */}
+                      <h2 className="w-full text-md font-semibold">
+                        {artistData && artistData.name}
+                      </h2>
+                      {/* Artist Stats */}
+                      <div className="text-sm">
+                        {artistData && artistData.stats.listeners && (
+                          <h3>
+                            <span className="font-medium">Listeners:</span>{" "}
+                            {formatNumber(artistData.stats.listeners)}
+                          </h3>
+                        )}
                         <h3>
-                          <span className="font-medium">Listeners:</span>{" "}
-                          {formatNumber(artistData.stats.listeners)}
+                          <span className="font-medium">Founded:</span>{" "}
+                          {selectedArtist && selectedArtist.startDate
+                            ? formatDate(selectedArtist.startDate)
+                            : "Unknown"}{" "}
                         </h3>
-                      )}
-                      <h3>
-                        <span className="font-medium">Founded:</span>{" "}
-                        {selectedArtist && selectedArtist.startDate
-                          ? formatDate(selectedArtist.startDate)
-                          : "Unknown"}{" "}
-                      </h3>
-                      {artistData && artistData.similar && (
-                        <h3>
-                          <span className="font-medium">Similar:</span>{" "}
-                          {similarFilter(artistData.similar)
-                            .slice(0, 3)
-                            .map((name, index, array) => (
-                              <>
-                                <button
-                                  key={index + name}
-                                  onClick={() => setArtistFromName(name)}
-                                >
-                                  {name}
-                                </button>
-                                {index < array.length - 1 ? ", " : ""}
-                              </>
-                            ))}
-                        </h3>
-                      )}
-                    </div>
-                  )}
-                  {artistLoading 
-                  ? <>
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                    </>
-                  : <div
-                    className="
+                        {artistData && artistData.similar && (
+                          <h3>
+                            <span className="font-medium">Similar:</span>{" "}
+                            {similarFilter(artistData.similar)
+                              .slice(0, 3)
+                              .map((name, index, array) => (
+                                <>
+                                  <button
+                                    key={index + name}
+                                    onClick={() => setArtistFromName(name)}
+                                  >
+                                    {name}
+                                  </button>
+                                  {index < array.length - 1 ? ", " : ""}
+                                </>
+                              ))}
+                          </h3>
+                        )}
+                      </div>
+                      <div
+                        className="
                       w-full
                       flex flex-col
                       text-sm
                       "
-                  >
-                    <p
-                      onClick={() => setIsExpanded((prev) => !prev)}
-                      className={`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "text-muted-foreground" : "line-clamp-3 overflow-hidden"}`}
-                    >
-                      {artistData && artistData.bio
-                        ? artistData.bio.summary
-                        : "No bio"}
-                    </p>
-                  </div>}
-                </div>
+                      >
+                        <p
+                          onClick={() => setIsExpanded((prev) => !prev)}
+                          className={`break-words cursor-pointer hover:text-gray-400 ${
+                            isExpanded
+                              ? "text-muted-foreground"
+                              : "line-clamp-3 overflow-hidden"
+                          }`}
+                        >
+                          {artistData && artistData.bio
+                            ? artistData.bio.summary
+                            : "No bio"}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </motion.div>

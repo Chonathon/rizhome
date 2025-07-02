@@ -124,7 +124,7 @@ function App() {
               flex flex-col gap-4
               ${isMobile
                 ? "w-full px-4 items-center bottom-4"
-                : "bottom-8 items-end"}
+                : "bottom-4 items-end"}
             `}
           >
             <ArtistCard

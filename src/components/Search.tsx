@@ -38,21 +38,22 @@ export function Search({ className }: { className?: string }) {
       >
         <Button
           variant="outline"
+          aria-label="Search"
           className={cn(
             "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
             className
           )}
           onClick={() => setOpen(true)}
         >
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-2 items-center">
             <SearchIcon size={20}></SearchIcon>
-            {/* <span>Search...</span> */}
+            <span className="text-sm text-muted-foreground">⌘K</span>
           </div>
-          <Badge
+          {/* <Badge
           className="text-xs text-muted-foreground"
           variant="outline"
           >⌘K
-          </Badge>
+          </Badge> */}
         </Button>
       </motion.div>
       <CommandDialog open={open} onOpenChange={setOpen}>

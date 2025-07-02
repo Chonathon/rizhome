@@ -13,10 +13,9 @@ interface SearchProps {
   genres: Genre[];
   onGenreSelect: (genre: string) => void;
   onArtistSelect: (artistName: string) => void;
-  className?: string;
 }
 
-export function Search({ genres, onGenreSelect, onArtistSelect, className }: SearchProps) {
+export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
@@ -38,6 +37,16 @@ export function Search({ genres, onGenreSelect, onArtistSelect, className }: Sea
     return () => document.removeEventListener("keydown", down)
   }, [])
 
+  // function handleSelection(item: { type: string; name: string; id: any }) {
+  //   if (item.type === 'genre') {
+  //       onGenreSelect(item.name);
+  //     } else {
+  //       onArtistSelect(item.name);
+  //     }
+  //     addRecentSelection({ id: item.id, name: item.name, type: item.type });
+  //     setOpen(false);
+  // }
+
   return (
     <>
       <motion.div
@@ -46,10 +55,9 @@ export function Search({ genres, onGenreSelect, onArtistSelect, className }: Sea
         <Button
           variant="outline"
           aria-label="Search"
-          className={cn(
-            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground",
-            className
-          )}
+          className=
+            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
+          
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-2 items-center">
@@ -73,8 +81,13 @@ export function Search({ genres, onGenreSelect, onArtistSelect, className }: Sea
                 <CommandItem
                   key={selection.id}
                   onSelect={() => {
+                    if (selection.type === 'genre') {
+                      onGenreSelect(selection.name);
+                    } else {
+                      onArtistSelect(selection.name);
+                    }
+                    addRecentSelection({ id: selection.id, name: selection.name, type: selection.type });
                     setOpen(false);
-                    // Handle selection, e.g., navigate or display details
                   }}
                   className="flex items-center justify-between"
                 >

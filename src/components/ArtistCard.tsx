@@ -10,6 +10,8 @@ import {AxiosError} from "axios";
 import { useState } from "react"
 import { useMediaQuery } from 'react-responsive';
 import { Skeleton } from './ui/skeleton';
+import { useRef, useLayoutEffect } from "react";
+
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
@@ -39,6 +41,14 @@ export function ArtistCard({
     const [isExpanded, setIsExpanded] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 640 });
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [cardHeight, setCardHeight] = useState<number | null>(null);
+    useLayoutEffect(() => {
+      if (cardRef.current && !artistLoading) {
+        setCardHeight(cardRef.current.offsetHeight);
+      }
+    }, [artistLoading]);
+
     const onDeselectArtist = () => {
         setIsHovered(false);
         setIsExpanded(false);
@@ -47,7 +57,8 @@ export function ArtistCard({
     return !show ? null : (
       <AnimatePresence mode="wait">
         <motion.div
-          // key={ArtistCard}
+          ref={cardRef}
+          style={{ height: artistLoading && cardHeight ? `${cardHeight}px` : "auto"}}
           layout
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
@@ -72,7 +83,10 @@ export function ArtistCard({
                 className="hover:bg-white/0"
                 variant="ghost"
                 size="icon"
-                onClick={() => onDeselectArtist()}
+                onClick={() => {
+                  onDeselectArtist();
+                  setIsExpanded(false);
+                }}
               >
                 <CircleX
                   className=" fill-gray-500 text-white overflow-hidden size-5"
@@ -174,11 +188,17 @@ export function ArtistCard({
                       )}
                     </div>
                   )}
-                  <div
+                  {artistLoading 
+                  ? <>
+                      <Skeleton className="h-[20px] w-full" />
+                      <Skeleton className="h-[20px] w-full" />
+                      <Skeleton className="h-[20px] w-full" />
+                    </>
+                  : <div
                     className="
                       w-full
                       flex flex-col
-                      text-sm text-muted-foreground
+                      text-sm
                       "
                   >
                     <p
@@ -189,7 +209,7 @@ export function ArtistCard({
                         ? artistData.bio.summary
                         : "No bio"}
                     </p>
-                  </div>
+                  </div>}
                 </div>
               </>
             )}

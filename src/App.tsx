@@ -16,6 +16,7 @@ import { ListViewPanel } from "@/components/ListViewPanel";
 import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient';
+import { Search } from './components/Search';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
@@ -101,7 +102,7 @@ function App() {
               currentGraph={graph}
               isMobile={isMobile}
           />
-        </div>
+          </div>
         <GenresForceGraph
             genres={genres}
             links={genreLinks}
@@ -118,40 +119,39 @@ function App() {
         />
         <AnimatePresence mode="popLayout">
           <motion.div
-          // layout
-          className={`
-            fixed left-1/2 transform -translate-x-1/2 z-999
-            flex gap-4
-            ${isMobile
-            ? "w-full px-4 items-center flex-col-reverse bottom-4"
-            : "bottom-8  items-end"}`}>
-              <motion.div
-                // layout
-                // initial={{ opacity: 1 }}
-                // animate={{ opacity: isLayoutAnimating ? 0 : 1 }}
-                // exit={{ opacity: 0 }}
-                // onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
-                // onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
-                // transition={{ layout: { duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
-              >
-                <ResetButton
-                  onClick={() => resetAppState()}
-                  show={graph === 'artists'}
-                />
-              </motion.div>
-              <ArtistCard
-                  selectedArtist={selectedArtist}
-                  setArtistFromName={setArtistFromName}
-                  setSelectedArtist={setSelectedArtist}
-                  artistData={artistData}
-                  artistLoading={artistLoading}
-                  artistError={artistError}
-                  show={showArtistCard}
-                  setShowArtistCard={setShowArtistCard}
-                  deselectArtist={deselectArtist}
-                  similarFilter={similarArtistFilter}
+            className={`
+              fixed left-1/2 transform -translate-x-1/2 z-50
+              flex flex-col gap-4
+              ${isMobile
+                ? "w-full px-4 items-center bottom-4"
+                : "bottom-4 items-end"}
+            `}
+          >
+            <ArtistCard
+              selectedArtist={selectedArtist}
+              setArtistFromName={setArtistFromName}
+              setSelectedArtist={setSelectedArtist}
+              artistData={artistData}
+              artistLoading={artistLoading}
+              artistError={artistError}
+              show={showArtistCard}
+              setShowArtistCard={setShowArtistCard}
+              deselectArtist={deselectArtist}
+              similarFilter={similarArtistFilter}
+            />
+            <div className={`flex justify-center gap-3 ${graph === 'artists' ? 'w-full' : ''}`}>
+              <ResetButton
+                onClick={() => resetAppState()}
+                show={graph === 'artists'}
               />
-            </motion.div>
+              <motion.div
+                layout
+                // className={`${graph === 'artists' ? 'flex-grow' : ''}`}
+              >
+                <Search genres={genres} onGenreSelect={onGenreNodeClick} onArtistSelect={setArtistFromName} />
+              </motion.div>
+            </div>
+          </motion.div>
         </AnimatePresence>
     </div>
   )

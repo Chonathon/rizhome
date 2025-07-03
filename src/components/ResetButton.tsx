@@ -32,16 +32,16 @@ export function ResetButton({ onClick, show }: ResetButtonProps) {
   return show && (
       <motion.div 
       layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: isLayoutAnimating ? 0 : 1, y: 0 }}
-      exit={{ opacity: 0, y: 16 }}
-      onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
-      onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
-      transition={{ layout: { delay: .2, duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.2 } }}
+      // initial={{ opacity: 0, y: 16 }}
+      // animate={{ opacity: isLayoutAnimating ? 0 : 1, y: 0 }}
+      // exit={{ opacity: 0, y: 16 }}
+      // onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
+      // onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
+      // transition={{ layout: { delay: .2, duration: 0.2, ease: "easeInOut" }, opacity: { duration: 0.2 } }}
       // transition={{ layout: { duration: 0.4 }, opacity: { duration: 0.2, ease: "easeInOut" } }}
     >
         <Button
-          className="rounded-full p-8 bg-gray-200/90 backdrop-blur-xs border-gray-200 shadow-lg hover:bg-gray-200"
+          className="rounded-full h-[54px] w-[54px] bg-gray-100/90 backdrop-blur-xs border border-gray-200 shadow-lg hover:bg-gray-200"
           size="icon"
           variant="secondary"
           onClick={onClick}

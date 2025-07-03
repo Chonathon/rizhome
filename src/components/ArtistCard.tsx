@@ -10,6 +10,8 @@ import {AxiosError} from "axios";
 import { useState } from "react"
 import { useMediaQuery } from 'react-responsive';
 import { Skeleton } from './ui/skeleton';
+import { useRef, useLayoutEffect } from "react";
+
 
 interface ArtistCardProps {
     selectedArtist?: Artist;
@@ -39,6 +41,14 @@ export function ArtistCard({
     const [isExpanded, setIsExpanded] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
     const isMobile = useMediaQuery({ maxWidth: 640 });
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [cardHeight, setCardHeight] = useState<number | null>(null);
+    useLayoutEffect(() => {
+      if (cardRef.current && !artistLoading) {
+        setCardHeight(cardRef.current.offsetHeight);
+      }
+    }, [artistLoading]);
+
     const onDeselectArtist = () => {
         setIsHovered(false);
         setIsExpanded(false);
@@ -47,7 +57,8 @@ export function ArtistCard({
     return !show ? null : (
       <AnimatePresence mode="wait">
         <motion.div
-          // key={ArtistCard}
+          ref={cardRef}
+          style={{ height: artistLoading && cardHeight ? `${cardHeight}px` : "auto"}}
           layout
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
@@ -58,11 +69,12 @@ export function ArtistCard({
             damping: 24,
             mass: 0.8,
           }}
+          // TODO: loading animation could use love
           className={`
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
             bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
              max-w-full overflow-hidden
-             `}
+             ${artistLoading && "animate-pulse bg-gray-50/86"}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -72,7 +84,10 @@ export function ArtistCard({
                 className="hover:bg-white/0"
                 variant="ghost"
                 size="icon"
-                onClick={() => onDeselectArtist()}
+                onClick={() => {
+                  onDeselectArtist();
+                  setIsExpanded(false);
+                }}
               >
                 <CircleX
                   className=" fill-gray-500 text-white overflow-hidden size-5"
@@ -108,89 +123,98 @@ export function ArtistCard({
               </div>
             ) : (
               <>
-                <div
-                  className={`
-                                 w-24 h-24 shrink-0 overflow-hidden
-                                 rounded-lg border border-gray-100
-                                 ${isExpanded ? "w-full h-[160px]" : ""}
-                             `}
-                >
-                  {artistData && artistData.image && (
-                    <img
-                      className={`w-24 h-24 object-cover
-                                        ${isExpanded ? "w-full h-full object-cover aspect-[4/3]" : ""}`}
-                      src={artistData.image}
-                      alt={artistData.name}
-                    />
-                  )}
-                </div>
-                <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
-                  {/* Artist Name */}
-                  {artistLoading ? (
-                    <Skeleton className="h-[24px] w-full" />
-                  ) : (
-                    <h2 className="w-full text-md font-semibold">
-                      {artistData && artistData.name}
-                    </h2>
-                  )}
-                  {/* Artist Stats */}
-                  {artistLoading ? (
-                    <>
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                      <Skeleton className="h-[20px] w-full" />
-                    </>
-                  ) : (
-                    <div className="text-sm">
-                      {artistData && artistData.stats.listeners && (
+                {artistLoading ? (
+                  <>
+                    {/* <Skeleton className={`w-24 h-24 shrink-0 rounded-xl`} /> */}
+                    {/* <Loading /> */}
+                    {/* <div className="flex-1 flex flex-col items-start gap-2 min-w-0 w-full">
+                      <Skeleton className="h-[22px] w-3/4" />
+                      <Skeleton className="h-[18px] w-full" />
+                      <Skeleton className="h-[18px] w-full" />
+                      <div className='w-full pr-32'>
+                        <Skeleton className="h-[18px] w-full" />
+                      </div>
+                    </div> */}
+                  </>
+                ) : (
+                  <>
+                    {artistData?.image && artistData && (
+                      <div
+                        className={`
+                      w-24 h-24 shrink-0 overflow-hidden
+                      rounded-xl border border-gray-100
+                      ${isExpanded ? "w-full h-[200px]" : ""}
+                    `}
+                      >
+                        <img
+                          className={`w-24 h-24 object-cover
+                        ${isExpanded ? "w-full h-full" : ""}`}
+                          src={artistData.image}
+                          alt={artistData.name}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
+                      {/* Artist Name */}
+                      <h2 className="w-full text-md font-semibold">
+                        {artistData && artistData.name}
+                      </h2>
+                      {/* Artist Stats */}
+                      <div className="text-sm">
+                        {artistData && artistData.stats.listeners && (
+                          <h3>
+                            <span className="font-medium">Listeners:</span>{" "}
+                            {formatNumber(artistData.stats.listeners)}
+                          </h3>
+                        )}
                         <h3>
-                          <span className="font-medium">Listeners:</span>{" "}
-                          {formatNumber(artistData.stats.listeners)}
+                          <span className="font-medium">Founded:</span>{" "}
+                          {selectedArtist && selectedArtist.startDate
+                            ? formatDate(selectedArtist.startDate)
+                            : "Unknown"}{" "}
                         </h3>
-                      )}
-                      <h3>
-                        <span className="font-medium">Founded:</span>{" "}
-                        {selectedArtist && selectedArtist.startDate
-                          ? formatDate(selectedArtist.startDate)
-                          : "Unknown"}{" "}
-                      </h3>
-                      {artistData && artistData.similar && (
-                        <h3>
-                          <span className="font-medium">Similar:</span>{" "}
-                          {similarFilter(artistData.similar)
-                            .slice(0, 3)
-                            .map((name, index, array) => (
-                              <>
-                                <button
-                                  key={index + name}
-                                  onClick={() => setArtistFromName(name)}
-                                >
-                                  {name}
-                                </button>
-                                {index < array.length - 1 ? ", " : ""}
-                              </>
-                            ))}
-                        </h3>
-                      )}
+                        {artistData && artistData.similar && (
+                          <h3>
+                            <span className="font-medium">Similar:</span>{" "}
+                            {similarFilter(artistData.similar)
+                              .slice(0, 3)
+                              .map((name, index, array) => (
+                                <>
+                                  <button
+                                    key={index + name}
+                                    onClick={() => setArtistFromName(name)}
+                                  >
+                                    {name}
+                                  </button>
+                                  {index < array.length - 1 ? ", " : ""}
+                                </>
+                              ))}
+                          </h3>
+                        )}
+                      </div>
+                      <div
+                        className="
+                      w-full
+                      flex flex-col
+                      text-sm
+                      "
+                      >
+                        <p
+                          onClick={() => setIsExpanded((prev) => !prev)}
+                          className={`break-words cursor-pointer hover:text-gray-400 ${
+                            isExpanded
+                              ? "text-muted-foreground"
+                              : "line-clamp-3 overflow-hidden"
+                          }`}
+                        >
+                          {artistData && artistData.bio
+                            ? artistData.bio.summary
+                            : "No bio"}
+                        </p>
+                      </div>
                     </div>
-                  )}
-                  <div
-                    className="
-                                     w-full
-                                     flex flex-col
-                                     text-sm text-muted-foreground
-                                     "
-                  >
-                    <p
-                      onClick={() => setIsExpanded((prev) => !prev)}
-                      className={`break-words cursor-pointer hover:text-gray-400 ${isExpanded ? "text-muted-foreground" : "line-clamp-3 overflow-hidden"}`}
-                    >
-                      {artistData && artistData.bio
-                        ? artistData.bio.summary
-                        : "No bio"}
-                    </p>
-                  </div>
-                </div>
+                  </>
+                )}
               </>
             )}
           </motion.div>

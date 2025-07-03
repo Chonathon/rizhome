@@ -114,6 +114,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
             ref={fgRef}
             graphData={graphData}
             linkVisibility={false}
+            linkCurvature={0.3}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={nodeCanvasObject}
             nodeCanvasObjectMode={() => 'replace'}

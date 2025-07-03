@@ -2,6 +2,12 @@ export interface Genre {
     id: string;
     name: string;
     artistCount: number;
+    subgenre_of: BasicNode[];
+    influenced_genres: BasicNode[];
+    subgenres: BasicNode[];
+    fusion_genres: BasicNode[];
+    fusion_of: BasicNode[];
+    influenced_by: BasicNode[];
 }
 
 export interface GenresJSON {

@@ -119,26 +119,26 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           )}
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
-            <CommandGroup heading="All Results">
-              {searchableItems.map((item, i) => (
-                <CommandItem
-                  key={item.id + i}
-                  onSelect={() => {
-                    if (isGenre(item)) {
-                      onGenreSelect(item.name);
-                    } else {
-                      onArtistSelect(item.name);
-                    }
-                    addRecentSelection(item);
-                    setOpen(false);
-                  }}
-                  className="flex items-center justify-between"
-                >
-                  <span>{item.name}</span>
-                  <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+              <CommandGroup key={searchableItems.length} heading="All Results">
+                {searchableItems.map((item, i) => (
+                    <CommandItem
+                        key={item.id + i}
+                        onSelect={() => {
+                          if (isGenre(item)) {
+                            onGenreSelect(item.name);
+                          } else {
+                            onArtistSelect(item.name);
+                          }
+                          addRecentSelection(item);
+                          setOpen(false);
+                        }}
+                        className="flex items-center justify-between"
+                    >
+                      <span>{item.name}</span>
+                      <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
+                    </CommandItem>
+                ))}
+              </CommandGroup>
           )}
         </CommandList>
       </CommandDialog>

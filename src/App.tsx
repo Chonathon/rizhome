@@ -17,6 +17,7 @@ import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient';
 import { Search } from './components/Search';
+import { ModeToggle } from './components/ModeToggle';
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
@@ -75,7 +76,7 @@ function App() {
   artistError
 });
   return (
-    <div className="relative min-h-screen min-w-screen bg-white">
+    <div className="relative min-h-screen min-w-screen">
        <Gradient />
       <div className={
         isMobile 
@@ -102,6 +103,9 @@ function App() {
               currentGraph={graph}
               isMobile={isMobile}
           />
+          </div>
+          <div className="fixed top-4 right-4 z-50">
+            <ModeToggle />
           </div>
         <GenresForceGraph
             genres={genres}

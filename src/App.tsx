@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { GraphControls } from './components/GraphControls'
+import { GraphControlsBottom as GraphControls } from './components/GraphControlsBottom'
 import { Waypoints, Undo2 } from 'lucide-react'
 import { BreadcrumbHeader } from './components/BreadcrumbHeader'
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -103,6 +103,7 @@ function App() {
               isMobile={isMobile}
           />
           </div>
+          
         <GenresForceGraph
             genres={genres}
             links={genreLinks}
@@ -138,7 +139,8 @@ function App() {
               setShowArtistCard={setShowArtistCard}
               deselectArtist={deselectArtist}
               similarFilter={similarArtistFilter}
-            />
+            />  
+            <GraphControls />
             <div className={`flex justify-center gap-3 ${graph === 'artists' ? 'w-full' : ''}`}>
               <ResetButton
                 onClick={() => resetAppState()}

@@ -1,6 +1,4 @@
-export interface Genre {
-    id: string;
-    name: string;
+export interface Genre extends BasicNode {
     artistCount: number;
     subgenre_of: BasicNode[];
     influenced_genres: BasicNode[];
@@ -22,9 +20,7 @@ export interface Tag {
     count: number;
 }
 
-export interface Artist {
-    id: string;
-    name: string;
+export interface Artist extends BasicNode {
     tags: Tag[];
     location?: string;
     startDate?: string;
@@ -48,20 +44,13 @@ export interface NodeLink {
     target: string;
 }
 
-export interface LastFMArtistJSON {
-    name: string;
-    mbid: string;
+export interface LastFMArtistJSON extends BasicNode {
     image: string;
     ontour: boolean;
     stats: LastFMStats;
     bio: LastFMBio;
     similar: string[];
     date: string; // this is for caching
-}
-
-export interface LastFMImage {
-    link: string;
-    size: string;
 }
 
 export interface LastFMStats {
@@ -76,3 +65,7 @@ export interface LastFMBio {
 }
 
 export type GraphType = 'genres' | 'artists';
+
+export interface LastFMSearchArtistData extends BasicNode {
+    listeners: number;
+}

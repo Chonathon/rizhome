@@ -6,27 +6,37 @@ import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils"
-import {Genre} from "@/types";
+import {cn, isGenre} from "@/lib/utils"
+import {BasicNode, Genre, LastFMSearchArtistData} from "@/types";
+import {useEffect, useMemo, useState} from "react";
 
 interface SearchProps {
-  genres: Genre[];
   onGenreSelect: (genre: string) => void;
   onArtistSelect: (artistName: string) => void;
+  setQuery: (query: string) => void;
+  searchableItems: BasicNode[];
 }
 
-export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
-  const [open, setOpen] = React.useState(false)
-  const [inputValue, setInputValue] = React.useState("")
+export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems }: SearchProps) {
+  const [open, setOpen] = useState<boolean>(false)
+  const [inputValue, setInputValue] = useState<string>("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
 
-  const allSearchableItems = React.useMemo(() => {
-    const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
-    const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
-    return [...genreItems, ...artists];
-  }, [genres]);
+  // const allSearchableItems = React.useMemo(() => {
+  //   const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
+  //   const artists = searchResults.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
+  //   return [...genreItems, ...artists];
+  // }, [genres, searchResults]);
 
-  React.useEffect(() => {
+  // Debouncing
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setQuery(inputValue);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [inputValue, 500]);
+
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -81,12 +91,12 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
                 <CommandItem
                   key={selection.id}
                   onSelect={() => {
-                    if (selection.type === 'genre') {
+                    if (isGenre(selection)) {
                       onGenreSelect(selection.name);
                     } else {
                       onArtistSelect(selection.name);
                     }
-                    addRecentSelection({ id: selection.id, name: selection.name, type: selection.type });
+                    addRecentSelection(selection);
                     setOpen(false);
                   }}
                   className="flex items-center justify-between"
@@ -110,22 +120,22 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
             <CommandGroup heading="All Results">
-              {allSearchableItems.map((item) => (
+              {searchableItems.map((item, i) => (
                 <CommandItem
-                  key={item.id}
+                  key={item.id + i}
                   onSelect={() => {
-                    if (item.type === 'genre') {
+                    if (isGenre(item)) {
                       onGenreSelect(item.name);
                     } else {
                       onArtistSelect(item.name);
                     }
-                    addRecentSelection({ id: item.id, name: item.name, type: item.type });
+                    addRecentSelection(item);
                     setOpen(false);
                   }}
                   className="flex items-center justify-between"
                 >
                   <span>{item.name}</span>
-                  <Badge variant="secondary">{item.type}</Badge>
+                  <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
                 </CommandItem>
               ))}
             </CommandGroup>

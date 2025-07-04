@@ -81,7 +81,11 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           </Badge> */}
         </Button>
       </motion.div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog
+          key={searchableItems.length}
+          open={open}
+          onOpenChange={setOpen}
+      >
         <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>

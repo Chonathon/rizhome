@@ -105,7 +105,15 @@ function App() {
   }
 
   const searchableItems = useMemo(() => {
-    return [...genres, ...currentArtists, ...searchResults];
+    // Create a Set of current artist names for O(1) lookup
+    const currentArtistNames = new Set(currentArtists.map(artist => artist.name));
+
+    // Filter out search results that have the same name as current artists
+    const filteredSearchResults = searchResults.filter(
+        searchResult => !currentArtistNames.has(searchResult.name)
+    );
+
+    return [...genres, ...currentArtists, ...filteredSearchResults];
   }, [genres, currentArtists, searchResults]);
 
   console.log("App render", {

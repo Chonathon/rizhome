@@ -29,6 +29,7 @@ function App() {
   const [currentArtists, setCurrentArtists] = useState<Artist[]>([]);
   const [currentArtistLinks, setCurrentArtistLinks] = useState<NodeLink[]>([]);
   const [query, setQuery] = useState<string>('');
+  const [shouldBuildSimilar, setShouldBuildSimilar] = useState(false);
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist);
@@ -81,17 +82,23 @@ function App() {
       }
     }
     onArtistNodeClick(artist);
-
-    const similarArtists = [artist];
-    artistData?.similar.forEach((s, i) => {
-      similarArtists.push({ id: i.toString(), name: s, tags: [] });
-    });
-    if (similarArtists && similarArtists.length > 1) {
-      setCurrentArtists(similarArtists);
-      setCurrentArtistLinks(generateArtistLinks(artist, similarArtists.length));
-      setGraph('artists');
-    }
+    setShouldBuildSimilar(true);
+    setGraph('artists');
   }
+
+  useEffect(() => {
+    if (selectedArtist && artistData && shouldBuildSimilar) {
+      const similarArtists = [selectedArtist];
+      artistData.similar.forEach((s, i) => {
+        similarArtists.push({ id: i.toString(), name: s, tags: [] });
+      });
+      if (similarArtists.length > 1) {
+        setCurrentArtists(similarArtists);
+        setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
+        setShouldBuildSimilar(false);
+      }
+    }
+  }, [selectedArtist, artistData, shouldBuildSimilar, generateArtistLinks]);
 
   const searchableItems = useMemo(() => {
     return [...genres, ...currentArtists, ...searchResults];

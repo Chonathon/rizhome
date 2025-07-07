@@ -98,7 +98,7 @@ function App() {
         setShouldBuildSimilar(false);
       }
     }
-  }, [selectedArtist, artistData, shouldBuildSimilar, generateArtistLinks]);
+  }, [artistData, shouldBuildSimilar]);
 
   const searchableItems = useMemo(() => {
     return [...genres, ...currentArtists, ...searchResults];
@@ -117,7 +117,8 @@ function App() {
   artistLoading,
   artistError,
     searchResults,
-    searchableItems
+    searchableItems,
+    currentArtists
 });
   return (
     <div className="relative min-h-screen min-w-screen bg-white">

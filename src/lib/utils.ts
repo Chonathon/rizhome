@@ -24,7 +24,7 @@ export const envBoolean = (value: string) => {
 
 export const generateArtistLinks = (artist: Artist, similarCount: number) => {
   const links = [];
-  for (let i = 0; i < similarCount; i++) {
+  for (let i = 0; i < similarCount - 1; i++) {
     links.push({ source: artist.id, target: i.toString() });
   }
   return links;

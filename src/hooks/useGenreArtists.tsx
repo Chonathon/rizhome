@@ -10,7 +10,7 @@ const url = envBoolean(import.meta.env.VITE_USE_LOCAL_SERVER)
 const useGenreArtists = (genre?: string) => {
     const [artists, setArtists] = useState<Artist[]>([]);
     const [artistLinks, setArtistLinks] = useState<NodeLink[]>([]);
-    const [artistsLoading, setArtistsLoading] = useState(true);
+    const [artistsLoading, setArtistsLoading] = useState(false);
     const [artistsError, setArtistsError] = useState<AxiosError>();
 
     const fetchArtists = async () => {

@@ -45,6 +45,7 @@ function App() {
 
   useEffect(() => {
     if (pendingSimilarArtistName && artistData?.similar && selectedArtist) {
+      const prevSimilarArtists = artists.map(a => a.name).slice(1);
       const similarArtists = [selectedArtist];
       artistData.similar.forEach((s, i) => {
         similarArtists.push({ id: i.toString(), name: s, tags: [] });
@@ -57,7 +58,10 @@ function App() {
       }
 
       // Clear the pending state
-      setPendingSimilarArtistName(undefined);
+      if (JSON.stringify(prevSimilarArtists) === JSON.stringify(similarArtists) ) {
+        setPendingSimilarArtistName(undefined);
+      }
+
     }
   }, [artistData, pendingSimilarArtistName, selectedArtist]);
 

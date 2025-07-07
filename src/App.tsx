@@ -29,7 +29,7 @@ function App() {
   const [currentArtists, setCurrentArtists] = useState<Artist[]>([]);
   const [currentArtistLinks, setCurrentArtistLinks] = useState<NodeLink[]>([]);
   const [query, setQuery] = useState<string>('');
-  const [shouldBuildSimilar, setShouldBuildSimilar] = useState(false);
+  const [canCreateSimilarArtistGraph, setCanCreateSimilarArtistGraph] = useState<boolean>(false);
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist);
@@ -42,6 +42,24 @@ function App() {
     setCurrentArtists(artists);
     setCurrentArtistLinks(artistLinks);
   }, [artists]);
+
+  useEffect(() => {
+    if (canCreateSimilarArtistGraph && artistData?.similar && selectedArtist) {
+      const prevSimilarArtists = artists.map(a => a.name).slice(1);
+      const similarArtists = [selectedArtist];
+      artistData.similar.forEach((s, i) => {
+        similarArtists.push({ id: i.toString(), name: s, tags: [] });
+      });
+      if (similarArtists.length > 1) {
+        setCurrentArtists(similarArtists);
+        setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
+        setGraph('artists');
+      }
+      if (JSON.stringify(prevSimilarArtists) === JSON.stringify(similarArtists) ) {
+        setCanCreateSimilarArtistGraph(false);
+      }
+    }
+  }, [artistData, canCreateSimilarArtistGraph, selectedArtist]);
 
   const setArtistFromName = (name: string) => {
     const artist = artists.find((artist) => artist.name === name);
@@ -81,24 +99,10 @@ function App() {
         tags: []
       }
     }
-    onArtistNodeClick(artist);
-    setShouldBuildSimilar(true);
-    setGraph('artists');
+    setSelectedArtist(artist);
+    setShowArtistCard(true);
+    setCanCreateSimilarArtistGraph(true);
   }
-
-  useEffect(() => {
-    if (selectedArtist && artistData && shouldBuildSimilar) {
-      const similarArtists = [selectedArtist];
-      artistData.similar.forEach((s, i) => {
-        similarArtists.push({ id: i.toString(), name: s, tags: [] });
-      });
-      if (similarArtists.length > 1) {
-        setCurrentArtists(similarArtists);
-        setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
-        setShouldBuildSimilar(false);
-      }
-    }
-  }, [artistData, shouldBuildSimilar]);
 
   const searchableItems = useMemo(() => {
     return [...genres, ...currentArtists, ...searchResults];
@@ -117,8 +121,7 @@ function App() {
   artistLoading,
   artistError,
     searchResults,
-    searchableItems,
-    currentArtists
+    searchableItems
 });
   return (
     <div className="relative min-h-screen min-w-screen bg-white">
@@ -199,6 +202,7 @@ function App() {
                     onArtistSelect={createSimilarArtistGraph}
                     setQuery={setQuery}
                     searchableItems={searchableItems}
+                    graphState={graph}
                 />
               </motion.div>
             </div>

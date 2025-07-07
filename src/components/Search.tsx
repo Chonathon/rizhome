@@ -1,23 +1,24 @@
-import * as React from "react"
-import { dummyLastFMArtistData } from "@/DummyDataForDummies"
 import { Button } from "@/components/ui/button"
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command"
 import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
 import { motion } from "framer-motion";
-import {cn, isGenre} from "@/lib/utils"
-import {BasicNode, Genre, LastFMSearchArtistData} from "@/types";
-import {useEffect, useMemo, useState} from "react";
+import {isGenre} from "@/lib/utils"
+import {BasicNode, GraphType} from "@/types";
+import {useEffect, useState} from "react";
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
   onArtistSelect: (artistName: string) => void;
   setQuery: (query: string) => void;
   searchableItems: BasicNode[];
+  graphState: GraphType;
 }
 
-export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems }: SearchProps) {
+const DEBOUNCE_MS = 500;
+
+export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems, graphState }: SearchProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
@@ -26,9 +27,9 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
   useEffect(() => {
     const timeout = setTimeout(() => {
       setQuery(inputValue);
-    }, 500);
+    }, DEBOUNCE_MS);
     return () => clearTimeout(timeout);
-  }, [inputValue, 500]);
+  }, [inputValue, DEBOUNCE_MS]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -41,15 +42,15 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
     return () => document.removeEventListener("keydown", down)
   }, [])
 
-  // function handleSelection(item: { type: string; name: string; id: any }) {
-  //   if (item.type === 'genre') {
-  //       onGenreSelect(item.name);
-  //     } else {
-  //       onArtistSelect(item.name);
-  //     }
-  //     addRecentSelection({ id: item.id, name: item.name, type: item.type });
-  //     setOpen(false);
-  // }
+  const onItemSelect = (selection: BasicNode) => {
+    if (isGenre(selection)) {
+      onGenreSelect(selection.name);
+    } else {
+      onArtistSelect(selection.name);
+    }
+    addRecentSelection(selection);
+    setOpen(false);
+  }
 
   return (
     <>
@@ -88,15 +89,7 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
               {recentSelections.map((selection) => (
                 <CommandItem
                   key={selection.id}
-                  onSelect={() => {
-                    if (isGenre(selection)) {
-                      onGenreSelect(selection.name);
-                    } else {
-                      onArtistSelect(selection.name);
-                    }
-                    addRecentSelection(selection);
-                    setOpen(false);
-                  }}
+                  onSelect={() => onItemSelect(selection)}
                   className="flex items-center justify-between"
                 >
                   <span>{selection.name}</span>
@@ -121,15 +114,7 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
               {searchableItems.map((item, i) => (
                 <CommandItem
                   key={item.id + i}
-                  onSelect={() => {
-                    if (isGenre(item)) {
-                      onGenreSelect(item.name);
-                    } else {
-                      onArtistSelect(item.name);
-                    }
-                    addRecentSelection(item);
-                    setOpen(false);
-                  }}
+                  onSelect={() => onItemSelect(item)}
                   className="flex items-center justify-between"
                 >
                   <span>{item.name}</span>

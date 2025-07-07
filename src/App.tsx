@@ -202,6 +202,7 @@ function App() {
                     onArtistSelect={createSimilarArtistGraph}
                     setQuery={setQuery}
                     searchableItems={searchableItems}
+                    graphState={graph}
                 />
               </motion.div>
             </div>

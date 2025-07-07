@@ -105,15 +105,34 @@ function App() {
   }
 
   const searchableItems = useMemo(() => {
-    // Create a Set of current artist names for O(1) lookup
-    const currentArtistNames = new Set(currentArtists.map(artist => artist.name));
+    const seen = new Set();
+    const result = [];
 
-    // Filter out search results that have the same name as current artists
-    const filteredSearchResults = searchResults.filter(
-        searchResult => !currentArtistNames.has(searchResult.name)
-    );
+    // Add genres
+    genres.forEach(item => {
+      if (!seen.has(item.name)) {
+        result.push(item);
+        seen.add(item.name);
+      }
+    });
 
-    return [...genres, ...currentArtists, ...filteredSearchResults];
+    // Add currentArtists
+    currentArtists.forEach(item => {
+      if (!seen.has(item.name)) {
+        result.push(item);
+        seen.add(item.name);
+      }
+    });
+
+    // Add searchResults, but only if not already seen
+    searchResults.forEach(item => {
+      if (!seen.has(item.name)) {
+        result.push(item);
+        seen.add(item.name);
+      }
+    });
+
+    return result;
   }, [genres, currentArtists, searchResults]);
 
   console.log("App render", {

@@ -22,12 +22,6 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
   const [inputValue, setInputValue] = useState<string>("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
 
-  // const allSearchableItems = React.useMemo(() => {
-  //   const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
-  //   const artists = searchResults.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
-  //   return [...genreItems, ...artists];
-  // }, [genres, searchResults]);
-
   // Debouncing
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -81,7 +75,11 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           </Badge> */}
         </Button>
       </motion.div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog
+          key={searchableItems.length}
+          open={open}
+          onOpenChange={setOpen}
+      >
         <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>

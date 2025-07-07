@@ -104,17 +104,21 @@ function App() {
     setCanCreateSimilarArtistGraph(true);
   }
 
-  const searchableItems = useMemo(() => {
-    // Create a Set of current artist names for O(1) lookup
-    const currentArtistNames = new Set(currentArtists.map(artist => artist.name));
+  const currentArtistNames = useMemo(
+      () => new Set(currentArtists.map(({ name }) => name)),
+      [currentArtists]
+  );
 
-    // Filter out search results that have the same name as current artists
-    const filteredSearchResults = searchResults.filter(
-        searchResult => !currentArtistNames.has(searchResult.name)
+  const filteredSearchResults = useMemo(() => {
+    return searchResults.filter(
+        ({ name }) => !currentArtistNames.has(name)
     );
+  }, [searchResults, currentArtistNames]);
 
-    return [...genres, ...currentArtists, ...filteredSearchResults];
-  }, [genres, currentArtists, searchResults]);
+  const searchableItems = useMemo(() => {
+    return (genres as BasicNode[])
+        .concat(currentArtists as BasicNode[], filteredSearchResults as BasicNode[]);
+  }, [genres, currentArtists, filteredSearchResults]);
 
   console.log("App render", {
   selectedGenre,

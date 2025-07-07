@@ -29,6 +29,7 @@ function App() {
   const [currentArtists, setCurrentArtists] = useState<Artist[]>([]);
   const [currentArtistLinks, setCurrentArtistLinks] = useState<NodeLink[]>([]);
   const [query, setQuery] = useState<string>('');
+  const [pendingSimilarArtistName, setPendingSimilarArtistName] = useState<string | undefined>(undefined);
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist);
@@ -41,6 +42,24 @@ function App() {
     setCurrentArtists(artists);
     setCurrentArtistLinks(artistLinks);
   }, [artists]);
+
+  useEffect(() => {
+    if (pendingSimilarArtistName && artistData?.similar && selectedArtist) {
+      const similarArtists = [selectedArtist];
+      artistData.similar.forEach((s, i) => {
+        similarArtists.push({ id: i.toString(), name: s, tags: [] });
+      });
+
+      if (similarArtists.length > 1) {
+        setCurrentArtists(similarArtists);
+        setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
+        setGraph('artists');
+      }
+
+      // Clear the pending state
+      setPendingSimilarArtistName(undefined);
+    }
+  }, [artistData, pendingSimilarArtistName, selectedArtist]);
 
   const setArtistFromName = (name: string) => {
     const artist = artists.find((artist) => artist.name === name);
@@ -80,17 +99,11 @@ function App() {
         tags: []
       }
     }
-    onArtistNodeClick(artist);
 
-    const similarArtists = [artist];
-    artistData?.similar.forEach((s, i) => {
-      similarArtists.push({ id: i.toString(), name: s, tags: [] });
-    });
-    if (similarArtists && similarArtists.length > 1) {
-      setCurrentArtists(similarArtists);
-      setCurrentArtistLinks(generateArtistLinks(artist, similarArtists.length));
-      setGraph('artists');
-    }
+    // Set the selected artist and mark that we want to create a similar artist graph
+    setSelectedArtist(artist);
+    setShowArtistCard(true);
+    setPendingSimilarArtistName(artistName);
   }
 
   const searchableItems = useMemo(() => {

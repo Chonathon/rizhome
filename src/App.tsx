@@ -81,9 +81,7 @@ function App() {
       }
     }
     onArtistNodeClick(artist);
-    while (artistLoading) {
 
-    }
     const similarArtists = [artist];
     artistData?.similar.forEach((s, i) => {
       similarArtists.push({ id: i.toString(), name: s, tags: [] });

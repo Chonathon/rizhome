@@ -30,7 +30,8 @@ const useArtist = (artist?: Artist) => {
                 } catch (err) {
 
                 }
-                setArtistData({...response.data, image: image ? image.data : undefined });
+                const data = {...response.data, image: image ? image.data : undefined}
+                setArtistData(data);
                 setArtistError(undefined);
             }
             setArtistLoading(false);

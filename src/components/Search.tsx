@@ -85,7 +85,7 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
         </Button>
       </motion.div>
       <CommandDialog
-          key={searchableItems.length}
+          key={searchableItems.length ? searchableItems[searchableItems.length - 1].name : searchableItems.length}
           open={open}
           onOpenChange={setOpen}
       >

@@ -77,36 +77,40 @@ function App() {
 });
   return (
     <div className="relative min-h-screen min-w-screen">
-       <Gradient />
+       <Gradient/>
+       {/* Top Bar */}
       <div className={
-        isMobile 
-          ? "fixed top-4 left-4 max-w-[calc(100vw-32px)] z-50 inline-flex flex-col gap-2 items-start"
-          : "fixed top-4 left-4 z-50 inline-flex flex-col gap-2 items-start"
-      }>
-          <BreadcrumbHeader
-              selectedGenre={selectedGenre}
-              selectedArtist={selectedArtist}
-              HomeIcon={Waypoints}
-              toggleListView={() => setShowListView(!showListView)}
-              showListView={showListView}
-              reset={resetAppState}
-              hideArtistCard={deselectArtist}
-          />
-          <ListViewPanel
-              genres={genres}
-              onGenreClick={onGenreNodeClick}
-              setSelectedArtist={setSelectedArtist}
-              genreLinksCount={genreLinks.length}
-              show={showListView && !genresError}
-              genresLoading={genresLoading}
-              artistsLoading={artistsLoading}
-              currentGraph={graph}
-              isMobile={isMobile}
-          />
-          </div>
-          <div className="fixed top-4 right-4 z-50">
-            <ModeToggle />
-          </div>
+        'flex width-full justify-between items-center px-4 z-50'}>
+        {/* Breadcrumb & ListViewPanel Container */}
+        <div className={
+          isMobile
+            ? "max-w-[calc(100vw-32px)]  inline-flex flex-col gap-2 items-start"
+            : " inline-flex flex-col gap-2 items-start"
+        }>
+            <BreadcrumbHeader
+                selectedGenre={selectedGenre}
+                selectedArtist={selectedArtist}
+                HomeIcon={Waypoints}
+                toggleListView={() => setShowListView(!showListView)}
+                showListView={showListView}
+                reset={resetAppState}
+                hideArtistCard={deselectArtist}
+            />
+            {/* <ListViewPanel
+                genres={genres}
+                onGenreClick={onGenreNodeClick}
+                setSelectedArtist={setSelectedArtist}
+                genreLinksCount={genreLinks.length}
+                show={showListView && !genresError}
+                genresLoading={genresLoading}
+                artistsLoading={artistsLoading}
+                currentGraph={graph}
+                isMobile={isMobile}
+            /> */}
+            </div>
+          <ModeToggle />
+
+      </div>
         <GenresForceGraph
             genres={genres}
             links={genreLinks}

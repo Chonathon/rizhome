@@ -56,7 +56,7 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
           variant="outline"
           aria-label="Search"
           className=
-            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
+            "w- h-[54px] bg-background/90 hover:bg-accent/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
           
           onClick={() => setOpen(true)}
         >

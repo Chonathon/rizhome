@@ -80,7 +80,7 @@ function App() {
        <Gradient/>
        {/* Top Bar */}
       <div className={
-        'flex width-full justify-between items-center px-4 z-50'}>
+        'fixed top-0 left-0 flex w-full justify-between items-center p-4 z-50'}>
         {/* Breadcrumb & ListViewPanel Container */}
         <div className={
           isMobile

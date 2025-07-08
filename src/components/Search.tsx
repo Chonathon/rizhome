@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import {isGenre} from "@/lib/utils"
 import {BasicNode, GraphType} from "@/types";
 import {useEffect, useState} from "react";
+import { useMemo } from "react";
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
@@ -41,6 +42,13 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
     document.addEventListener("keydown", down)
     return () => document.removeEventListener("keydown", down)
   }, [])
+
+  const filteredSearchableItems = useMemo(() =>
+          searchableItems.filter((item) =>
+              item.name.toLowerCase().includes(inputValue.toLowerCase())
+          ),
+      [searchableItems, inputValue]
+  );
 
   const onItemSelect = (selection: BasicNode) => {
     if (isGenre(selection)) {
@@ -110,18 +118,18 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           )}
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
-            <CommandGroup heading="All Results">
-              {searchableItems.map((item, i) => (
-                <CommandItem
-                  key={item.id + i}
-                  onSelect={() => onItemSelect(item)}
-                  className="flex items-center justify-between"
-                >
-                  <span>{item.name}</span>
-                  <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+              <CommandGroup heading="All Results">
+                {filteredSearchableItems.map((item, i) => (
+                    <CommandItem
+                        key={`${item.id}-${i}`}  // Updated key to ensure uniqueness
+                        onSelect={() => onItemSelect(item)}
+                        className="flex items-center justify-between"
+                    >
+                      <span>{item.name}</span>
+                      <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
+                    </CommandItem>
+                ))}
+              </CommandGroup>
           )}
         </CommandList>
       </CommandDialog>

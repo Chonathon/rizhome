@@ -72,9 +72,9 @@ export function ArtistCard({
           // TODO: loading animation could use love
           className={`
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
-            bg-stone-50/90 dark:bg-gray-900/90 backdrop-blur-xs shadow-lg rounded-3xl border border-border
+            bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xs shadow-lg rounded-3xl border border-border
              max-w-full overflow-hidden
-             ${artistLoading && "animate-pulse bg-gray-50/86"}`}
+             ${artistLoading && "animate-pulse bg-stone-50/86"}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

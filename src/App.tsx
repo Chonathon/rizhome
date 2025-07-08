@@ -17,7 +17,7 @@ import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient';
 import { Search } from './components/Search';
-import {generateArtistLinks} from "@/lib/utils";
+import {generateArtistLinks, generateSimilarLinks} from "@/lib/utils";
 import useLastFMArtistSearch from "@/hooks/useLastFMArtistSearch";
 import {s} from "framer-motion/m";
 
@@ -48,12 +48,13 @@ function App() {
     if (canCreateSimilarArtistGraph && artistData?.similar && selectedArtist && selectedArtist.name === artistData.name) {
       const similarArtists = [selectedArtist];
       artistData.similar.forEach((s, i) => {
-        similarArtists.push({ id: i.toString(), name: s, tags: [] });
+        similarArtists.push({ id: Math.floor((Math.random() + i) * 1234567).toString(), name: s, tags: [] });
       });
       if (similarArtists.length > 1) {
+        const links = generateSimilarLinks(similarArtists);
         setCurrentArtists(similarArtists);
-        setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
-        setGraph('artists');
+        setCurrentArtistLinks(links);
+        setGraph('similarArtists');
       }
       setCanCreateSimilarArtistGraph(false);
     }
@@ -71,8 +72,13 @@ function App() {
     setGraph('artists');
   }
   const onArtistNodeClick = (artist: Artist) => {
-    setSelectedArtist(artist);
-    setShowArtistCard(true);
+    if (graph === 'artists') {
+      setSelectedArtist(artist);
+      setShowArtistCard(true);
+    }
+    if (graph === 'similarArtists') {
+      createSimilarArtistGraph(artist.name);
+    }
   }
   const resetAppState = () => {
     setGraph('genres');
@@ -89,7 +95,7 @@ function App() {
     return similarArtists.filter(s => artists.some(a => a.name === s));
   }
   const createSimilarArtistGraph = (artistName: string) => {
-    let artist = artists.find((artist) => artist.name === artistName);
+    let artist = currentArtists.find((artist) => artist.name === artistName);
     if (!artist) {
       artist = {
         id: Math.floor(Math.random() * 1234567).toString(),
@@ -174,7 +180,7 @@ function App() {
             artistLinks={currentArtistLinks}
             loading={artistsLoading}
             onNodeClick={onArtistNodeClick}
-            show={graph === 'artists' && !artistsError}
+            show={(graph === 'artists' || graph === 'similarArtists') && !artistsError}
         />
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -198,10 +204,10 @@ function App() {
               deselectArtist={deselectArtist}
               similarFilter={similarArtistFilter}
             />
-            <div className={`flex justify-center gap-3 ${graph === 'artists' ? 'w-full' : ''}`}>
+            <div className={`flex justify-center gap-3 ${graph !== 'genres' ? 'w-full' : ''}`}>
               <ResetButton
                 onClick={() => resetAppState()}
-                show={graph === 'artists'}
+                show={graph !== 'genres'}
               />
               <motion.div
                 layout

@@ -19,6 +19,7 @@ import { Gradient } from './components/Gradient';
 import { Search } from './components/Search';
 import {generateArtistLinks} from "@/lib/utils";
 import useLastFMArtistSearch from "@/hooks/useLastFMArtistSearch";
+import {s} from "framer-motion/m";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(undefined);
@@ -44,8 +45,7 @@ function App() {
   }, [artists]);
 
   useEffect(() => {
-    if (canCreateSimilarArtistGraph && artistData?.similar && selectedArtist) {
-      const prevSimilarArtists = artists.map(a => a.name).slice(1);
+    if (canCreateSimilarArtistGraph && artistData?.similar && selectedArtist && selectedArtist.name === artistData.name) {
       const similarArtists = [selectedArtist];
       artistData.similar.forEach((s, i) => {
         similarArtists.push({ id: i.toString(), name: s, tags: [] });
@@ -55,11 +55,9 @@ function App() {
         setCurrentArtistLinks(generateArtistLinks(selectedArtist, similarArtists.length));
         setGraph('artists');
       }
-      if (JSON.stringify(prevSimilarArtists) === JSON.stringify(similarArtists) ) {
-        setCanCreateSimilarArtistGraph(false);
-      }
+      setCanCreateSimilarArtistGraph(false);
     }
-  }, [artistData, canCreateSimilarArtistGraph, selectedArtist]);
+  }, [artistData, canCreateSimilarArtistGraph]);
 
   const setArtistFromName = (name: string) => {
     const artist = artists.find((artist) => artist.name === name);

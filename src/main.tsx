@@ -10,7 +10,7 @@ if (!container) throw new Error("Root container not found");
 createRoot(container).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider attribute="class" defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <App />
       </ThemeProvider>
     </BrowserRouter>

@@ -27,9 +27,9 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                 fgRef.current.d3Force('charge')?.strength(-300);
                 fgRef.current.d3Force('link')?.distance(100);
                 fgRef.current.d3Force('link')?.strength(0.08); // Reduce strength (default is 1)
+                fgRef.current.d3Force('collide')?.strength(300);
                 const fontSize = 10;
                 const labelWidthBuffer = 20;
-                const collide = forceCollide((d: any) => d.r);
 
                 fgRef.current.d3Force('collide', forceCollide((node => {
                     const genreNode = node as Genre;

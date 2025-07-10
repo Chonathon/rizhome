@@ -9,7 +9,7 @@ import useGenres from "@/hooks/useGenres";
 import useArtist from "@/hooks/useArtist";
 import ArtistsForceGraph from "@/components/ArtistsForceGraph";
 import GenresForceGraph from "@/components/GenresForceGraph";
-import {Artist, BasicNode, Genre, GraphType, LastFMArtistJSON, NodeLink} from "@/types";
+import {Artist, BasicNode, Genre, GraphType, LastFMArtistJSON, LastFMSearchArtistData, NodeLink} from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResetButton } from "@/components/ResetButton";
 import { ListViewPanel } from "@/components/ListViewPanel";
@@ -74,7 +74,7 @@ function App() {
       setShowArtistCard(true);
     }
     if (graph === 'similarArtists') {
-      createSimilarArtistGraph(artist.name);
+      createSimilarArtistGraph(artist);
     }
   }
   const resetAppState = () => {
@@ -89,18 +89,10 @@ function App() {
     setShowArtistCard(false);
   }
   const similarArtistFilter = (similarArtists: string[]) => {
-    return similarArtists.filter(s => artists.some(a => a.name === s));
+    return similarArtists.filter(s => currentArtists.some(a => a.name === s));
   }
-  const createSimilarArtistGraph = (artistName: string) => {
-    let artist = currentArtists.find((artist) => artist.name === artistName);
-    if (!artist) {
-      artist = {
-        id: Math.floor(Math.random() * 1234567).toString(),
-        name: artistName,
-        tags: []
-      }
-    }
-    setSelectedArtist(artist);
+  const createSimilarArtistGraph = (artistResult: Artist) => {
+    setSelectedArtist(artistResult);
     setShowArtistCard(true);
     setCanCreateSimilarArtistGraph(true);
   }
@@ -198,7 +190,6 @@ function App() {
                     currentArtists={currentArtists}
                     genres={genres}
                     graphState={graph}
-                    searchLoading={searchLoading}
                 />
               </motion.div>
             </div>

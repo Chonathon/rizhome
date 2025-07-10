@@ -8,13 +8,12 @@ import {isGenre} from "@/lib/utils"
 import {Artist, BasicNode, Genre, GraphType} from "@/types";
 import {useEffect, useRef, useState} from "react";
 import { useMemo } from "react";
-import {CommandLoading} from "cmdk";
 import {Loading} from "@/components/Loading";
-import useLastFMArtistSearch from "@/hooks/useLastFMArtistSearch";
+import useMBArtistSearch from "@/hooks/useMBArtistSearch";
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
-  onArtistSelect: (artistName: string) => void;
+  onArtistSelect: (artist: Artist) => void;
   graphState: GraphType;
   currentArtists: Artist[];
   genres: Genre[];
@@ -23,52 +22,45 @@ interface SearchProps {
 const DEBOUNCE_MS = 500;
 
 export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }: SearchProps) {
-  const [open, setOpen] = useState<boolean>(false)
-  const [inputValue, setInputValue] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false);
-  const [query, setQuery] = useState("")
-  const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
-  const { searchResults, searchLoading, searchError } = useLastFMArtistSearch(query);
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [open, setOpen] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [query, setQuery] = useState("");
+  const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections();
+  const { mbSearchResults, mbSearchLoading, mbSearchError } = useMBArtistSearch(query);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Debouncing
   useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      setQuery(inputValue);
-    }, DEBOUNCE_MS);
-    return () => clearTimeout(timeout);
+    if (inputValue) {
+      const timeout = setTimeout(() => {
+        setQuery(inputValue);
+      }, DEBOUNCE_MS);
+      return () => clearTimeout(timeout);
+    }
   }, [inputValue, DEBOUNCE_MS]);
-
-  // Loading (gets around debouncing)
-  useEffect(() => {
-    setLoading(searchLoading);
-  }, [searchLoading]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
     }
-    document.addEventListener("keydown", down)
+    document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down)
   }, [])
 
-  const currentArtistNames = useMemo(
-      () => new Set(currentArtists.map(({ name }) => name)),
-      [currentArtists]
-  );
-
+  // Filter the searchable items. This is problematic with bands of the same name, for now it just uses the first one in the results
   const filteredSearchableItems = useMemo(() => {
-          const filteredSearchResults = searchResults.filter(
-              ({ name }) => !currentArtistNames.has(name)
-          );
-          return [...filteredSearchResults, ...genres, ...currentArtists].filter((item) =>
-              item.name.toLowerCase().includes(inputValue.toLowerCase())
-          )},
-      [genres, searchResults, currentArtistNames]
+    const seenNames = new Set<string>();
+    return [...currentArtists, ...mbSearchResults, ...genres].filter((item) => {
+      if (!item.name.toLowerCase().includes(inputValue.toLowerCase())) return false;
+      if (seenNames.has(item.name)) return false;
+      seenNames.add(item.name);
+      return true;
+    }
+    )},
+      [genres, mbSearchResults, currentArtists]
   );
 
   // Clears the selection on remount
@@ -89,7 +81,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
     if (isGenre(selection)) {
       onGenreSelect(selection.name);
     } else {
-      onArtistSelect(selection.name);
+      onArtistSelect(selection as Artist);
     }
     addRecentSelection(selection);
     setOpen(false);
@@ -133,7 +125,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
             ref={inputRef}
         />
         <CommandList>
-          {loading && <CommandLoading><Loading /></CommandLoading>}
+          {mbSearchLoading && <Loading />}
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>
           {recentSelections.length > 0 && (
             <CommandGroup heading="Recent Selections">
@@ -148,7 +140,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
                     variant="ghost"
                     size="sm"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent CommandItem onSelect from firing
+                      e.stopPropagation();
                       removeRecentSelection(selection.id);
                     }}
                     className="h-auto p-1"
@@ -164,7 +156,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
               <CommandGroup heading="All Results">
                 {filteredSearchableItems.map((item, i) => (
                     <CommandItem
-                        key={`${item.id}-${i}`}  // Updated key to ensure uniqueness
+                        key={`${item.id}-${i}`}
                         onSelect={() => onItemSelect(item)}
                         className="flex items-center justify-between"
                     >

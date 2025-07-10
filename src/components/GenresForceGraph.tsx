@@ -24,10 +24,13 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         if (genres) {
             setGraphData({ nodes: genres, links });
             if (fgRef.current) {
-                fgRef.current.d3Force('charge')?.strength(-500);
+                fgRef.current.d3Force('charge')?.strength(-300);
                 fgRef.current.d3Force('link')?.distance(100);
+                fgRef.current.d3Force('link')?.strength(0.08); // Reduce strength (default is 1)
                 const fontSize = 10;
                 const labelWidthBuffer = 20;
+                const collide = forceCollide((d: any) => d.r);
+
                 fgRef.current.d3Force('collide', forceCollide((node => {
                     const genreNode = node as Genre;
                     const radius = calculateRadius(genreNode.artistCount);

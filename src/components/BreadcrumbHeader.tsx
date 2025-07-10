@@ -27,17 +27,16 @@ export function BreadcrumbHeader({
     return (
         <div>
             <div
-                className='
-                    h-[54px]
-                    inline-flex items-center gap-2
-                    px-2 py-3
-                    bg-gray-50/90 border backdrop-blur-xs border-gray-200 shadow-md rounded-full
-                    transition-all
-                    '
+
                 >
                     <Breadcrumb
                     className="
-                    
+                    h-[54px]
+                    inline-flex items-center gap-2
+                    px-2 py-3
+                    bg-background border backdrop-blur-xs border-border shadow-md rounded-full
+                    transition-all
+                    '
                     ">
                         <BreadcrumbList>
                             {/* Home icon - always visible */}

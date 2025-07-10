@@ -10,6 +10,8 @@ import {useEffect, useRef, useState} from "react";
 import { useMemo } from "react";
 import {Loading} from "@/components/Loading";
 import useMBArtistSearch from "@/hooks/useMBArtistSearch";
+import { cn } from "@/lib/utils"
+import { useTheme } from "next-themes"
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
@@ -96,13 +98,12 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
           variant="outline"
           aria-label="Search"
           className=
-            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
-
+            "w- h-[54px] bg-background/90 hover:bg-accent/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-foreground"
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-2 items-center">
             <SearchIcon size={20}></SearchIcon>
-            <span className="text-sm text-muted-foreground">⌘K</span>
+            <span className="text-sm text-foreground">⌘K</span>
           </div>
           {/* <Badge
           className="text-xs text-muted-foreground"
@@ -134,7 +135,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
                   key={selection.id}
                   onSelect={() => onItemSelect(selection)}
                   className="flex items-center justify-between"
-                >
+                  >
                   <span>{selection.name}</span>
                   <Button
                     variant="ghost"
@@ -151,6 +152,18 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
               ))}
             </CommandGroup>
           )}
+                  <CommandGroup heading="Actions">
+                    <CommandItem
+                            key={"toggle-theme"}
+                            onSelect={() => {
+                              setTheme(theme === "light" ? "dark" : "light");
+                            }}
+                            className="flex items-center justify-between"
+                          >
+                            <span>{theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}</span>
+                    
+                          </CommandItem>
+                  </CommandGroup>
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
               <CommandGroup heading="All Results">

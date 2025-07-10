@@ -72,9 +72,9 @@ export function ArtistCard({
           // TODO: loading animation could use love
           className={`
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
-            bg-gray-50/90 backdrop-blur-xs shadow-lg rounded-3xl border border-gray-200
+            bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xs shadow-lg rounded-3xl border border-border
              max-w-full overflow-hidden
-             ${artistLoading && "animate-pulse bg-gray-50/86"}`}
+             ${artistLoading && "animate-pulse bg-stone-50/86"}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -90,7 +90,7 @@ export function ArtistCard({
                 }}
               >
                 <CircleX
-                  className=" fill-gray-500 text-white overflow-hidden size-5"
+                  className=" fill-gray-500 dark:fill-gray-900 text-white dark:text-foreground overflow-hidden size-5"
                   size={20}
                 />
               </Button>
@@ -142,7 +142,7 @@ export function ArtistCard({
                       <div
                         className={`
                       w-24 h-24 shrink-0 overflow-hidden
-                      rounded-xl border border-gray-100
+                      rounded-xl border border-border
                       ${isExpanded ? "w-full h-[200px]" : ""}
                     `}
                       >

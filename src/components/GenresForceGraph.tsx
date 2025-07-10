@@ -13,6 +13,9 @@ interface GenresForceGraphProps {
     show: boolean;
 }
 
+// Helper to estimate label width based on name length and font size
+const estimateLabelWidth = (name: string, fontSize: number) => name.length * (fontSize * 0.6);
+
 const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading, show }) => {
     const [graphData, setGraphData] = useState<GraphData<Genre, NodeLink>>({ nodes: [], links: [] });
     const fgRef = useRef<ForceGraphMethods<Genre, NodeLink> | undefined>(undefined);
@@ -23,9 +26,15 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
             if (fgRef.current) {
                 fgRef.current.d3Force('charge')?.strength(-500);
                 fgRef.current.d3Force('link')?.distance(100);
-                // @ts-expect-error this works
-                const labelPadding = 24;
-                fgRef.current.d3Force('collide', forceCollide((node: Genre) => calculateRadius(node.artistCount) + labelPadding));
+                const fontSize = 10;
+                const labelWidthBuffer = 20;
+                fgRef.current.d3Force('collide', forceCollide((node => {
+                    const genreNode = node as Genre;
+                    const radius = calculateRadius(genreNode.artistCount);
+                    const labelWidth = estimateLabelWidth(genreNode.name, fontSize) / 2 + labelWidthBuffer;
+                    const padding = 10;
+                    return Math.max(radius + padding, labelWidth + padding);
+                })));
                 fgRef.current.zoom(0.15);
                 fgRef.current.centerAt(-400, -800, 0);
             }
@@ -33,7 +42,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     }, [genres, links, show]);
 
     const calculateRadius = (artistCount: number) => {
-        return 5 + Math.sqrt(artistCount) * 3.2;
+        return 5 + Math.sqrt(artistCount) * 2;
     };
 
     const nodeCanvasObject = (node: NodeObject, ctx: CanvasRenderingContext2D) => {
@@ -44,8 +53,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         const nodeY = node.y || 0;
 
         // Node styling
-        ctx.fillStyle = 'rgba(138, 128, 255, 0.4)'; // Semi-transparent fill
-        ctx.strokeStyle = 'rgba(138, 128, 255, 0.8)'; // Border color
+        ctx.fillStyle = '#8a80ff'; // Equivalent solid color
+        ctx.strokeStyle = '#8a80ff'; // Same solid color
         ctx.lineWidth = 0.5;
 
         // Draw node
@@ -59,7 +68,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // Slightly transparent white
-        ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize);
+        const verticalPadding = 6;
+        ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize + verticalPadding);
     };
 
     const nodePointerAreaPaint = (node: NodeObject, color: string, ctx: CanvasRenderingContext2D) => {

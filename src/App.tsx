@@ -17,8 +17,7 @@ import { useMediaQuery } from 'react-responsive';
 import { ArtistCard } from './components/ArtistCard'
 import { Gradient } from './components/Gradient';
 import { Search } from './components/Search';
-import {generateArtistLinks, generateSimilarLinks} from "@/lib/utils";
-import useLastFMArtistSearch from "@/hooks/useLastFMArtistSearch";
+import {generateSimilarLinks} from "@/lib/utils";
 import {s} from "framer-motion/m";
 
 function App() {
@@ -29,12 +28,10 @@ function App() {
   const [graph, setGraph] = useState<GraphType>('genres');
   const [currentArtists, setCurrentArtists] = useState<Artist[]>([]);
   const [currentArtistLinks, setCurrentArtistLinks] = useState<NodeLink[]>([]);
-  const [query, setQuery] = useState<string>('');
   const [canCreateSimilarArtistGraph, setCanCreateSimilarArtistGraph] = useState<boolean>(false);
   const { genres, genreLinks, genresLoading, genresError } = useGenres();
   const { artists, artistLinks, artistsLoading, artistsError } = useGenreArtists(selectedGenre);
   const { artistData, artistLoading, artistError } = useArtist(selectedArtist);
-  const { searchResults, searchLoading, searchError } = useLastFMArtistSearch(query);
 
   const isMobile = useMediaQuery({ maxWidth: 640 });
   // const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
@@ -108,22 +105,6 @@ function App() {
     setCanCreateSimilarArtistGraph(true);
   }
 
-  const currentArtistNames = useMemo(
-      () => new Set(currentArtists.map(({ name }) => name)),
-      [currentArtists]
-  );
-
-  const filteredSearchResults = useMemo(() => {
-    return searchResults.filter(
-        ({ name }) => !currentArtistNames.has(name)
-    );
-  }, [searchResults, currentArtistNames]);
-
-  const searchableItems = useMemo(() => {
-    return (genres as BasicNode[])
-        .concat(currentArtists as BasicNode[], filteredSearchResults as BasicNode[]);
-  }, [genres, currentArtists, filteredSearchResults]);
-
   console.log("App render", {
   selectedGenre,
   selectedArtist,
@@ -136,8 +117,6 @@ function App() {
   artistData,
   artistLoading,
   artistError,
-    searchResults,
-    searchableItems
 });
   return (
     <div className="relative min-h-screen min-w-screen bg-white">
@@ -216,8 +195,8 @@ function App() {
                 <Search
                     onGenreSelect={onGenreNodeClick}
                     onArtistSelect={createSimilarArtistGraph}
-                    setQuery={setQuery}
-                    searchableItems={searchableItems}
+                    currentArtists={currentArtists}
+                    genres={genres}
                     graphState={graph}
                 />
               </motion.div>

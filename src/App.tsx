@@ -219,6 +219,7 @@ function App() {
                     setQuery={setQuery}
                     searchableItems={searchableItems}
                     graphState={graph}
+                    searchLoading={searchLoading}
                 />
               </motion.div>
             </div>

@@ -8,6 +8,8 @@ import {isGenre} from "@/lib/utils"
 import {BasicNode, GraphType} from "@/types";
 import {useEffect, useState} from "react";
 import { useMemo } from "react";
+import {CommandLoading} from "cmdk";
+import {Loading} from "@/components/Loading";
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
@@ -15,22 +17,30 @@ interface SearchProps {
   setQuery: (query: string) => void;
   searchableItems: BasicNode[];
   graphState: GraphType;
+  searchLoading: boolean;
 }
 
 const DEBOUNCE_MS = 500;
 
-export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems, graphState }: SearchProps) {
+export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems, graphState, searchLoading }: SearchProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false);
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
 
   // Debouncing
   useEffect(() => {
+    setLoading(true);
     const timeout = setTimeout(() => {
       setQuery(inputValue);
     }, DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [inputValue, DEBOUNCE_MS]);
+
+  // Loading (gets around debouncing)
+  useEffect(() => {
+    setLoading(searchLoading);
+  }, [searchLoading]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -91,6 +101,7 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
       >
         <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
         <CommandList>
+          {loading && <CommandLoading><Loading /></CommandLoading>}
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>
           {recentSelections.length > 0 && (
             <CommandGroup heading="Recent Selections">

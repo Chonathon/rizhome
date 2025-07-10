@@ -30,8 +30,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                 fgRef.current.d3Force('link')?.distance(30); //how far apart linked nodes want to be and how tightly they pull
                 fgRef.current.d3Force('link')?.strength(0.01); // Prevents nodes from overlapping, based on radius and label width
                 fgRef.current.d3Force('collide')?.strength(300);
-                fgRef.current.d3Force('x', d3.forceX(0).strength(0.01));
-                fgRef.current.d3Force('y', d3.forceY(0).strength(0.01));
+                fgRef.current.d3Force('x', d3.forceX(0).strength(0.02));
+                fgRef.current.d3Force('y', d3.forceY(0).strength(0.02));
                 const fontSize = 10;
                 const labelWidthBuffer = 20;
 
@@ -49,7 +49,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     }, [genres, links, show]);
 
     const calculateRadius = (artistCount: number) => {
-        return 5 + Math.sqrt(artistCount) * 2;
+        return 5 + Math.sqrt(artistCount) * .5;
     };
 
     const nodeCanvasObject = (node: NodeObject, ctx: CanvasRenderingContext2D) => {

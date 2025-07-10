@@ -3,8 +3,9 @@ import React, {useEffect, useState, useRef, useMemo} from "react";
 import ForceGraph, {ForceGraphMethods, GraphData, NodeObject} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 import {forceCollide} from 'd3-force';
+import * as d3 from 'd3-force';
 
-// Needs more props like the view/filtering controls
+
 interface GenresForceGraphProps {
     genres: Genre[];
     links: NodeLink[];
@@ -24,10 +25,13 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         if (genres) {
             setGraphData({ nodes: genres, links });
             if (fgRef.current) {
-                fgRef.current.d3Force('charge')?.strength(-300);
-                fgRef.current.d3Force('link')?.distance(100);
-                fgRef.current.d3Force('link')?.strength(0.08); // Reduce strength (default is 1)
+                // fgRef.current.d3Force('center')?.strength(-1, -1);
+                fgRef.current.d3Force('charge')?.strength(-200); // Applies a repelling force between all nodes
+                fgRef.current.d3Force('link')?.distance(30); //how far apart linked nodes want to be and how tightly they pull
+                fgRef.current.d3Force('link')?.strength(0.01); // Prevents nodes from overlapping, based on radius and label width
                 fgRef.current.d3Force('collide')?.strength(300);
+                fgRef.current.d3Force('x', d3.forceX(0).strength(0.01));
+                fgRef.current.d3Force('y', d3.forceY(0).strength(0.01));
                 const fontSize = 10;
                 const labelWidthBuffer = 20;
 
@@ -38,7 +42,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                     const padding = 10;
                     return Math.max(radius + padding, labelWidth + padding);
                 })));
-                fgRef.current.zoom(0.15);
+                fgRef.current.zoom(.09);
                 fgRef.current.centerAt(-400, -800, 0);
             }
         }
@@ -51,7 +55,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     const nodeCanvasObject = (node: NodeObject, ctx: CanvasRenderingContext2D) => {
         const genreNode = node as Genre;
         const radius = calculateRadius(genreNode.artistCount);
-        const fontSize = 10;
+        const fontSize = 24;
         const nodeX = node.x || 0;
         const nodeY = node.y || 0;
 
@@ -70,7 +74,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.font = `${fontSize}px Geist`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // Slightly transparent white
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; 
         const verticalPadding = 6;
         ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize + verticalPadding);
     };
@@ -86,6 +90,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
         ctx.fill();
     }
+    
 
     return !show ? null : loading ? <Loading /> : (
         <ForceGraph

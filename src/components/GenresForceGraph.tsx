@@ -74,7 +74,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.font = `${fontSize}px Geist`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; 
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; 
         const verticalPadding = 6;
         ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize + verticalPadding);
     };
@@ -87,7 +87,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         const nodeY = node.y || 0;
 
         ctx.beginPath();
-        ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
+        ctx.arc(nodeX, nodeY, radius + 24, 0, 2 * Math.PI, false); // node pointer area
         ctx.fill();
     }
     

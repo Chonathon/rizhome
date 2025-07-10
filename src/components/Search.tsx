@@ -8,6 +8,8 @@ import { X, Search as SearchIcon } from "lucide-react"
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils"
 import {Genre} from "@/types";
+import { useTheme } from "next-themes"
+
 
 interface SearchProps {
   genres: Genre[];
@@ -19,6 +21,7 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
+  const { theme, setTheme } = useTheme()
 
   const allSearchableItems = React.useMemo(() => {
     const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
@@ -56,13 +59,13 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
           variant="outline"
           aria-label="Search"
           className=
-            "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
+            "w- h-[54px] bg-background/90 hover:bg-accent/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-foreground"
           
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-2 items-center">
             <SearchIcon size={20}></SearchIcon>
-            <span className="text-sm text-muted-foreground">⌘K</span>
+            <span className="text-sm text-foreground">⌘K</span>
           </div>
           {/* <Badge
           className="text-xs text-muted-foreground"
@@ -79,8 +82,8 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
             <CommandGroup heading="Recent Selections">
               {recentSelections.map((selection) => (
                 <CommandItem
-                  key={selection.id}
-                  onSelect={() => {
+                key={selection.id}
+                onSelect={() => {
                     if (selection.type === 'genre') {
                       onGenreSelect(selection.name);
                     } else {
@@ -90,7 +93,7 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
                     setOpen(false);
                   }}
                   className="flex items-center justify-between"
-                >
+                  >
                   <span>{selection.name}</span>
                   <Button
                     variant="ghost"
@@ -107,6 +110,18 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
               ))}
             </CommandGroup>
           )}
+                  <CommandGroup heading="Actions">
+                    <CommandItem
+                            key={"toggle-theme"}
+                            onSelect={() => {
+                              setTheme(theme === "light" ? "dark" : "light");
+                            }}
+                            className="flex items-center justify-between"
+                          >
+                            <span>{theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}</span>
+                    
+                          </CommandItem>
+                  </CommandGroup>
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
             <CommandGroup heading="All Results">

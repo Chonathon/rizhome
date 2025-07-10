@@ -41,7 +41,7 @@ export function ResetButton({ onClick, show }: ResetButtonProps) {
       // transition={{ layout: { duration: 0.4 }, opacity: { duration: 0.2, ease: "easeInOut" } }}
     >
         <Button
-          className="rounded-full h-[54px] w-[54px] bg-gray-100/90 backdrop-blur-xs border border-gray-200 shadow-lg hover:bg-gray-200"
+          className="rounded-full h-[54px] w-[54px] bg-stone-100/90 dark:bg-stone-900/50 backdrop-blur-xs border border-input shadow-lg"
           size="icon"
           variant="secondary"
           onClick={onClick}

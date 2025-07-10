@@ -2,7 +2,7 @@
 
 export default {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "class",
   theme: {
     extend: {},
   },

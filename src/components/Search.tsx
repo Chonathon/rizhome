@@ -89,7 +89,14 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           open={open}
           onOpenChange={setOpen}
       >
-        <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
+        <CommandInput
+            placeholder="Search..."
+            value={inputValue}
+            onValueChange={setInputValue}
+            onFocus={(e) => {
+              e.target.setSelectionRange(inputValue.length, inputValue.length);
+            }}
+        />
         <CommandList>
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>
           {recentSelections.length > 0 && (

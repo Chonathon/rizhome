@@ -5,28 +5,31 @@ import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
 import { motion } from "framer-motion";
 import {isGenre} from "@/lib/utils"
-import {BasicNode, GraphType} from "@/types";
-import {useEffect, useState} from "react";
+import {Artist, BasicNode, Genre, GraphType} from "@/types";
+import {useEffect, useRef, useState} from "react";
 import { useMemo } from "react";
 import {CommandLoading} from "cmdk";
 import {Loading} from "@/components/Loading";
+import useLastFMArtistSearch from "@/hooks/useLastFMArtistSearch";
 
 interface SearchProps {
   onGenreSelect: (genre: string) => void;
   onArtistSelect: (artistName: string) => void;
-  setQuery: (query: string) => void;
-  searchableItems: BasicNode[];
   graphState: GraphType;
-  searchLoading: boolean;
+  currentArtists: Artist[];
+  genres: Genre[];
 }
 
 const DEBOUNCE_MS = 500;
 
-export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItems, graphState, searchLoading }: SearchProps) {
+export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }: SearchProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState("")
   const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
+  const { searchResults, searchLoading, searchError } = useLastFMArtistSearch(query);
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Debouncing
   useEffect(() => {
@@ -53,12 +56,34 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
     return () => document.removeEventListener("keydown", down)
   }, [])
 
-  const filteredSearchableItems = useMemo(() =>
-          searchableItems.filter((item) =>
-              item.name.toLowerCase().includes(inputValue.toLowerCase())
-          ),
-      [searchableItems, inputValue]
+  const currentArtistNames = useMemo(
+      () => new Set(currentArtists.map(({ name }) => name)),
+      [currentArtists]
   );
+
+  const filteredSearchableItems = useMemo(() => {
+          const filteredSearchResults = searchResults.filter(
+              ({ name }) => !currentArtistNames.has(name)
+          );
+          return [...filteredSearchResults, ...genres, ...currentArtists].filter((item) =>
+              item.name.toLowerCase().includes(inputValue.toLowerCase())
+          )},
+      [genres, searchResults, currentArtistNames]
+  );
+
+  // Clears the selection on remount
+  useEffect(() => {
+    if (open) {
+      // Wait for next tick after remount and selection
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          const input = inputRef.current;
+          const length = input.value.length;
+          input.setSelectionRange(length, length);
+        }
+      });
+    }
+  }, [open, filteredSearchableItems.length]);
 
   const onItemSelect = (selection: BasicNode) => {
     if (isGenre(selection)) {
@@ -80,7 +105,7 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
           aria-label="Search"
           className=
             "w- h-[54px] bg-gray-100/90 hover:bg-gray-200/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-muted-foreground"
-          
+
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-2 items-center">
@@ -95,11 +120,18 @@ export function Search({ onGenreSelect, onArtistSelect, setQuery, searchableItem
         </Button>
       </motion.div>
       <CommandDialog
-          key={searchableItems.length ? searchableItems[searchableItems.length - 1].name : searchableItems.length}
+          key={filteredSearchableItems.length
+              ? filteredSearchableItems[filteredSearchableItems.length - 1].name
+              : filteredSearchableItems.length}
           open={open}
           onOpenChange={setOpen}
       >
-        <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
+        <CommandInput
+            placeholder="Search..."
+            value={inputValue}
+            onValueChange={setInputValue}
+            ref={inputRef}
+        />
         <CommandList>
           {loading && <CommandLoading><Loading /></CommandLoading>}
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>

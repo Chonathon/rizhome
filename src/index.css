@@ -203,6 +203,13 @@
   opacity: .16;
 }
 
+.noise-dark {
+  background-image: url('src/assets/Noise(dark).png');
+  background-repeat: repeat;
+  background-size :contain;
+  opacity: .3;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }

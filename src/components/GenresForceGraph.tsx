@@ -1,10 +1,12 @@
 import {Genre, NodeLink} from "@/types";
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, useMemo, use} from "react";
 import ForceGraph, {ForceGraphMethods, GraphData, NodeObject} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 import {forceCollide} from 'd3-force';
+import * as d3 from 'd3-force';
+import { useTheme } from "next-themes";
 
-// Needs more props like the view/filtering controls
+
 interface GenresForceGraphProps {
     genres: Genre[];
     links: NodeLink[];
@@ -13,59 +15,70 @@ interface GenresForceGraphProps {
     show: boolean;
 }
 
-const GENRE_MAX_SIZE = 34000; // Approx. size of the largest genre (rock)
-const TRANSPARENCY = 0.8;
+// Helper to estimate label width based on name length and font size
+const estimateLabelWidth = (name: string, fontSize: number) => name.length * (fontSize * 0.6);
 
 const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading, show }) => {
     const [graphData, setGraphData] = useState<GraphData<Genre, NodeLink>>({ nodes: [], links: [] });
     const fgRef = useRef<ForceGraphMethods<Genre, NodeLink> | undefined>(undefined);
+    const { theme } = useTheme();
 
     useEffect(() => {
-        if (genres && links){
+        if (genres) {
             setGraphData({ nodes: genres, links });
-            // Creates d3 forces to separate nodes and centers/zooms to a set level on load
             if (fgRef.current) {
-                fgRef.current.d3Force('charge')?.strength(-500);
-                fgRef.current.d3Force('link')?.distance(100);
-                // @ts-expect-error this works
-                fgRef.current.d3Force('collide', forceCollide((node: Genre) => calculateRadius(node.artistCount) + 1));
-                fgRef.current.zoom(0.15);
-                fgRef.current.centerAt(-400, -800, 0);
+                // fgRef.current.d3Force('center')?.strength(-1, -1);
+                fgRef.current.d3Force('charge')?.strength(-200); // Applies a repelling force between all nodes
+                fgRef.current.d3Force('link')?.distance(30); //how far apart linked nodes want to be and how tightly they pull
+                fgRef.current.d3Force('link')?.strength(0.01); // Prevents nodes from overlapping, based on radius and label width
+                fgRef.current.d3Force('collide')?.strength(300);
+                fgRef.current.d3Force('x', d3.forceX(0).strength(0.02));
+                fgRef.current.d3Force('y', d3.forceY(0).strength(0.02));
+                const fontSize = 10;
+                const labelWidthBuffer = 20;
+
+                fgRef.current.d3Force('collide', forceCollide((node => {
+                    const genreNode = node as Genre;
+                    const radius = calculateRadius(genreNode.artistCount);
+                    const labelWidth = estimateLabelWidth(genreNode.name, fontSize) / 2 + labelWidthBuffer;
+                    const padding = 10;
+                    return Math.max(radius + padding, labelWidth + padding);
+                })));
+                fgRef.current.zoom(.15);
+                // fgRef.current.centerAt(0, 0, 0);
             }
         }
-    }, [genres, show]);
+    }, [genres, links, show]);
 
     const calculateRadius = (artistCount: number) => {
-        return 5 + Math.sqrt(artistCount) * 2;
-    };
-
-    const getColor = (artistCount: number) => {
-        const ratio = Math.min(artistCount / GENRE_MAX_SIZE, 1);
-        const r = Math.floor(ratio * 255);
-        const g = Math.abs(127 - (ratio * 255));
-        const b = Math.floor(255 - (ratio * 255));
-        return `rgba(${r}, ${g}, ${b}, ${TRANSPARENCY})`;
+        return 5 + Math.sqrt(artistCount) * .5;
     };
 
     const nodeCanvasObject = (node: NodeObject, ctx: CanvasRenderingContext2D) => {
         const genreNode = node as Genre;
         const radius = calculateRadius(genreNode.artistCount);
-        const fontSize = (radius * Math.min(4 / genreNode.name.length, 1) * 0.75); // Font size based on radius and name length
+        const fontSize = 24;
         const nodeX = node.x || 0;
         const nodeY = node.y || 0;
 
-        // Draw the circle with dynamic size and color
+        // Node styling
+        ctx.fillStyle = 'rgb(138, 128, 255)'; 
+        ctx.strokeStyle = 'rgb(138, 128, 255)';
+        ctx.lineWidth = 0.5;
+
+        // Draw node
         ctx.beginPath();
         ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = getColor(genreNode.artistCount);
         ctx.fill();
+        ctx.stroke();
 
-        // Draw the genre name text, centered and contained within the circle
+        // Text styling
         ctx.font = `${fontSize}px Geist`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'white';
-        ctx.fillText(genreNode.name, nodeX, nodeY);
+        ctx.fillStyle = theme === "dark" ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 255, 0.8)';
+        const verticalPadding = 6;
+        ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize + verticalPadding);
     };
 
     const nodePointerAreaPaint = (node: NodeObject, color: string, ctx: CanvasRenderingContext2D) => {
@@ -76,45 +89,21 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         const nodeY = node.y || 0;
 
         ctx.beginPath();
-        ctx.arc(nodeX, nodeY, radius, 0, 2 * Math.PI, false);
+        ctx.arc(nodeX, nodeY, radius + 24, 0, 2 * Math.PI, false); // node pointer area
         ctx.fill();
     }
-
-    // useEffect(() => {
-    //     const updateVisibleGenres = () => {
-    //         if (!fgRef.current) return;
-
-    //         const fg = fgRef.current;
-    //         const allNodes = fg.graphData().nodes;
-    //         const { x: cx, y: cy, k: zoom } = fg.cameraPosition();
-    //         const halfWidth = window.innerWidth / 2 / zoom;
-    //         const halfHeight = window.innerHeight / 2 / zoom;
-
-    //         const visible = allNodes.filter((node: any) => {
-    //             const nx = node.x || 0;
-    //             const ny = node.y || 0;
-    //             return (
-    //                 nx > cx - halfWidth &&
-    //                 nx < cx + halfWidth &&
-    //                 ny > cy - halfHeight &&
-    //                 ny < cy + halfHeight
-    //             );
-    //         });
-
-    //         // setVisibleGenres(visible.map(node => ({ id: node.id, name: node.name })));
-    //     };
-
-    //     updateVisibleGenres();
-    //     const fg = fgRef.current;
-    //     fg && fg.onZoom(updateVisibleGenres) && fg.onPan(updateVisibleGenres);
-    // }, [graphData, setVisibleGenres]);
+    
 
     return !show ? null : loading ? <Loading /> : (
         <ForceGraph
             ref={fgRef}
+             d3AlphaDecay={0.005}     // Length forces are active; smaller → slower cooling
+             d3VelocityDecay={0.6}    // How springy tugs feel; smaller → more inertia
+  
             graphData={graphData}
-            linkVisibility={false}
             linkCurvature={0.3}
+            linkColor={() => theme === "dark" ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}
+            linkWidth={0.5}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={nodeCanvasObject}
             nodeCanvasObjectMode={() => 'replace'}

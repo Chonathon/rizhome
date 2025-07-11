@@ -11,7 +11,7 @@ import { useState } from "react"
 import { useMediaQuery } from 'react-responsive';
 import { Skeleton } from './ui/skeleton';
 import { useRef, useLayoutEffect } from "react";
-
+// committment issues
 
 interface ArtistCardProps {
     selectedArtist?: Artist;

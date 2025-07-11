@@ -21,6 +21,7 @@ const estimateLabelWidth = (name: string, fontSize: number) => name.length * (fo
 const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNodeClick, loading, show }) => {
     const [graphData, setGraphData] = useState<GraphData<Genre, NodeLink>>({ nodes: [], links: [] });
     const fgRef = useRef<ForceGraphMethods<Genre, NodeLink> | undefined>(undefined);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (genres) {
@@ -48,8 +49,6 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
             }
         }
     }, [genres, links, show]);
-
-      const { theme, setTheme } = useTheme()
 
     const calculateRadius = (artistCount: number) => {
         return 5 + Math.sqrt(artistCount) * .5;
@@ -103,7 +102,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
   
             graphData={graphData}
             linkCurvature={0.3}
-            linkColor={() => theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}
+            linkColor={() => theme === "dark" ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}
             linkWidth={0.5}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={nodeCanvasObject}

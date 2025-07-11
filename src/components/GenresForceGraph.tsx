@@ -1,9 +1,10 @@
 import {Genre, NodeLink} from "@/types";
-import React, {useEffect, useState, useRef, useMemo} from "react";
+import React, {useEffect, useState, useRef, useMemo, use} from "react";
 import ForceGraph, {ForceGraphMethods, GraphData, NodeObject} from "react-force-graph-2d";
 import {Loading} from "./Loading";
 import {forceCollide} from 'd3-force';
 import * as d3 from 'd3-force';
+import { useTheme } from "next-themes";
 
 
 interface GenresForceGraphProps {
@@ -47,6 +48,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
             }
         }
     }, [genres, links, show]);
+
+      const { theme, setTheme } = useTheme()
 
     const calculateRadius = (artistCount: number) => {
         return 5 + Math.sqrt(artistCount) * .5;
@@ -100,7 +103,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
   
             graphData={graphData}
             linkCurvature={0.3}
-            linkColor={() => 'rgba(255, 255, 255, 0.1)'}
+            linkColor={() => theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}
             linkWidth={0.5}
             onNodeClick={node => onNodeClick(node.name)}
             nodeCanvasObject={nodeCanvasObject}

@@ -44,8 +44,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                     const padding = 10;
                     return Math.max(radius + padding, labelWidth + padding);
                 })));
-                fgRef.current.zoom(.12);
-                fgRef.current.centerAt(-400, -400, 0);
+                fgRef.current.zoom(.15);
+                // fgRef.current.centerAt(0, 0, 0);
             }
         }
     }, [genres, links, show]);

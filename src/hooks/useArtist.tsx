@@ -9,7 +9,7 @@ const url = envBoolean(import.meta.env.VITE_USE_LOCAL_SERVER)
 
 const useArtist = (artist?: Artist) => {
     const [artistData, setArtistData] = useState<LastFMArtistJSON>();
-    const [artistLoading, setArtistLoading] = useState(true);
+    const [artistLoading, setArtistLoading] = useState(false);
     const [artistError, setArtistError] = useState<AxiosError>();
 
     const fetchArtist = async () => {
@@ -30,7 +30,8 @@ const useArtist = (artist?: Artist) => {
                 } catch (err) {
 
                 }
-                setArtistData({...response.data, image: image ? image.data : undefined });
+                const data = {...response.data, image: image ? image.data : undefined}
+                setArtistData(data);
                 setArtistError(undefined);
             }
             setArtistLoading(false);

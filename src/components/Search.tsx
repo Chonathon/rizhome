@@ -1,54 +1,94 @@
-import * as React from "react"
-import { dummyLastFMArtistData } from "@/DummyDataForDummies"
 import { Button } from "@/components/ui/button"
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command"
 import { Badge } from "@/components/ui/badge"
 import { useRecentSelections } from "@/hooks/useRecentSelections"
 import { X, Search as SearchIcon } from "lucide-react"
 import { motion } from "framer-motion";
+import {isGenre} from "@/lib/utils"
+import {Artist, BasicNode, Genre, GraphType} from "@/types";
+import {useEffect, useRef, useState} from "react";
+import { useMemo } from "react";
+import {Loading} from "@/components/Loading";
+import useMBArtistSearch from "@/hooks/useMBArtistSearch";
 import { cn } from "@/lib/utils"
-import {Genre} from "@/types";
 import { useTheme } from "next-themes"
 
-
 interface SearchProps {
-  genres: Genre[];
   onGenreSelect: (genre: string) => void;
-  onArtistSelect: (artistName: string) => void;
+  onArtistSelect: (artist: Artist) => void;
+  graphState: GraphType;
+  currentArtists: Artist[];
+  genres: Genre[];
 }
 
-export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
-  const [open, setOpen] = React.useState(false)
-  const [inputValue, setInputValue] = React.useState("")
-  const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections()
-  const { theme, setTheme } = useTheme()
+const DEBOUNCE_MS = 500;
 
-  const allSearchableItems = React.useMemo(() => {
-    const genreItems = genres.map((genre: Genre) => ({ id: genre.id, name: genre.name, type: 'genre' as const }));
-    const artists = dummyLastFMArtistData.map(artist => ({ id: artist.mbid, name: artist.name, type: 'artist' as const }));
-    return [...genreItems, ...artists];
-  }, [genres]);
+export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }: SearchProps) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [query, setQuery] = useState("");
+  const { recentSelections, addRecentSelection, removeRecentSelection } = useRecentSelections();
+  const { mbSearchResults, mbSearchLoading, mbSearchError } = useMBArtistSearch(query);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  // Debouncing
+  useEffect(() => {
+    if (inputValue) {
+      const timeout = setTimeout(() => {
+        setQuery(inputValue);
+      }, DEBOUNCE_MS);
+      return () => clearTimeout(timeout);
+    }
+  }, [inputValue, DEBOUNCE_MS]);
+
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
     }
-    document.addEventListener("keydown", down)
+    document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down)
   }, [])
 
-  // function handleSelection(item: { type: string; name: string; id: any }) {
-  //   if (item.type === 'genre') {
-  //       onGenreSelect(item.name);
-  //     } else {
-  //       onArtistSelect(item.name);
-  //     }
-  //     addRecentSelection({ id: item.id, name: item.name, type: item.type });
-  //     setOpen(false);
-  // }
+  // Filter the searchable items. This is problematic with bands of the same name, for now it just uses the first one in the results
+  const filteredSearchableItems = useMemo(() => {
+    const seenNames = new Set<string>();
+    return [...currentArtists, ...mbSearchResults, ...genres].filter((item) => {
+      if (!item.name.toLowerCase().includes(inputValue.toLowerCase())) return false;
+      if (seenNames.has(item.name)) return false;
+      seenNames.add(item.name);
+      return true;
+    }
+    )},
+      [genres, mbSearchResults, currentArtists]
+  );
+
+  // Clears the selection on remount
+  useEffect(() => {
+    if (open) {
+      // Wait for next tick after remount and selection
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          const input = inputRef.current;
+          const length = input.value.length;
+          input.setSelectionRange(length, length);
+        }
+      });
+    }
+  }, [open, filteredSearchableItems.length]);
+
+  const onItemSelect = (selection: BasicNode) => {
+    if (isGenre(selection)) {
+      onGenreSelect(selection.name);
+    } else {
+      onArtistSelect(selection as Artist);
+    }
+    addRecentSelection(selection);
+    setOpen(false);
+  }
+  const { theme, setTheme } = useTheme()
 
   return (
     <>
@@ -60,7 +100,6 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
           aria-label="Search"
           className=
             "w- h-[54px] bg-background/90 hover:bg-accent/90 backdrop-blur-xs shadow-md rounded-full justify-between text-left text-md font-normal text-foreground"
-          
           onClick={() => setOpen(true)}
         >
           <div className="flex gap-2 items-center">
@@ -74,24 +113,28 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
           </Badge> */}
         </Button>
       </motion.div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search..." value={inputValue} onValueChange={setInputValue} />
+      <CommandDialog
+          key={filteredSearchableItems.length
+              ? filteredSearchableItems[filteredSearchableItems.length - 1].name
+              : filteredSearchableItems.length}
+          open={open}
+          onOpenChange={setOpen}
+      >
+        <CommandInput
+            placeholder="Search..."
+            value={inputValue}
+            onValueChange={setInputValue}
+            ref={inputRef}
+        />
         <CommandList>
+          {mbSearchLoading && <Loading />}
           <CommandEmpty>{inputValue ? "No results found." : "Start typing to search..."}</CommandEmpty>
           {recentSelections.length > 0 && (
             <CommandGroup heading="Recent Selections">
               {recentSelections.map((selection) => (
                 <CommandItem
-                key={selection.id}
-                onSelect={() => {
-                    if (selection.type === 'genre') {
-                      onGenreSelect(selection.name);
-                    } else {
-                      onArtistSelect(selection.name);
-                    }
-                    addRecentSelection({ id: selection.id, name: selection.name, type: selection.type });
-                    setOpen(false);
-                  }}
+                  key={selection.id}
+                  onSelect={() => onItemSelect(selection)}
                   className="flex items-center justify-between"
                   >
                   <span>{selection.name}</span>
@@ -99,7 +142,7 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
                     variant="ghost"
                     size="sm"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent CommandItem onSelect from firing
+                      e.stopPropagation();
                       removeRecentSelection(selection.id);
                     }}
                     className="h-auto p-1"
@@ -124,26 +167,18 @@ export function Search({ genres, onGenreSelect, onArtistSelect }: SearchProps) {
                   </CommandGroup>
           {recentSelections.length > 0 && <CommandSeparator />}
           {inputValue && (
-            <CommandGroup heading="All Results">
-              {allSearchableItems.map((item) => (
-                <CommandItem
-                  key={item.id}
-                  onSelect={() => {
-                    if (item.type === 'genre') {
-                      onGenreSelect(item.name);
-                    } else {
-                      onArtistSelect(item.name);
-                    }
-                    addRecentSelection({ id: item.id, name: item.name, type: item.type });
-                    setOpen(false);
-                  }}
-                  className="flex items-center justify-between"
-                >
-                  <span>{item.name}</span>
-                  <Badge variant="secondary">{item.type}</Badge>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+              <CommandGroup heading="All Results">
+                {filteredSearchableItems.map((item, i) => (
+                    <CommandItem
+                        key={`${item.id}-${i}`}
+                        onSelect={() => onItemSelect(item)}
+                        className="flex items-center justify-between"
+                    >
+                      <span>{item.name}</span>
+                      <Badge variant="secondary">{isGenre(item) ? 'genre' : 'artist'}</Badge>
+                    </CommandItem>
+                ))}
+              </CommandGroup>
           )}
         </CommandList>
       </CommandDialog>

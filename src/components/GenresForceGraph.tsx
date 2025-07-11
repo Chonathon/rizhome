@@ -62,8 +62,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         const nodeY = node.y || 0;
 
         // Node styling
-        ctx.fillStyle = '#8a80ff'; // Equivalent solid color
-        ctx.strokeStyle = '#8a80ff'; // Same solid color
+        ctx.fillStyle = 'rgb(138, 128, 255)'; 
+        ctx.strokeStyle = 'rgb(138, 128, 255)';
         ctx.lineWidth = 0.5;
 
         // Draw node
@@ -76,7 +76,7 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
         ctx.font = `${fontSize}px Geist`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = theme === "dark" ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)';
+        ctx.fillStyle = theme === "dark" ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 255, 0.8)';
         const verticalPadding = 6;
         ctx.fillText(genreNode.name, nodeX, nodeY + radius + fontSize + verticalPadding);
     };

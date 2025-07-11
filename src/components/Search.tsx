@@ -88,6 +88,7 @@ export function Search({ onGenreSelect, onArtistSelect, currentArtists, genres }
     addRecentSelection(selection);
     setOpen(false);
   }
+  const { theme, setTheme } = useTheme()
 
   return (
     <>

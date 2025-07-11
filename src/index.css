@@ -204,7 +204,7 @@
 }
 
 .noise-dark {
-  background-image: url('assets/Noise(dark).png');
+  background-image: url('assets/Noise-dark.png');
   background-repeat: repeat;
   background-size :contain;
   opacity: .3;

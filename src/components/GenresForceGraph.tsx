@@ -42,8 +42,8 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
                     const padding = 10;
                     return Math.max(radius + padding, labelWidth + padding);
                 })));
-                fgRef.current.zoom(.09);
-                fgRef.current.centerAt(-400, -800, 0);
+                fgRef.current.zoom(.12);
+                fgRef.current.centerAt(-400, -400, 0);
             }
         }
     }, [genres, links, show]);
@@ -95,6 +95,9 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     return !show ? null : loading ? <Loading /> : (
         <ForceGraph
             ref={fgRef}
+             d3AlphaDecay={0.005}     // Length forces are active; smaller → slower cooling
+             d3VelocityDecay={0.6}    // How springy tugs feel; smaller → more inertia
+  
             graphData={graphData}
             linkCurvature={0.3}
             linkColor={() => 'rgba(255, 255, 255, 0.1)'}

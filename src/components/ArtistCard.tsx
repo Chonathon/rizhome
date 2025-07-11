@@ -74,7 +74,7 @@ export function ArtistCard({
             w-[420px] min-h-[126px] h-auto  p-3 z-50 pb-4
             bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-xs shadow-lg rounded-3xl border border-border
              max-w-full overflow-hidden
-             ${artistLoading && "animate-pulse bg-stone-50/86"}`}
+             ${artistLoading && "bg-stone-50/86"}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

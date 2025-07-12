@@ -97,9 +97,9 @@ const GenresForceGraph: React.FC<GenresForceGraphProps> = ({ genres, links, onNo
     return !show ? null : loading ? <Loading /> : (
         <ForceGraph
             ref={fgRef}
-             d3AlphaDecay={0.005}     // Length forces are active; smaller → slower cooling
-             d3VelocityDecay={0.6}    // How springy tugs feel; smaller → more inertia
-  
+             d3AlphaDecay={0.008}     // Length forces are active; smaller → slower cooling
+             d3VelocityDecay={0.8}    // How springy tugs feel; smaller → more inertia
+            cooldownTime={8000} // How long to run the simulation before stopping
             graphData={graphData}
             linkCurvature={0.3}
             linkColor={() => theme === "dark" ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}
